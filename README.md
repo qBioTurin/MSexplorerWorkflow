@@ -153,11 +153,11 @@ This structured approach enhances clarity, allowing for a more intuitive compari
 
 
 
-## [Step 4.1 Lefse](https://github.com/franky2204/postProcess/blob/main/(4.1)Lefse)
+## [Step 4 Discriminant Analysis](https://github.com/franky2204/postProcess/blob/main/)
 
 LEfSe is the acronime od Linear discrciminant ananlysis effect size and its used to determines the features most likely to explain difference between classes. The way it was implemented is:
 
-### [Step 1 (4.1.a) - PreLefSe](https://github.com/franky2204/postProcess/blob/main/(4.1)Lefse/(4.1.a)PreLefse.R)
+### [Step 4.1.a - PreLefSe](https://github.com/franky2204/postProcess/blob/main/(4.1)Lefse/(4.1.a)PreLefse.R)
 
 The PreLefSe script is an R-based preprocessing tool designed to prepare data for LEfSe (Linear Discriminant Analysis Effect Size) analysis. It takes as input:
 
@@ -185,7 +185,7 @@ Patients)These four additional metadata fields are analyzed separately for GC-po
 
 This structured approach ensures that each comparison is appropriately categorized, facilitating meaningful insights from the LEfSe analysis.
 
-### [Step 2 - lefseEX](https://github.com/franky2204/postProcess/blob/main/(4.1)Lefse/(4.1.b)LefseElaborator/lefseEx.sh)
+### [Step 4.1.b - lefseEX](https://github.com/franky2204/postProcess/blob/main/(4.1)Lefse/(4.1.b)LefseElaborator/lefseEx.sh)
 
 The lefseEX script is a Bash-based automation tool designed to streamline the execution of LEfSe without manual intervention. It automatically runs the necessary commands to process the input data, perform statistical analysis, and generate results.
 
@@ -206,7 +206,7 @@ In order to execute this file you must be in the postProcess folder(the base of 
 conda activate lefse_env
 bash \(4.1\)Lefse/\(4.1.b\)LefseElaborator/lefseEx.sh 
 ```
-### [Step 3 - main.py](https://github.com/franky2204/postProcess/blob/main/(4.1)Lefse/(4.1.b)LefseElaborator/main.py)
+### [Step 4.1.c - main.py](https://github.com/franky2204/postProcess/blob/main/(4.1)Lefse/(4.1.b)LefseElaborator/main.py)
 
 This step involves the initial manipulation of the LEfSe output, specifically focusing on two tasks:
 
@@ -234,7 +234,7 @@ To assist with this, you can refer to one of the RDS files containing the taxa t
 
 NOTE: This step is crucial for maintaining data integrity and preventing mismatches in downstream analyses.
 
-## [Step 4.2 Limma](https://github.com/franky2204/postProcess/blob/main/(4.2)Limma/DAS_LIMMA.R)
+### [Step 4.2 Limma](https://github.com/franky2204/postProcess/blob/main/(4.2)Limma/DAS_LIMMA.R)
 
 Limma is a powerful tool for data analysis, particularly suited for linear models and differential expression analysis in omics data. It leverages a systematic approach to identify significant changes between conditions by applying statistical models.
 
@@ -252,7 +252,7 @@ Subset analyses (e.g., lesion burden, bone marrow lesion, gadolinium contrast, s
 **Output**
 The result of the Limma analysis will be a set of tables that highlight differential expression across domains, helping to identify key species or features that exhibit significant differences under various conditions. These tables will serve as the foundation for further interpretation and integration with other tools and analysis pipelines.
 
-## [Step 5 Merge DAS](https://github.com/franky2204/postProcess/blob/main/(5)Merge_DAS/Merge_DAS.R)
+### [Step 4.3 Merge DAS](https://github.com/franky2204/postProcess/blob/main/(5)Merge_DAS/Merge_DAS.R)
 
 This script takes the output from LEfSe and Limma and merges them into 10 distinct lists, making a merge of the two. The process works as follows:
 
@@ -262,16 +262,12 @@ The script then searches for the abundance values of all these species in the su
 The final output consists of 10 RDS files, each containing the full list of species for a given category, along with their corresponding abundance values.
 This process ensures that all species are considered, providing a complete view of the species distribution across various conditions, regardless of whether they appear in both the LEfSe and Limma results.
 
-## [Step 6 Heatmaps](https://github.com/franky2204/postProcess/blob/main/(6)Heatmaps/HeatmapNew.R)
+## [Step 5 Heatmaps](https://github.com/franky2204/postProcess/blob/main/(6)Heatmaps/HeatmapNew.R)
 This script processes the DAS generated during the merge DAS step and creates a series of heatmaps designed to identify significant clusters. These clusters play a crucial role in refining the search for key species across different comparative analyses. By visually highlighting areas of interest, the heatmaps help researchers better interpret patterns and distributions within the dataset.
 
 To run this script, the DAS files produced in Step 5 are required as input. The output consists of a series of PDF document that presents important elements, such as gadolinium and subtentorial regions, each represented with a distinct color. The color scale is carefully structured to enhance interpretability: white indicates zero presence, while progressively more saturated hues correspond to increasing concentrations. This visual representation allows for a more intuitive understanding of the data, making it easier to detect significant variations and trends.
 
-## [Step 7 Leaps](https://github.com/franky2204/postProcess/blob/main/(7)Leaps/DAS_Leaps_ALE_alltaxatogetherNEW.R)
-
-
-## [Step 8 DAS Alpha diversity](https://github.com/franky2204/postProcess/blob/main/(8)DAS_Alpha)
+## [Step 6 DAS Alpha diversity](https://github.com/franky2204/postProcess/blob/main/(8)DAS_Alpha)
 WIP
 
-## [Step 9 Score ratio](https://github.com/franky2204/postProcess/blob/main/(9)Score_Ratio/F:B ratio.R)
-WIP
+
