@@ -2,13 +2,29 @@
 
 This is the post-processing workflow we created and used for our pipeline, which includes Kraken2, Bracken, and KrakenBio. It consists of an initial decontamination step, followed by various plots that help provide a better understanding of the results obtained from the taxonomic classifier.
 
-# Steps
+## Requirements
 
-In the following steps, I will do my best to explain all the processes required to recreate our post-processing workflow, from the initial requirements to the final stages. If anything doesn’t work for you, please feel free to open an issue on GitHub.
+The following tools are strictly necessary for the successful execution of the post-processing workflow.
 
-## Pre-condition
+### Docker
 
-This is the essential framework needed to begin the post-processing step. Everything included here is strictly necessary and mandatory for the successful execution of the next phase, so please be methodical and precise.
+You need to have docker installed on your machine, for more info see this document:https://docs.docker.com/engine/installation/.
+
+Ensure your user has the rights to run docker (without the use of ```sudo```). To create the docker group and add your user:
+
+* Create the docker group.
+
+```
+  $ sudo groupadd docker
+```
+* Add your user to the docker group.
+
+```
+  $ sudo usermod -aG docker $USER
+```
+* Log out and log back in so that your group membership is re-evaluated.
+
+
 
 ### [R](https://www.r-project.org/)
 
