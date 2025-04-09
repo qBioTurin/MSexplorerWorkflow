@@ -7,13 +7,11 @@ createFolder(output_folder)
 baselines <- import_biom("input/fin_hs_vs_MS_T0.biom")
 
 # Import metadata
-baselines_metadata = read.csv("input/20241205_MetadataHSvsT0_modified.csv", 
+baselines_metadata = read.csv("InputData/metadata.csv", 
                               header = TRUE, 
                               sep = ",",
                               na = c("", " ", "NA"), 
                               check.names = TRUE)
-baselines_metadata = baselines_metadata[,-1]
-
 
 baselines_metadata = baselines_metadata %>%
   mutate(
