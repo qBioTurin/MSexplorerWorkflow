@@ -1,4 +1,4 @@
-# mSEXplorerWorkflow
+# MSexplorerWorkflow
 
 This is the post-processing workflow we created and used for our pipeline, which includes Kraken2, Bracken, and KrakenBio. It consists of an initial decontamination step, followed by various plots that help provide a better understanding of the results obtained from the taxonomic classifier.
 
