@@ -157,7 +157,7 @@ This structured approach enhances clarity, allowing for a more intuitive compari
 
 LEfSe is the acronime od Linear discrciminant ananlysis effect size and its used to determines the features most likely to explain difference between classes. The way it was implemented is:
 
-### [Step 4.1.a - PreLefSe](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(4.1)Lefse/(4.1.a)PreLefse.R)
+### [Step 4 - PreLefSe](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step4_DiscriminantAnalysis/Lefse/PreLefse.R)
 
 The PreLefSe script is an R-based preprocessing tool designed to prepare data for LEfSe (Linear Discriminant Analysis Effect Size) analysis. It takes as input:
 
@@ -252,7 +252,7 @@ Subset analyses (e.g., lesion burden, bone marrow lesion, gadolinium contrast, s
 **Output**
 The result of the Limma analysis will be a set of tables that highlight differential expression across domains, helping to identify key species or features that exhibit significant differences under various conditions. These tables will serve as the foundation for further interpretation and integration with other tools and analysis pipelines.
 
-### [Step 4.3 Merge DAS](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(5)Merge_DAS/Merge_DAS.R)
+### [Step 4 Merge DAS](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step4_DiscriminantAnalysis/Merge_DAS/Merge_DAS.R)
 
 This script takes the output from LEfSe and Limma and merges them into 10 distinct lists, making a merge of the two. The process works as follows:
 
@@ -262,12 +262,24 @@ The script then searches for the abundance values of all these species in the su
 The final output consists of 10 RDS files, each containing the full list of species for a given category, along with their corresponding abundance values.
 This process ensures that all species are considered, providing a complete view of the species distribution across various conditions, regardless of whether they appear in both the LEfSe and Limma results.
 
-## [Step 5 Heatmaps](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(6)Heatmaps/HeatmapNew.R)
+## [Step 5 Heatmaps](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step5_Heatmaps/HeatmapNew.R)
 This script processes the DAS generated during the merge DAS step and creates a series of heatmaps designed to identify significant clusters. These clusters play a crucial role in refining the search for key species across different comparative analyses. By visually highlighting areas of interest, the heatmaps help researchers better interpret patterns and distributions within the dataset.
 
 To run this script, the DAS files produced in Step 5 are required as input. The output consists of a series of PDF document that presents important elements, such as gadolinium and subtentorial regions, each represented with a distinct color. The color scale is carefully structured to enhance interpretability: white indicates zero presence, while progressively more saturated hues correspond to increasing concentrations. This visual representation allows for a more intuitive understanding of the data, making it easier to detect significant variations and trends.
 
-## [Step 6 DAS Alpha diversity](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(8)DAS_Alpha)
+## [Step 6 DAS Alpha diversity](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha)
+
 WIP
+
+###[Step 6 Create Fusion](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/create_fusion.R)
+
+WIP
+
+###[Step 6 DAS Alpha](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/DAS_ALPHA.R)
+
+
+WIP
+
+## [Step 7 Leaps](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step7_Leaps/FunzioneLRM.R)
 
 
