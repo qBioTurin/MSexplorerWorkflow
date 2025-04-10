@@ -271,11 +271,11 @@ To run this script, the DAS files produced in Step 5 are required as input. The 
 
 WIP
 
-###[Step 6 Create Fusion](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/create_fusion.R)
+### [Step 6 Create Fusion](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/create_fusion.R)
 
 WIP
 
-###[Step 6 DAS Alpha](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/DAS_ALPHA.R)
+### [Step 6 DAS Alpha](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/DAS_ALPHA.R)
 
 
 WIP
