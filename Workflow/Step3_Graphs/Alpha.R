@@ -9,7 +9,6 @@ baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_deco
 ######################
 
 Alpha <- function(baselines_dec,Domain,output_folder) {
-    baselines_dec=baselines_decB
     
     baselines_dec_richness = estimate_richness(baselines_dec, split = TRUE, measures = c("Observed","Shannon", "Simpson", "Chao1"))
     baselines_dec_richness <- data.frame(id = row.names(baselines_dec_richness), baselines_dec_richness)

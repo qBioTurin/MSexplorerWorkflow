@@ -2,7 +2,7 @@ source("utilities.R")
 source("Colorpalette.R")
 output_folder = "Output/NEW_PLOT_RDS/"
 createFolder(output_folder)
-baselines_dec = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds")
+baselines_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds")
 baselines_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam.rds")
 baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam.rds")
 
@@ -57,9 +57,8 @@ Beta <- function(baselines_dec,kingdom,output_folder) {
 
 # Change legend label
     sample_data(MS)$gc_treatment <- factor(sample_data(MS)$gc_treatment, 
-                                          levels = c("negative", "positive"), 
-                                          labels = c("Untreated", "Treated"))
-
+                                          levels = c("negative", "positive")) 
+                                          
 
 # Calculate Bray
     ordination <- ordinate(MS, method = "PCoA", distance = "bray")

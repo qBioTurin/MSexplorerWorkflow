@@ -1,11 +1,11 @@
 source("utilities.R")
 output_folder = "Output/NEW_PLOT_RDS/"
 createFolder(output_folder)
-baseline_dec = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds")
+baseline_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds")
 baseline_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam.rds")
 baseline_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam.rds")
 
-levels=c(  "Bifidobacterium adolescentis  ","Collinsella aerofaciens  ","Segatella copri  "
+levelsB=c(  "Bifidobacterium adolescentis  ","Collinsella aerofaciens  ","Segatella copri  "
 ,"Phocaeicola dorei  ","Bifidobacterium longum  ","Faecalibacterium prausnitzii  ",
 "Agathobacter rectalis  " ,"Bacteroides uniformis  ","Phocaeicola vulgatus  ", 
 "Blautia wexlerae  ","Other" )
