@@ -144,8 +144,7 @@ bacteria_final <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontamnno
 print(bacteria_final)
 print(bacteria_final)
 
-midWay<-readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontamMidWay.rds")
-print(midWay)
+
 rds39<-readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_dec_elabundance005.rds")
 print(rds39)
 rds116<-readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds")

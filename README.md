@@ -1,7 +1,11 @@
 # MSexplorerWorkflow
+We developed and employed a comprehensive post-processing workflow designed to analyze metagenomic data processed with Kraken2, Bracken, and KrakenBio. The workflow begins with three decontamination steps aimed at minimizing technical and environmental contaminants, ensuring higher data integrity for downstream analyses.
 
-This is the post-processing workflow we created and used for our pipeline, which includes Kraken2, Bracken, and KrakenBio. It consists of an initial decontamination step, followed by various plots that help provide a better understanding of the results obtained from the taxonomic classifier.
+Following decontamination, we performed alpha and beta diversity analyses, as well as stacked bar plots, to facilitate a global visualization of microbial community structure and composition. To identify differentially abundant species (DAS), we utilized two complementary statistical approaches: limma, which employs a linear modeling framework after voom transformation of count data, and LEfSe (Linear discriminant analysis Effect Size), which identifies features characterizing statistical differences between groups.
 
+The results from both DAS tools were subsequently integrated to enhance robustness and biological interpretability. Notably, LEfSe can be executed through two methods: (i) via a pre-configured Docker container, which provides a streamlined and reproducible environment, or (ii) through manual installation involving Python, Conda, and LEfSe, including a required code modification and execution of the accompanying Bash script.
+
+Finally, we computed alpha diversity metrics and applied LEAPS (Learning with Embedded and Projected Subspaces) using these metrics as input, enabling feature selection and predictive modeling grounded in microbial diversity.
 ## Requirements
 
 The following tools are strictly necessary for the successful execution of the post-processing workflow.
@@ -39,7 +43,7 @@ Next, you can remove a list of samples that are not relevant to your research. T
 *The BIOM file must result from the merging of multiple Bracken files, and the column names must correspond to the names of the individual Bracken files.
 
 
-### [Lefse](https://huttenhower.sph.harvard.edu/lefse/)
+### [Lefse(optional)](https://huttenhower.sph.harvard.edu/lefse/)
 
 In order to install LEfSe, you need Python 2, and depending on your operating system, this could be a bit of a challenge since it has been deprecated for over half a decade now. Anyway, in the following steps, I will guide you through its installation on Debian 12 (this should be quite similar for other Unix-like systems):
 
@@ -62,6 +66,14 @@ conda config --add channels conda-forge
 conda config --add channels bioconda
 conda install -c bioconda lefse -y
 ```
+lastly you need to change the 71th row of the run_lefse.py in wilcoxon_res[feat_name] = str(pv), the command i suggest to use is 
+```bash
+ed -s path/to/run_lefse.py <<EOF
+71s/.*/			wilcoxon_res[feat_name] = str(pv)
+w
+q
+EOF
+```
 You are now done! The following lines are an example of how to use LEfSe:
 ```bash
 conda activate lefse_env #only if you havent already
@@ -70,10 +82,8 @@ run_lefse.py -l 2  file_input.in file_input.res
 ```
 For any additional info or issues, please refer to the SegataLab [github page](https://github.com/SegataLab/lefse) or [biobackery tutorial](https://github.com/biobakery/biobakery/wiki/lefse)
 
-**IMPORTANT**The next few steps will have a folder for each one containing all the necessary files. To avoid running into errors, it is recommended to load all the libraries listed in the [Package.R](https://github.com/franky2204/postProcess/blob/main/Packages.R). One last thing: every path is relative, so the paths do not need to be modified unless the user wants to use a custom input. **IMPORTANT**
+**IMPORTANT** To avoid running into errors, it is recommended to install all the libraries listed in the [Package.R](https://github.com/franky2204/postProcess/blob/main/Packages.R). One last thing: every path is relative, so the paths do not need to be modified unless the user wants to use a custom input. **IMPORTANT**
 
-
-**TODO** update the Package file to automatize it
 ## [Step 0 Data import](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step0_DataImport/DataImport.R)
 
 This script takes as input the biom file created by [bracken](https://github.com/jenniferlu717/Bracken) and the metadata of your files in CSV format. Once uploaded, the user must define a type for each column. This step is only necessary if the metadata differs from the one provided in this script. Additionally, if a custom input is used, it may be necessary to change the OTU table column names.
@@ -185,7 +195,7 @@ Patients)These four additional metadata fields are analyzed separately for GC-po
 
 This structured approach ensures that each comparison is appropriately categorized, facilitating meaningful insights from the LEfSe analysis.
 
-### [Step 4.1.b - lefseEX](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(4.1)Lefse/(4.1.b)LefseElaborator/lefseEx.sh)
+### [Step 4 manual - lefseEX](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(4.1)Lefse/(4.1.b)LefseElaborator/lefseEx.sh)
 
 The lefseEX script is a Bash-based automation tool designed to streamline the execution of LEfSe without manual intervention. It automatically runs the necessary commands to process the input data, perform statistical analysis, and generate results.
 
@@ -204,9 +214,16 @@ By automating the LEfSe pipeline, this script enhances efficiency, reducing manu
 In order to execute this file you must be in the postProcess folder(the base of the project) and the command must be : 
 ```bash
 conda activate lefse_env
-bash \(4.1\)Lefse/\(4.1.b\)LefseElaborator/lefseEx.sh 
+bash Workflow/Step4_DiscriminantAnalysis/Lefse/Docker_LefseElaborator/lefseEx.sh
 ```
-### [Step 4.1.c - main.py](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(4.1)Lefse/(4.1.b)LefseElaborator/main.py)
+
+The next few steps are executed by lefseEX and are:
+
+### [Step 4 Create dictionary of Specise](/home/franky/Desktop/Git/MSexplorerWorkflow/Workflow/Step4_DiscriminantAnalysis/Lefse/Docker_LefseElaborator/Scripts/create_dict.py)
+
+To refine the LEfSe results, which could not handle special characters correctly, we developed a Python script that processes the pre-LEfSe output to extract species-level taxa. The script reads the pre-LEfSe output file (in tab-delimited format), skips the initial header lines, and extracts the species names from the taxonomic annotations (which are provided in a concatenated format). These species names are then sorted alphabetically, and the refined list is saved to a separate file for further analysis.
+
+#### [Step 4 Remove Line(automatized)](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step4_DiscriminantAnalysis/Lefse/Docker_LefseElaborator/Scripts/rem_line.py)
 
 This step involves the initial manipulation of the LEfSe output, specifically focusing on two tasks:
 
@@ -217,24 +234,33 @@ Converting the phylogenetic tree format – Changing the format of the tree from
 Customization
 To modify the input and output folder paths, simply adjust the variables input_folder and output_folder inside the script.
 Like for the previous step you must be in the postProcess folder and execute:
-```bash
-/bin/python3 "(4.1)Lefse/(4.1.b)LefseElaborator/main.py"
-```
+
 **Expected Output**
 
 Once the script has been run, it will output a series of files containing the phylogenetic paths of the relevant species. These files are essential for the subsequent analyses and will be used for further processing, including integration with the limma results.
 
-**Important Considerations**
+### [Step 4 Fix Species Names(automatized)](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step4_DiscriminantAnalysis/Lefse/Docker_LefseElaborator/Scripts/rem_line.py)
 
-**Special Character Handling in LEfSe Output:**
+To address issues with special characters in the LEfSe results, we developed a Python script that corrects species names by referencing a dictionary of validated names. This dictionary is created by the create_dict script, which extracts and normalizes species names from the pre-LEfSe output. The correction script reads the LEfSe taxonomy file, normalizes the species names (removing non-alphabetic characters and converting to lowercase), and replaces any erroneous names with the correct counterparts from the dictionary. The resulting corrected file ensures that all species names are properly formatted and standardized, facilitating more accurate downstream analysis.
 
-LEfSe modifies all special characters in species names by replacing them with underscores (_). This could lead to discrepancies when matching species names across different datasets.
-Therefore, it is imperative that the user manually review the output and replace any underscores with the correct special characters (e.g., spaces, hyphens, etc.).
-To assist with this, you can refer to one of the RDS files containing the taxa tables to view the original species names and ensure proper character restoration.
+### [Step 4 Docker - lefseEx]
 
-NOTE: This step is crucial for maintaining data integrity and preventing mismatches in downstream analyses.
+The inner workings of the Docker-based LEfSe implementation are identical to the manual method, but it significantly simplifies installation and execution. To install the Docker container, simply run:
+```
+docker pull qbioturin/lefse:0.1
+```
+To execute the analysis, navigate to the directory containing the folder(s) with the sample data and run the following command:
 
-### [Step 4.2 Limma](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(4.2)Limma/DAS_LIMMA.R)
+```
+docker run -v ./:/input_files/ -it  fpant/lefse  bash Scripts/lefseEx.sh file_folder
+```
+Here, folder_name refers to the subdirectory within the current directory that contains the sample(s) to be analyzed. Alternatively, it is also possible to omit the folder name to run the analysis on all eligible folders within the current directory.
+
+### [Step 4 Lefese - Output]
+
+The output of the LEfSe analysis was organized into two main directories. The first, named step2, contains the complete output generated by LEfSe, including all detected features and associated statistical metrics. The second directory, final_name, includes only the subset of features classified at the species level that were identified by LEfSe as differentially abundant between the study groups, based on the specified significance thresholds.
+
+### [Step 4 Limma](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/(4.2)Limma/DAS_LIMMA.R)
 
 Limma is a powerful tool for data analysis, particularly suited for linear models and differential expression analysis in omics data. It leverages a systematic approach to identify significant changes between conditions by applying statistical models.
 
@@ -269,17 +295,10 @@ To run this script, the DAS files produced in Step 5 are required as input. The 
 
 ## [Step 6 DAS Alpha diversity](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha)
 
-WIP
+To calculate and store various alpha diversity indices for different taxonomic groups across multiple datasets, we developed the createTab function. This function takes as input the differential abundance results (DAS) from previous steps—represented from Lesion, Spinal Cord, Gadolinium, and Subtentorial.
 
-### [Step 6 Create Fusion](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/create_fusion.R)
-
-WIP
-
-### [Step 6 DAS Alpha](https://github.com/qBioTurin/MSexplorerWorkflow/blob/Workflow/Step6_DAS_Alpha/DAS_ALPHA.R)
-
-
-WIP
+The function filters the baseline data (filtered_baselines_decB_table) according to specific taxonomic names from each DAS dataset. It then computes the Shannon, Simpson, and Evenness (EH) indices for each condition, and stores the results in separate tables. These indices are calculated for each condition across the filtered taxonomic data, ensuring only relevant taxa are included. The results are saved as CSV files, named according to the diversity index and dataset, facilitating further downstream analysis.
 
 ## [Step 7 Leaps](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step7_Leaps/FunzioneLRM.R)
 
-
+vedere se alla fine verra messo nel progetto

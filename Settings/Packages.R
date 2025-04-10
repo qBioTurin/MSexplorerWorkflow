@@ -34,79 +34,62 @@ library(gridExtra)
 library(FDRestimation)
 
 
-# Lista delle librerie richieste
-packages <- c(
-  "dplyr", "ggplot2", "phyloseq", "ggsignif", "patchwork", "ape", "DESeq2", 
-  "microbiome", "tidyr", "MetBrewer", "ggbreak", "tibble", "limma", 
-  "readr", "pheatmap", "microbiomeutilities", "ggpubr", "grid", 
-  "leaps", "UpSetR"
+# CRAN packages
+cran_packages <- c(
+  "dplyr", "ggplot2", "tidyr", "tibble", "patchwork", "gridExtra", 
+  "ggsignif", "ggbreak", "MetBrewer", "ggalt", "cluster", "NbClust",
+  "ggfortify", "factoextra", "UpSetR", "leaps", "readr", "grid", 
+  "ggpubr", "rstatix", "pheatmap", "nloptr", "lme4", "pbkrtest", "car"
 )
 
-# Funzione per installare e caricare i pacchetti
-install_and_load <- function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    message(paste("Installando il pacchetto:", pkg))
-    install.packages(pkg, dependencies = TRUE)
-  }
-  library(pkg, character.only = TRUE)
-}
+# Bioconductor Packages
+bioc_packages <- c("phyloseq", "DESeq2", "microbiome", "limma")
 
-# Itera sulla lista e verifica/installazione/caricamento delle librerie
-for (pkg in packages) {
-  install_and_load(pkg)
-}
-###############controllare lista
-# Lista dei pacchetti necessari
-packages <- c(
-  "dplyr", "ggplot2", "phyloseq", "ggsignif", "patchwork",
-  "ape", "DESeq2", "microbiome", "tidyr", "MetBrewer", 
-  "ggbreak", "tibble"
+# GitHub Packages
+github_packages <- list(
+  phyloseq = "joey711/phyloseq",
+  microbiomeutilities = "microsud/microbiomeutilities"
 )
 
-# Installazione dei pacchetti mancanti
-install_missing <- function(packages) {
-  installed <- installed.packages()[, "Package"]
-  to_install <- packages[!packages %in% installed]
+#  CRAN installation
+install_if_missing_cran <- function(pkgs) {
+  installed <- rownames(installed.packages())
+  to_install <- pkgs[!pkgs %in% installed]
   if (length(to_install) > 0) {
     install.packages(to_install, dependencies = TRUE)
-  } else {
-    message("Tutti i pacchetti sono già installati.")
   }
 }
 
-# Installare Bioconductor per phyloseq e DESeq2, se necessario
+# Bioconductor installation
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
 }
-BiocManager::install(c("phyloseq", "DESeq2"), update = FALSE,force=TRUE)
+install_if_missing_bioc <- function(pkgs) {
+  for (pkg in pkgs) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      BiocManager::install(pkg, update = FALSE, force = TRUE)
+    }
+  }
+}
 
-# Installazione dei pacchetti restanti
-install_missing(packages)
-
-# Verifica di eventuali problemi
-suppressMessages(lapply(packages, library, character.only = TRUE))
-# Forzare la reinstallazione di DESeq2
-BiocManager::install("DESeq2", force = TRUE)
-
-BiocManager::install("microbiome")
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("limma")
-install.packages("readr")
-install.packages("pheatmap")
-
-install.packages(c("phyloseq", "ggplot2", "dplyr", "tibble"))
+# GitHub installation
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
-remotes::install_github("joey711/phyloseq")
-install.packages(c("nloptr", "lme4", "pbkrtest", "car", "rstatix", "ggpubr"))
-remotes::install_github("microsud/microbiomeutilities")
+install_github_packages <- function(pkgs) {
+  for (pkg in names(pkgs)) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      remotes::install_github(pkgs[[pkg]])
+    }
+  }
+}
 
-install.packages(rstatix)
+install_if_missing_cran(cran_packages)
+install_if_missing_bioc(bioc_packages)
+install_github_packages(github_packages)
 
-
-install.packages("ggpubr")
-install.packages("rstatix")  # Install rstatix if not already installed
-library(rstatix)
-install.packages("factoextra", repos="http://cran.rstudio.com/")
+# Check installation
+main_packages <- c(cran_packages, bioc_packages, names(github_packages))
+suppressMessages(invisible(lapply(main_packages, function(p) {
+  try(library(p, character.only = TRUE), silent = TRUE)
+})))
