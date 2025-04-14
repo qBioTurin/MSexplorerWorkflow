@@ -21,6 +21,8 @@ source("Workflow/Step3_Graphs/Alpha.R")
 source("Workflow/Step3_Graphs/Beta.R")
 #Stackbars
 source("Workflow/Step3_Graphs/Stack.R")
+#patchwork
+source("Workflow/Step3_Graphs/Patchwork.R")
 
 # Step 4: creation of DAS using limma and lefse
 #limma

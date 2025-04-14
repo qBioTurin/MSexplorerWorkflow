@@ -1,5 +1,4 @@
-source("Colorpalette.R")
-source("utilities.R")
+source("Settings/utilities.R")
 output_folder = "Image/Fused_plot/"
 createFolder(output_folder)
 
@@ -97,43 +96,3 @@ patchwork = patchwork & plot_annotation(tag_levels = 'A') &
 
 ggsave(gsub(" ","",paste(output_folder,"patchworkplot.pdf")), plot = patchwork, width = 30, height = 20, dpi = 300)
 
-
-####patch2 devo metterla?
-
-
-#p1 = readRDS(file = "BACT_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10))  # Aumentare il margine inferiore
-#p1 = p1 + guides(fill = guide_legend(ncol = 1), color = guide_legend(ncol = 1))
-p2 = readRDS(file = "Output/NEW_PLOT_RDS/Bacteria_alpha_gc_treatment.rds") + theme(axis.text.x = element_blank(),
-                                                                          axis.title.x = element_blank(),
-                                                                          axis.ticks.x = element_blank())
-p3 = readRDS(file = "Output/NEW_PLOT_RDS/Bacteria_beta_gc.rds") + theme(axis.text.x = element_text(size=24,face = "bold"))
-#p4 = readRDS(file = "./NEW_PLOT_RDS/ARCH_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10)) 
-#p4 = p4 + guides(fill = guide_legend(ncol = 1), color = guide_legend(ncol = 1))
-p5 = readRDS(file = "Output/NEW_PLOT_RDS/Archaea_alpha_gc_treatment.rds") + theme(axis.text.x = element_blank(), 
-                                                                          axis.title.x = element_blank(), 
-                                                                          axis.ticks.x = element_blank())
-p6 = readRDS(file = "Output/NEW_PLOT_RDS/Archaea_beta_gc.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))
-#p7 = readRDS(file = "./NEW_PLOT_RDS/EUK_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10)) 
-#p7 = p7 + guides(fill = guide_legend(ncol = 1), color = guide_legend(ncol = 1))
-p8 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryota_alpha_gc_treatment.rds") + theme(axis.text.x = element_blank(), 
-                                                                         axis.title.x = element_blank(),
-                                                                         axis.ticks.x = element_blank())
-p9 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryota_beta_gc.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))
-
-patchwork = (p2 + p5 + p8 + p3 + p6 + p9) + plot_layout(ncol = 3, widths = c(1, 1, 1), heights = c(1, 1))
-
-patchwork = patchwork & plot_annotation(tag_levels = 'A') &
-  theme(plot.tag = element_text(size = 42, face = "bold"),
-        text = element_text(size=24, face = "bold"),
-        axis.title.y = element_text(size=24, face = "bold"),
-        axis.title.x = element_text(size=24, face = "bold"),
-        axis.text.y = element_text(size=24, face = "bold"),
-        plot.title = element_text(size=24, face = "bold"),
-        legend.title = element_text(size=24, face = "bold"),
-        legend.text = element_text(size=24, face = "bold"),
-        legend.position = "bottom",
-        strip.text = element_text(colour = "black", size=24, face = "bold"),
-        strip.background = element_rect(colour = "black", fill = "white"),
-        axis.ticks.x = element_blank())
-
-ggsave(gsub(" ","",paste(output_folder,"patchworkplot_GCtreatment.pdf")), plot = patchwork, width = 30, height = 20, dpi = 300)
