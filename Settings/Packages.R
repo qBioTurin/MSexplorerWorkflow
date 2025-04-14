@@ -2,7 +2,6 @@
 #######AUTOMATIZZARE SCRIPT################################
 ############################################################
 
-source("Colorpalette.R")
 library(dplyr)
 library(ggplot2)
 library(phyloseq)

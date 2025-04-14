@@ -9,7 +9,7 @@ source("Settings/Colorpalette.R")
 source("Workflow/Step0_DataImport/DataImport.R")
 
 # Step 1: use Deseq to do unsupervised decontamination
-source("Workflow/Step1_DESEQ/DESEQ.R")
+source("Workflow/Step1_Normalization/DeSeq.R")
 
 # Step 2: use supervised decontamination
 source("Workflow/Step2_Decontamination/Supervised_decontam.R")
