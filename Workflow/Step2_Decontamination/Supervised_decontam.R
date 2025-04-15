@@ -4,6 +4,8 @@ createFolder(output_folder)
 
 decontam <- function(baselines, decontam_list, level, Domain, output_folder, dec_level) {
    
+   # Remove controls
+    baselines = subset_samples(baselines, sample_type == "sample")
     otu = data.frame(otu_table(baselines))
     tax = data.frame(tax_table(baselines))
 

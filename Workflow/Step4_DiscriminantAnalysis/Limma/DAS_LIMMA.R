@@ -1,50 +1,26 @@
-source("utilities.R")
+source("Settings/utilities.R")
+
+output_folderMSHD="Output/LIMMA_score/MSHD/"
+createFolder(output_folderMSHD)
+output_folderGC="Output/LIMMA_score/GC/"
+createFolder(output_folderGC)
 output_folder = "Output/LIMMA_score/"
 createFolder(output_folder)
-output_folder264 = "Output/DAS_ONLY_LIMMA/264/"
-createFolder(output_folder264)
-output_folder167 = "Output/DAS_ONLY_LIMMA/167/"
-createFolder(output_folder167)
-output_folder116 = "Output/DAS_ONLY_LIMMA/116/"
-createFolder(output_folder116)
-output_folder39 = "Output/DAS_ONLY_LIMMA/39/"
-createFolder(output_folder39)
-
-
-output_folder = "Output/DAS_ONLY_LIMMA_HD/"
-createFolder(output_folder)
-output_folder_hd_264 = "Output/DAS_ONLY_LIMMA_HD/264/"
-createFolder(output_folder264)
-output_folder_hd_39 = "Output/DAS_ONLY_LIMMA_HD/39/"
-createFolder(output_folder39)
-
-
-
-
-baselines_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds")
-baselines_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam.rds")
-baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam.rds")
-
-baselines_dec264 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontamOLD.rds")
-print(baselines_dec264)
-baselines_dec167 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontamMidWay.rds")
-baselines_dec116 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds")
-baselines_dec39 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_dec_elabundance005.rds")
-print(baselines_dec39)
-
+output_folder_001 = "Output/LIMMA_score/001/"
+createFolder(output_folder_001)
+output_folder_01 = "Output/LIMMA_score/01/"
+createFolder(output_folder_01)
+output_folder_05 = "Output/LIMMA_score/05/"
+createFolder(output_folder_05)
 
 das_limma <- function(baselines_dec,analisys,status,output_folder,Domain,info) {
-
-baselines_dec<-baselines_dec264
-analisys="gc_treatment"
-status="healty"
 
 # Keep only samples that have received gc treatment
 samples = as.data.frame(sample_data(baselines_dec))
 
 if(analisys!="category"){
-    samples = samples[!samples$gc_treatment == "healthy",]#gc threatment only scheme not do for msvshd
-    samples = samples[!is.na(samples$gc_treatment),]
+  samples = samples[!samples$gc_treatment == "healthy",]#gc threatment only scheme not do for msvshd
+  samples = samples[!is.na(samples$gc_treatment),]
 }
 
 baselines_dec = prune_samples(samples$id, baselines_dec)
@@ -78,14 +54,14 @@ colnames(norm_data)
   
   
 ## Select patients metadata 
-metadata = read.csv("input/20241205_MetadataHSvsT0_modified.csv", 
+metadata = read.csv("InputData/metadataMS.csv", 
                     header = TRUE, 
                     sep = ",",
                     na = c("", " ", "NA"), 
                     check.names = TRUE)
 samples = c(colnames(norm_data))
 metadata = metadata[metadata$id %in% samples,] # 71 samples
-metadata = metadata[,-1]
+#metadata = metadata[,-1]
 # 47 x 49
 rownames(metadata) <- metadata$id
 
@@ -160,26 +136,26 @@ if(analisys=="lesion_burden"){
 
 
 ############################
-###for analysis gluctrt pos/neg comparing bone marrow lesion#####
+###for analysis gluctrt pos/neg comparing spinal cord#####
 ############################
 # select metadata to visualize in heatmapt
-if(analisys=="bone_marrow_lesions"){
+if(analisys=="spinal_cord_lesion"){
   if(status=="positive"){
         metadata_hm = metadata %>% 
             filter(gc_treatment =="positive") %>%
-            select(bone_marrow_lesions) %>%
-            mutate(bone_marrow_lesions = as.factor(bone_marrow_lesions))
+            select(spinal_cord_lesion) %>%
+            mutate(spinal_cord_lesion = as.factor(spinal_cord_lesion))
   }else if (status == "negative"){
         metadata_hm = metadata %>% 
             filter(gc_treatment =="negative") %>%
-            select(bone_marrow_lesions) %>%
-            mutate(bone_marrow_lesions = as.factor(bone_marrow_lesions)) }
+            select(spinal_cord_lesion) %>%
+            mutate(spinal_cord_lesion = as.factor(spinal_cord_lesion)) }
   else if (status == "both") 
       {
         metadata_hm = metadata %>% 
             filter(gc_treatment =="positive" | gc_treatment =="negative") %>%
-            select(bone_marrow_lesions) %>%
-            mutate(bone_marrow_lesions = as.factor(bone_marrow_lesions)) 
+            select(spinal_cord_lesion) %>%
+            mutate(spinal_cord_lesion = as.factor(spinal_cord_lesion)) 
         }
   
   norm_data = norm_data %>%
@@ -187,7 +163,7 @@ if(analisys=="bone_marrow_lesions"){
 
   log_data <- log2(norm_data + 1)
 
-  design <- model.matrix(~ bone_marrow_lesions, data = metadata_hm)
+  design <- model.matrix(~ spinal_cord_lesion, data = metadata_hm)
 }
 
 ############################
@@ -271,40 +247,42 @@ write.table(top_table, file=gsub(" ","",paste(output_folder,Domain,info,"_limma_
 #################
 filterForHeatMap=norm_data[rownames((top_table)),]
 if (status==""){
-    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folder,Domain,info,"_limma_",analisys,".csv")))}
+    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folde,"/",Domain,info,"_limma_",analisys,".csv")))}
 else {    
-    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folder,Domain,info,"_limma_",analisys,"_",status,".csv")))
+    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folder,"/",Domain,info,"_limma_",analisys,"_",status,".csv")))
   }
 }
 
-array1=c("category","gc_treatment")
-array2=c("lesion_burden","bone_marrow_lesions","gadolinium_contrast","subtentorial_lesions")
-array3=c("positive","negative","both")
-for (i in 1:length(array1)){
-    das_limma(baselines_decB,array1[i],"",output_folder,"Bacteria")
- #   das_limma(baselines_decA,array1[i],"",output_folder,"Archaea")
- #   das_limma(baselines_decE,array1[i],"",output_folder,"Eukaryota")
+
+execute_limma <- function() {
+
+  baselines_dec_001 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
+  baselines_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
+  baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam0.001.rds")
+
+  baselines_dec_01 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
+  baselines_dec_05 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
+ 
+  analysis=c("lesion_burden","spinal_cord_lesion","gadolinium_contrast","subtentorial_lesions")
+
+  das_limma(baselines_decA,"category","both",output_folderMSHD,"Archaea","")
+  das_limma(baselines_decE,"category","both",output_folderMSHD,"Eukaryota","")
+  das_limma(baselines_dec_001,"category","both",output_folderMSHD,"Bacteria","")
+    
+  das_limma(baselines_decA,"gc_treatment","both",output_folderGC,"Archaea","")
+  das_limma(baselines_decE,"gc_treatment","both",output_folderGC,"Eukaryota","")
+  das_limma(baselines_dec_001,"gc_treatment","both",output_folderGC,"Bacteria","")
+
+  for(i in 1:length(analysis)){
+    das_limma(baselines_dec_001,analysis[i],"both",output_folder_001,"Bacteria","_001")
+    das_limma(baselines_dec_01,analysis[i],"both",output_folder_01,"Bacteria","_01")
+    das_limma(baselines_dec_05,analysis[i],"both",output_folder_05,"Bacteria","_05")
+  }
+  das_limma(baselines_dec_001,"gc_treatment","both",output_folder_001,"Bacteria","_001")
+  das_limma(baselines_dec_01,"gc_treatment","both",output_folder_01,"Bacteria","_01")
+  das_limma(baselines_dec_05,"gc_treatment","both",output_folder_05,"Bacteria","_05")
 }
-for (j in 1:length(array2)){
-        for (k in 1:length(array3)){
-            das_limma(baselines_decB,array2[j],array3[k],output_folder,"Bacteria")
-  #          das_limma(baselines_decA,array2[j],array3[k],output_folder,"Archaea")
-  #          das_limma(baselines_decE,array2[j],array3[k],output_folder,"Eukaryota")
-        }
-}
 
-for(i in 1:length(array2)){
-
-    das_limma(baselines_dec264,array2[i],"both",output_folder264,"Bacteria","_264")
-    das_limma(baselines_dec167,array2[i],"both",output_folder167,"Bacteria","_167")
-    das_limma(baselines_dec116,array2[i],"both",output_folder116,"Bacteria","_116")
-    das_limma(baselines_dec39,array2[i],"both",output_folder39,"Bacteria","_39")
-}
-das_limma(baselines_dec264,"gc_treatment","both",output_folder264,"Bacteria","_264")
-das_limma(baselines_dec167,"gc_treatment","both",output_folder167,"Bacteria","_167")  
-das_limma(baselines_dec116,"gc_treatment","both",output_folder116,"Bacteria","_116")
-das_limma(baselines_dec39,"gc_treatment","both",output_folder39,"Bacteria","_39")
+execute_limma()
 
 
-das_limma(baselines_dec264,"category","both",output_folder_hd_264,"Bacteria","_hd_264")
-das_limma(baselines_dec39,"category","both",output_folder_hd_39,"Bacteria","_hd_39")

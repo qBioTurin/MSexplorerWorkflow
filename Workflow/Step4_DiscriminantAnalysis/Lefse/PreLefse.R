@@ -122,14 +122,23 @@ for (i in seq_along(arry1)) {
 }
  
     generate.LEFSE1(BACT_Supervised_decontam, metadataB, "gc_treatment", "both", "BACT_GC",output_folder )
-    #generate.LEFSE1(EUK_Supervised_decontam, metadataE, "gc_treatment", both, "EUK_GC",output_folder )
-    #generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "gc_treatment", both, "ARCH_GC",output_folder )
+    generate.LEFSE1(EUK_Supervised_decontam, metadataE, "gc_treatment", both, "EUK_GC",output_folder )
+    generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "gc_treatment", both, "ARCH_GC",output_folder )
 
     generate.LEFSE1(BACT_Supervised_decontam, metadataB, "category", "both", "BACT_MsHd",output_folder )
-    #generate.LEFSE1(EUK_Supervised_decontam, metadataE, "category", both, "EUK_MsHd",output_folder )
-    #generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "category", both, "ARCH_MsHd",output_folder )
+    generate.LEFSE1(EUK_Supervised_decontam, metadataE, "category", "both", "EUK_MsHd",output_folder )
+    generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "category", "both", "ARCH_MsHd",output_folder )
 
-    generate.LEFSE1(BACT_Supervised_decontam116, metadataB, "lesion_burden", "both", "BACT_Lesion116",output_folder3 )
+    first_analysis=c("category","gc_treatment")
+    second_analysis=c("lesion_burden","bone_marrow_lesions","gadolinium_contrast","subtentorial_lesions")
+    for(i in 1:length(second_analysis)){
+      name=paste("BACT_",second_analysis[i])
+      generate.LEFSE1(BACT_Supervised_decontam001, metadataB, second_analysis[i], "both", paste(name,"_001"),output_folder001 )
+      generate.LEFSE1(BACT_Supervised_decontam01, metadataB, second_analysis[i], "both",paste(name,"_01"),output_folder01)
+      generate.LEFSE1(BACT_Supervised_decontam05, metadataB, second_analysis[i], "both", paste(name,"_05"),output_folder05)
+    }
+
+    
     generate.LEFSE1(BACT_Supervised_decontam116, metadataB, "bone_marrow_lesions", "both", "BACT_BM_Lesion116",output_folder3 )
     generate.LEFSE1(BACT_Supervised_decontam116, metadataB, "gadolinium_contrast", "both", "BACT_Gadolinium116",output_folder3 )
     generate.LEFSE1(BACT_Supervised_decontam116, metadataB, "subtentorial_lesions", "both", "BACT_Subtentorial116",output_folder3 )

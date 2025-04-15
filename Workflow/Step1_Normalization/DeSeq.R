@@ -14,9 +14,7 @@ coldata_filt$sequencing_batch
 # Convert into a DESeq Dataset
 ALL_baselines_df <- DESeqDataSetFromMatrix(countData = round(ALL_baselines_df), 
                                          colData = coldata_filt, 
-                                         design = ~ category)
-
-
+                                         design = ~ sequencing_batch)
 
 # Normalize ALL_baselines_DDS
 ALL_baselines_DDS = DESeq(ALL_baselines_df, test="Wald", fitType="parametric")
