@@ -1,7 +1,9 @@
 source("Settings/utilities.R")
 output_folder = "Output/NEW_PLOT_RDS/"
-createFolder(output_folder)
+meta_alpha = "Output/AlphaMetadata/"
 
+createFolder(output_folder)
+createFolder(meta_alpha)
 # Calculate alfa diversity
 ######################
 
@@ -16,7 +18,7 @@ Alpha <- function(baselines_dec,Domain,output_folder) {
     baselines_dec_metadata1=baselines_dec_metadata%>%
     tidyr::gather(Observed,Simpson,Shannon,key="index", value="value" )
 
-
+    write.csv(baselines_dec_metadata, file = gsub(" ","",paste(meta_alpha,Domain,"_alpha_metadata.csv")), row.names = FALSE)
 ######healty vs ms
 
     custom_labels <- c("negative" = "Untreated", "positive" = "Treated")
