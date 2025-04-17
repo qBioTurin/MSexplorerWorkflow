@@ -79,7 +79,7 @@ Alpha <- function(baselines_dec,Domain,output_folder) {
               })+
     theme_classic() +
     scale_x_discrete(labels = custom_labels) +
-    scale_fill_manual(values=c("#6EE2FF99","#ff410D99")) +
+    scale_fill_manual(values=c("negative" = "#D7D7D7", "positive" = "#4D4D4D")) +
     theme(
         axis.title.x = element_text(size = 15), 
         axis.title.y = element_text(size = 15), 

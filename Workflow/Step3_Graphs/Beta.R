@@ -22,7 +22,7 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
 
     # Plot PCoA
     # Category
-    beta1 = plot_ordination(
+    category = plot_ordination(
         baselines_dec, 
         wUF.ordu, 
         type = "sample_type", 
@@ -43,8 +43,8 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
             legend.text = element_text(size = 15),
             legend.title = element_text(size = 15)
         )
-    beta1
-    saveRDS(beta1, gsub(" ", "", paste(output_folder, kingdom, "_beta_cat.rds")))
+  
+    saveRDS(category, gsub(" ", "", paste(output_folder, kingdom, "_beta_cat.rds")))
 
     ## GC_TREATMENT
     ###############
@@ -67,7 +67,7 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
 
     # Calculate Bray
     ordination <- ordinate(MS, method = "PCoA", distance = "bray")
-    beta2 = plot_ordination(
+    gc_treatment = plot_ordination(
         MS, 
         ordination, 
         type = "sample_type", 
@@ -78,7 +78,7 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
         ggtitle("PCoA of bray Curtis distance") + 
         guides(color = guide_legend(title = "Glucocorticoid Treatment")) +
         geom_point(size = 4) +
-        scale_color_manual(values = rev(colors_venn4)) +
+        scale_color_manual(values=c("negative" = "#D7D7D7", "positive" = "#4D4D4D")) +
         theme(
             axis.title.x = element_text(size = 15),  
             axis.title.y = element_text(size = 15),  
@@ -88,7 +88,7 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
             legend.text = element_text(size = 15),
             legend.title = element_text(size = 15)
         )
-    saveRDS(beta1, gsub(" ", "", paste(output_folder, kingdom, "_beta_gc.rds")))
+    saveRDS(gc_treatment, gsub(" ", "", paste(output_folder, kingdom, "_beta_gc.rds")))
 }
 
 execute_beta <- function() {

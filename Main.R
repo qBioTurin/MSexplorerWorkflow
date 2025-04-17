@@ -28,8 +28,7 @@ source("Workflow/Step3_Graphs/Patchwork.R")
 #limma
 source("Workflow/Step4_DiscriminantAnalysis/Limma/DAS_LIMMA.R")
 #lefse
-source("Workflow/Step4_DiscriminantAnalysis/Lefse/PreLefse.R")
-#furthermore for lefse you need other steps see README
+source("Workflow/Step4_DiscriminantAnalysis/Lefse/DAS_LEFSE.R")
 #fuse DAS
 source("Workflow/Step4_DiscriminantAnalysis/Merge_DAS/Merge_DAS.R")
 
@@ -39,5 +38,6 @@ source("Workflow/Step5_Heatmaps/HeatmapNew.R")
 # Step 6 calculate Alpha diversity DAS
 source("Workflow/Step6_DAS_Alpha/DAS_ALPHA.R")
 
-# Step 7: LEAPS?
-source("Workflow/Step7_Leaps/script_LEAPS_nuovo_perpaper.R")
+# Step 7: LEAPS
+source("Workflow/Step7_Leaps/FunctionLRM.R")
+source("Workflow/Step7_Leaps/LEAPS.R")

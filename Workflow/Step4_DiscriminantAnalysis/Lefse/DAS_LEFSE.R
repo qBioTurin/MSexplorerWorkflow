@@ -10,6 +10,8 @@ folderMSHD="Output/LEFSE/MSHD/"
 createFolder(folderMSHD)
 folderGC="Output/LEFSE/GC/"
 createFolder(folderGC)
+folderGC_comp="Output/LEFSE/GC_comp/"
+createFolder(folderGC_comp)
 
 
 output_folder_001 = ("Output/LEFSE/001/step0/")
@@ -17,12 +19,14 @@ output_folder_01= ("Output/LEFSE/01/step0/")
 output_folder_05= ("Output/LEFSE/05/step0/")
 output_folderMSHD= ("Output/LEFSE/MSHD/step0/")
 output_folderGC=("Output/LEFSE/GC/step0/")
+output_folderGC_comp=("Output/LEFSE/GC_comp/step0/")
 
 createFolder(output_folder_001)
 createFolder(output_folder_01)
 createFolder(output_folder_05)
 createFolder(output_folderMSHD)
 createFolder(output_folderGC)
+createFolder(output_folderGC_comp)
 
 generate.LEFSE1 <- function(Domain, metadata, column, status, fileName,output_folder ) {
   
@@ -90,7 +94,7 @@ generate.LEFSE1 <- function(Domain, metadata, column, status, fileName,output_fo
   glcLesionFinal <- glcLesionFinal[-2, ]
   
 
-  write.table(glcLesionFinal, file = paste0(output_folder, fileName), sep = "\t", quote = FALSE, col.names = FALSE)
+  write.table(glcLesionFinal, file = gsub(" ","",paste0(output_folder, fileName)), sep = "\t", quote = FALSE, col.names = FALSE)
 }
 
 
@@ -112,36 +116,43 @@ generate.LEFSE1(BACT_Supervised_decontam001, metadataB, "gc_treatment", "both", 
 generate.LEFSE1(EUK_Supervised_decontam, metadataE, "gc_treatment", "both", "EUK_GC", output_folderGC)
 generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "gc_treatment", "both", "ARCH_GC", output_folderGC)
 
-analysis <- c("lesion_burden", "spinal_cord_lesion", "gadolinium_contrast", "subtentorial_lesions")
-
+analysis <- c("lesion_burden", "spinal_cord_lesion", "gadolinium_contrast", "subtentorial_lesions","gc_treatment")
+status <- c("positive", "negative")
 for (i in 1:length(analysis)) {
-  name <- paste("BACT_", analysis[i])
-  generate.LEFSE1(BACT_Supervised_decontam001, metadataB, analysis[i], "both", paste(name, "_001"), output_folder_001)
-  generate.LEFSE1(BACT_Supervised_decontam01, metadataB, analysis[i], "both", paste(name, "_01"), output_folder_01)
-  generate.LEFSE1(BACT_Supervised_decontam05, metadataB, analysis[i], "both", paste(name, "_05"), output_folder_05)
+  name <- gsub(" ","",paste("BACT_", analysis[i]))
+  generate.LEFSE1(BACT_Supervised_decontam001, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_001")), output_folder_001)
+  generate.LEFSE1(BACT_Supervised_decontam01, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_01")), output_folder_01)
+  generate.LEFSE1(BACT_Supervised_decontam05, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_05")), output_folder_05)
+  for(j in 1:length(status)){
+    generate.LEFSE1(BACT_Supervised_decontam001, metadataB, "gc_treatment", status[j],paste0("BACT_", analysis[i], "_", status[j]), output_folder_GC_comp)
+    generate.LEFSE1(EUK_Supervised_decontam, metadataE, "gc_treatment", status[j], paste0("EUK_", analysis[i], "_", status[j]), output_folderGC_comp)
+    generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "gc_treatment", status[j], paste0("ARCH_", analysis[i], "_", status[j]), output_folderGC_comp)
+  }
 }
 
-generate.LEFSE1(BACT_Supervised_decontam001, metadataB, "gc_treatment", "both", paste(name, "_001"), output_folder_001)
-generate.LEFSE1(BACT_Supervised_decontam01, metadataB, "gc_treatment", "both", paste(name, "_01"), output_folder_01)
-generate.LEFSE1(BACT_Supervised_decontam05, metadataB, "gc_treatment", "both", paste(name, "_05"), output_folder_05)
 
-  system(paste0(
+system(paste0(
   "docker run -v",normalizePath(folder01),":/input_files/ -it ",
   "fpant/lefse bash Scripts/lefseEx.sh step0/"))
 
-  system(paste0(
+system(paste0(
   "docker run -v",normalizePath(folder001),":/input_files/ -it ",
   "fpant/lefse bash Scripts/lefseEx.sh step0/"))
 
-    system(paste0(
+system(paste0(
   "docker run -v",normalizePath(folder05),":/input_files/ -it ",
   "fpant/lefse bash Scripts/lefseEx.sh step0/"))
 
-  system(paste0(
+system(paste0(
   "docker run -v",normalizePath(folderMSHD),":/input_files/ -it ",
   "fpant/lefse bash Scripts/lefseEx.sh step0/"))
 
-    system(paste0(
+system(paste0(
   "docker run -v",normalizePath(folderGC),":/input_files/ -it ",
   "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+
+system(paste0(
+  "docker run -v",normalizePath(folderGC_comp),":/input_files/ -it ",
+  "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+
 

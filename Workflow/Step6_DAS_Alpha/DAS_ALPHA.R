@@ -48,22 +48,6 @@ bm_264<- readRDS("Output/MERGED_DAS/264/Bacteria_BM_LesionAll_merged.rds")
 gado_264<- readRDS("Output/MERGED_DAS/264/Bacteria_GadoliniumAll_merged.rds")
 sub_264<- readRDS("Output/MERGED_DAS/264/Bacteria_SubtentorialAll_merged.rds")
 
-
-#lef_lesion_39<-readRDS("Output/DAS_ONLY_LEFSE/39RDS/Bacteria_Lesion39_merged.rds")
-#lef_bm_39<-readRDS("Output/DAS_ONLY_LEFSE/39RDS/Bacteria_BM_Lesion39_merged.rds")
-#lef_gado_39<-readRDS("Output/DAS_ONLY_LEFSE/39RDS/Bacteria_Gadolinium39_merged.rds")
-#lef_sub_39<-readRDS("Output/DAS_ONLY_LEFSE/39RDS/Bacteria_Subtentorial39_merged.rds")
-
-#lef_lesion_116<-readRDS("Output/DAS_ONLY_LEFSE/116RDS/Bacteria_Lesion116_merged.rds")
-#lef_bm_116<-readRDS("Output/DAS_ONLY_LEFSE/116RDS/Bacteria_BM_Lesion116_merged.rds")
-#lef_gado_116<-readRDS("Output/DAS_ONLY_LEFSE/116RDS/Bacteria_Gadolinium116_merged.rds")
-#lef_sub_116<-readRDS("Output/DAS_ONLY_LEFSE/116RDS/Bacteria_Subtentorial116_merged.rds")
-
-#lef_lesion_264<-readRDS("Output/DAS_ONLY_LEFSE/264RDS/Bacteria_LesionAll_merged.rds")
-#lef_bm_264<-readRDS("Output/DAS_ONLY_LEFSE/264RDS/Bacteria_BM_LesionAll_merged.rds")
-#lef_gado_264<-readRDS("Output/DAS_ONLY_LEFSE/264RDS/Bacteria_GadoliniumAll_merged.rds")
-#lef_sub_264<-readRDS("Output/DAS_ONLY_LEFSE/264RDS/Bacteria_SubtentorialAll_merged.rds")
-
 createTab(lesion_39,bm_39,gado_39,sub_39,"39",output_folder39,filtered_baselines_decB_table)
 createTab(lesion_116,bm_116,gado_116,sub_116,"116",output_folder116, filtered_baselines_decB_table)
 createTab(lesion_264,bm_264,gado_264,sub_264,"264",output_folder264, filtered_baselines_decB_table)

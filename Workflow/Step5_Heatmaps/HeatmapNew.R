@@ -1,17 +1,16 @@
-source("utilities.R")
+source("Settings/utilities.R")
 output_folder = "Image/Heatmap/"
 createFolder(output_folder)
 #### Functions ############
-generate.heatmap = function(Bacteria,Archaea,filename,filterRows = FALSE,output_folder)
-{
+generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = F, output_folder){
   data_bact=data.generation(Bacteria)
   data_arch=data.generation(Archaea)
-  #data_euk=data.generation(Eukaryota)
+  data_euk=data.generation(Eukaryota)
   
   ### Kingdom together ###### 
-  norm_data_z=rbind(rbind(data_bact[[1]],data_arch[[1]]))
-  metadata_hm=rbind(rbind(data_bact[[2]],data_arch[[2]]))
-  metadata_kingdom=rbind(rbind(data_bact[[3]],data_arch[[3]]))
+  norm_data_z=rbind(rbind(data_bact[[1]],data_arch[[1]]),data_euk[[1]])
+  metadata_hm=rbind(rbind(data_bact[[2]],data_arch[[2]]),data_euk[[2]])
+  metadata_kingdom=rbind(rbind(data_bact[[3]],data_arch[[3]]),data_euk[[3]])
  
   ann_colors = list(
     Sex= setNames(c("blue", "pink"),
@@ -123,15 +122,17 @@ generate.heatmap = function(Bacteria,Archaea,filename,filterRows = FALSE,output_
   relative_heights <- row_counts / total_rows + c(0.05,0,0.05)
   
   tbac = textGrob("Bacteria", rot = 90, gp = gpar(fontsize=14))
+  teuk = textGrob("Eukaryota", rot = 90, gp = gpar(fontsize=14))
   tarc = textGrob("Archaea", rot = 90, gp = gpar(fontsize=14))
   
   g = grid.arrange(grobs = list(tbac,heatmap_bact$gtable,
-                                tarc,heatmap_arch$gtable),
+                                tarc,heatmap_arch$gtable,
+                                teuk,heatmap_euk$gtable),
                    ncol = 2,
                    heights =relative_heights, #c(.21, .29, 0.1),
                    widths = c(0.05,1.5) )
   
-  ggsave(plot = g, filename = gsub(" ","",paste0(output_folder,filename,".pdf")),
+  ggsave(plot = g, filename = paste0(output_folder,filename,".pdf"),
          height = 22,width = 18,limitsize = FALSE)
   
   return(NULL)
@@ -164,34 +165,28 @@ data.generation=function(baselines_dec){
   rownames(norm_data) = norm_data$Genus_species
   norm_data = norm_data[,-c(1,length(norm_data))]
   colnames(norm_data)
-  # 30 x 26 samples
-  # 10 x 26 samples
-  
-  
+
+
   ## seleziona nei metadati solo i campioni corretti (che ci sono anche in matrice)
-  metadata = read.csv("input/20241205_MetadataHSvsT0_modified.csv", 
+  metadata = read.csv("InputData/metadataMS.csv", 
                       header = TRUE, 
                       sep = ",",
                       na = c("", " ", "NA"), 
                       check.names = TRUE)
-  metadata = metadata %>%
-    mutate(
-      across(id, .fns= as.character),
-      across(.cols = c(category, naive, 
-                       sex, smoking_habit, physical_activity, edss,
-                       antibiotic_use, spike_in, sample_type, therapy, sequencing_batch, 
-                       gc_treatment, age_terciles, pyr_median, simplified_batch,
-                       bmi_classes, disease_actvity, edss_t0, edss_t12, edss_t24, 
-                       gc_treatment, lesion_burden, bone_marrow_lesions, subtentorial_lesions, 
-                       gadolinium_contrast, clinical_presentation, full_recovery, 
-                       new_lesions_t12, relapse_t12, new_lesions_t24, relapse_t24, 
-                       medas_percent, therapy_change, prognosis_at_onset, center),
-             .fns = as.factor),
-      across(.cols = c(age, bmi, pyr_mds, dna_quantification, days_gc_collection, medas_percent, 
-                       percent_th17, treg_il10_pos, treg_cd39_pos), 
-             .fns = as.numeric),
-      across(c(sample_collection_date, onset_date, diagnosis_date, glc_date_before_t0), 
-             as.POSIXct, format = "%Y-%m-%d %H:%M:%S"))
+ metadata <- metadata %>%
+  mutate(
+    across(.cols = c(id), .fns = as.character),
+    
+    across(.cols = c(sex, category, clinical_presentation, gc_treatment,
+                     subtentorial_lesions, spinal_cord_lesion, gadolinium_contrast,
+                     sequencing_batch,WORSENING, EDSS_DIAGNOSI, EDSS_PROGRESSIONE, Event,
+                     naive, previous_therapy, antibiotic_use, sample_type,lesion_burden), 
+           .fns = as.factor),
+    across(.cols = c(age, bmi, EventTime
+          ), .fns = as.numeric),
+    across(.cols = c(sample_collection_date), .fns = as.Date)
+  )
+
   samples = c(colnames(norm_data))
   metadata = metadata[metadata$id %in% samples,] # 71 samples
   metadata = metadata[,-1]
@@ -207,7 +202,7 @@ data.generation=function(baselines_dec){
            Status=category,
            gc_treatment = gc_treatment,
            Lesion_Burden = lesion_burden,
-           Spinal_cord_lesions = bone_marrow_lesions,
+           Spinal_cord_lesions = spinal_cord_lesion,
            gadolinium_contrast = gadolinium_contrast,
            subtentorial_lesions = subtentorial_lesions) %>%
     mutate(Sex= factor(Sex, levels = c("M", "F"), labels = c("M", "F")),
@@ -223,13 +218,12 @@ data.generation=function(baselines_dec){
 }
 
 ########################
-######### ALL ############
+######### MSHD ############
 generate.heatmap(
-  Bacteria = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam.rds"),
-  Archaea = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam.rds"),
-  Eukaryota = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam.rds"),
-  ,
-  filename = "ALL", output_folder)
+  Bacteria = readRDS(file = "Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds"),
+  Archaea = readRDS(file = "Output/merge_DAS/MSHD/Archaea_MsHd_merged.rds"),
+  Eukaryota = readRDS(file = "Output/merge_DAS/MSHD/Eukaryota_MsHd_merged.rds"),
+  ,filename = "category", output_folder)
 #########NO_GC_LESION############
 generate.heatmap(
   Bacteria = readRDS("Output/MERGED_DAS/Bacteria/Bacteria_NO_GC_Lesion_merged.rds") ,

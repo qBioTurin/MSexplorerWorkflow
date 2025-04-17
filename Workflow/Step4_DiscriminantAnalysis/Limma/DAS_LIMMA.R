@@ -12,6 +12,8 @@ output_folder_01 = "Output/LIMMA_score/01/"
 createFolder(output_folder_01)
 output_folder_05 = "Output/LIMMA_score/05/"
 createFolder(output_folder_05)
+output_folder_GC_comp="Output/LIMMA_score/GC_comp/"
+createFolder(output_folder_GC_comp)
 
 das_limma <- function(baselines_dec,analisys,status,output_folder,Domain,info) {
 
@@ -273,10 +275,17 @@ execute_limma <- function() {
   das_limma(baselines_decE,"gc_treatment","both",output_folderGC,"Eukaryota","")
   das_limma(baselines_dec_001,"gc_treatment","both",output_folderGC,"Bacteria","")
 
+  status=c("positive","negative")
+
   for(i in 1:length(analysis)){
     das_limma(baselines_dec_001,analysis[i],"both",output_folder_001,"Bacteria","_001")
     das_limma(baselines_dec_01,analysis[i],"both",output_folder_01,"Bacteria","_01")
     das_limma(baselines_dec_05,analysis[i],"both",output_folder_05,"Bacteria","_05")
+    for(j in 1:length(status)){
+      das_limma(baselines_dec_001,analysis[i],status[j],output_folder_GC_comp,"Bacteria","")
+      das_limma(baselines_decA,analysis[i],status[j],output_folder_GC_comp,"Archaea","")
+      das_limma(baselines_decE,analysis[i],status[j],output_folder_GC_comp,"Eukaryota","")
+    }
   }
   das_limma(baselines_dec_001,"gc_treatment","both",output_folder_001,"Bacteria","_001")
   das_limma(baselines_dec_01,"gc_treatment","both",output_folder_01,"Bacteria","_01")
