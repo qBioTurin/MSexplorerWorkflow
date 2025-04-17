@@ -124,9 +124,9 @@ for (i in 1:length(analysis)) {
   generate.LEFSE1(Bacteria_Supervised_decontam01, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_01")), output_folder_01)
   generate.LEFSE1(Bacteria_Supervised_decontam05, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_05")), output_folder_05)
   for(j in 1:length(status)){
-    generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, "gc_treatment", status[j],paste0("Bacteria_", analysis[i], "_", status[j]), output_folderGC_comp)
-    generate.LEFSE1(Eukaryota_Supervised_decontam, metadataE, "gc_treatment", status[j], paste0("Eukaryote_", analysis[i], "_", status[j]), output_folderGC_comp)
-    generate.LEFSE1(Archaea_Supervised_decontam, metadataA, "gc_treatment", status[j], paste0("Archaea_", analysis[i], "_", status[j]), output_folderGC_comp)
+    generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, analysis[i], status[j],paste0("Bacteria_", analysis[i], "_", status[j]), output_folderGC_comp)
+    generate.LEFSE1(Eukaryota_Supervised_decontam, metadataE, analysis[i], status[j], paste0("Eukaryote_", analysis[i], "_", status[j]), output_folderGC_comp)
+    generate.LEFSE1(Archaea_Supervised_decontam, metadataA, analysis[i], status[j], paste0("Archaea_", analysis[i], "_", status[j]), output_folderGC_comp)
   }
 }
 
