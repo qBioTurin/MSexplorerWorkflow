@@ -82,11 +82,11 @@ execute_stackbar<-function(){
 
   baseline_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
   baseline_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-  baseline_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam0.001.rds")
+  baseline_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
 
   stackbar(baseline_decB, levelsB,"Bacteria", output_folder)
   stackbar(baseline_decA, levelsA,"Archaea", output_folder)
-  stackbar(baseline_decE, levelsE,"Eukaryota", output_folder)
+  stackbar(baseline_decE, levelsE,"Eukaryote", output_folder)
 }
 
 execute_stackbar()

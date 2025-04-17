@@ -61,17 +61,17 @@ p5 = readRDS(file = "./Output/NEW_PLOT_RDS/Archaea_alpha_category.rds") +
 
 p6 = readRDS(file = "./Output/NEW_PLOT_RDS/Archaea_beta_cat.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))+
   scale_color_manual(values = unname(paletteStatus), breaks = c("HD","MS"),labels = c("HEALTHY","MS") )
-p7 = readRDS(file = "./Output/NEW_PLOT_RDS/Eukaryota_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10)) 
+p7 = readRDS(file = "./Output/NEW_PLOT_RDS/Eukaryote_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10)) 
 
 p7 = stackbar.updating(p7)
 
-p8 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryota_alpha_category.rds") + 
+p8 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryote_alpha_category.rds") + 
   theme(axis.text.x = element_blank(), 
         axis.title.x = element_blank(),
         axis.ticks.x = element_blank()) +
   scale_fill_manual(values = paletteStatus)+labs(fill = "Disease Status")
 
-p9 = readRDS(file = "./Output/NEW_PLOT_RDS/Eukaryota_beta_cat.rds") +
+p9 = readRDS(file = "./Output/NEW_PLOT_RDS/Eukaryote_beta_cat.rds") +
   theme(axis.text.x = element_text(size=24, face = "bold"))+
   scale_color_manual(values = unname(paletteStatus), breaks = c("HD","MS"),labels = c("HEALTHY","MS") )
 
@@ -104,10 +104,10 @@ p5 = readRDS(file = "Output/NEW_PLOT_RDS/Archaea_alpha_gc_treatment.rds") + them
                                                                           axis.ticks.x = element_blank())
 p6 = readRDS(file = "Output/NEW_PLOT_RDS/Archaea_beta_gc.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))
 
-p8 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryota_alpha_gc_treatment.rds") + theme(axis.text.x = element_blank(), 
+p8 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryote_alpha_gc_treatment.rds") + theme(axis.text.x = element_blank(), 
                                                                          axis.title.x = element_blank(),
                                                                          axis.ticks.x = element_blank())
-p9 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryota_beta_gc.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))
+p9 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryote_beta_gc.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))
 
 patchwork = (p2 + p5 + p8 + p3 + p6 + p9) + plot_layout(ncol = 3, widths = c(1, 1, 1), heights = c(1, 1))
 

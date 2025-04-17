@@ -243,13 +243,15 @@ top_table <- topTable(fit, coef=NULL, number = 100, adjust = "fdr")
 top_table=top_table[top_table$P.Value < 0.05, ]
 dim(top_table)
 #print(top_table)
-write.table(top_table, file=gsub(" ","",paste(output_folder,Domain,info,"_limma_",analisys,"_",status,"_top_table.tsv")), sep="\t", row.names=TRUE, col.names=NA)
-
-if (info!="")
+if(info!=""){
   info=paste0("_",info)
+}
+write.table(top_table, file=gsub(" ","",paste(output_folder,Domain,"_",analisys,status,info,"_limma_top_table.tsv")), sep="\t", row.names=TRUE, col.names=NA)
+
 # Save DAS
 #################
 filterForHeatMap=norm_data[rownames((top_table)),]
+
 if (status=="" | status=="both"){
     write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folder,"/",Domain,"_",analisys,info,"_limma.csv")))}
 else {    
@@ -262,19 +264,19 @@ execute_limma <- function() {
 
   baselines_dec_001 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
   baselines_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-  baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam0.001.rds")
+  baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
 
   baselines_dec_01 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
   baselines_dec_05 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
  
-  analysis=c("lesion_burden","spinal_cord_lesion","gadolinium_contrast","subtentorial_lesions")
+  analysis=c("lesion_burden","spinal_cord_lesion","gadolinium_contrast","subtentorial_lesions","gc_treatment")
 
   das_limma(baselines_decA,"category","both",output_folderMSHD,"Archaea","")
-  das_limma(baselines_decE,"category","both",output_folderMSHD,"Eukaryota","")
+  das_limma(baselines_decE,"category","both",output_folderMSHD,"Eukaryote","")
   das_limma(baselines_dec_001,"category","both",output_folderMSHD,"Bacteria","")
     
   das_limma(baselines_decA,"gc_treatment","both",output_folderGC,"Archaea","")
-  das_limma(baselines_decE,"gc_treatment","both",output_folderGC,"Eukaryota","")
+  das_limma(baselines_decE,"gc_treatment","both",output_folderGC,"Eukaryote","")
   das_limma(baselines_dec_001,"gc_treatment","both",output_folderGC,"Bacteria","")
 
   status=c("positive","negative")
@@ -286,7 +288,7 @@ execute_limma <- function() {
     for(j in 1:length(status)){
       das_limma(baselines_dec_001,analysis[i],status[j],output_folder_GC_comp,"Bacteria","")
       das_limma(baselines_decA,analysis[i],status[j],output_folder_GC_comp,"Archaea","")
-      das_limma(baselines_decE,analysis[i],status[j],output_folder_GC_comp,"Eukaryota","")
+      das_limma(baselines_decE,analysis[i],status[j],output_folder_GC_comp,"Eukaryote","")
     }
   }
   das_limma(baselines_dec_001,"gc_treatment","both",output_folder_001,"Bacteria","001")

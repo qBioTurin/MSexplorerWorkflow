@@ -99,11 +99,11 @@ execute_alpha <- function(){
 
   baselines_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
   baselines_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-  baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam0.001.rds")  
+  baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")  
   
   Alpha(baselines_decB,"Bacteria",output_folder)
   Alpha(baselines_decA,"Archaea",output_folder)
-  Alpha(baselines_decE,"Eukaryota",output_folder)
+  Alpha(baselines_decE,"Eukaryote",output_folder)
 }
 
 execute_alpha()

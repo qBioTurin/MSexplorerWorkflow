@@ -46,5 +46,5 @@ saveRDS(archaea_baselines_ds, file = gsub(" ","",paste(output_folder,"Archaea_De
 
 # Subset Eukaryotes
 euk_baselines_ds = subset_taxa(ALL_baselines_ds, Kingdom == "Eukaryota")
-saveRDS(euk_baselines_ds, file = gsub(" ","",paste(output_folder,"Eukaryota_DeSeq.rds")))
+saveRDS(euk_baselines_ds, file = gsub(" ","",paste(output_folder,"Eukaryote_DeSeq.rds")))
 

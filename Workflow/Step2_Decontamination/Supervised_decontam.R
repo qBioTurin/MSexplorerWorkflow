@@ -133,13 +133,13 @@ execute_sup_decontam <- function() {
 
     bact_baselines_ds = readRDS(file = "Output/DESEQ_RDS/Bact_DeSeq.rds")
     archaea_baselines_ds = readRDS(file = "Output/DESEQ_RDS/Archaea_DeSeq.rds")
-    euk_baselines_ds = readRDS(file = "Output/DESEQ_RDS/Eukaryota_DeSeq.rds")
+    euk_baselines_ds = readRDS(file = "Output/DESEQ_RDS/Eukaryote_DeSeq.rds")
 
     decontam(bact_baselines_ds, human_phylaB, "Phylum", "Bacteria", output_folder, 0.05)
     decontam(bact_baselines_ds, human_phylaB, "Phylum", "Bacteria", output_folder, 0.01)
     decontam(bact_baselines_ds, human_phylaB, "Phylum", "Bacteria", output_folder, 0.001)
     decontam(archaea_baselines_ds, human_phylaA, "Phylum", "Archaea", output_folder, 0.001)
-    decontam(euk_baselines_ds, human_genus, "Genus", "Eukaryota", output_folder, 0.001)
+    decontam(euk_baselines_ds, human_genus, "Genus", "Eukaryote", output_folder, 0.001)
 }
 
 execute_sup_decontam()
