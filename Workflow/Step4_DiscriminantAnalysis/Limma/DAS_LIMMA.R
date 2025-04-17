@@ -245,13 +245,15 @@ dim(top_table)
 #print(top_table)
 write.table(top_table, file=gsub(" ","",paste(output_folder,Domain,info,"_limma_",analisys,"_",status,"_top_table.tsv")), sep="\t", row.names=TRUE, col.names=NA)
 
+if (info!="")
+  info=paste0("_",info)
 # Save DAS
 #################
 filterForHeatMap=norm_data[rownames((top_table)),]
-if (status==""){
-    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folde,"/",Domain,info,"_limma_",analisys,".csv")))}
+if (status=="" | status=="both"){
+    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folder,"/",Domain,"_",analisys,info,"_limma.csv")))}
 else {    
-    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folder,"/",Domain,info,"_limma_",analisys,"_",status,".csv")))
+    write.csv(filterForHeatMap, file=gsub(" ","",paste(output_folder,"/",Domain,"_",analisys,"_",status,info,"_limma.csv")))
   }
 }
 
@@ -278,18 +280,18 @@ execute_limma <- function() {
   status=c("positive","negative")
 
   for(i in 1:length(analysis)){
-    das_limma(baselines_dec_001,analysis[i],"both",output_folder_001,"Bacteria","_001")
-    das_limma(baselines_dec_01,analysis[i],"both",output_folder_01,"Bacteria","_01")
-    das_limma(baselines_dec_05,analysis[i],"both",output_folder_05,"Bacteria","_05")
+    das_limma(baselines_dec_001,analysis[i],"both",output_folder_001,"Bacteria","001")
+    das_limma(baselines_dec_01,analysis[i],"both",output_folder_01,"Bacteria","01")
+    das_limma(baselines_dec_05,analysis[i],"both",output_folder_05,"Bacteria","05")
     for(j in 1:length(status)){
       das_limma(baselines_dec_001,analysis[i],status[j],output_folder_GC_comp,"Bacteria","")
       das_limma(baselines_decA,analysis[i],status[j],output_folder_GC_comp,"Archaea","")
       das_limma(baselines_decE,analysis[i],status[j],output_folder_GC_comp,"Eukaryota","")
     }
   }
-  das_limma(baselines_dec_001,"gc_treatment","both",output_folder_001,"Bacteria","_001")
-  das_limma(baselines_dec_01,"gc_treatment","both",output_folder_01,"Bacteria","_01")
-  das_limma(baselines_dec_05,"gc_treatment","both",output_folder_05,"Bacteria","_05")
+  das_limma(baselines_dec_001,"gc_treatment","both",output_folder_001,"Bacteria","001")
+  das_limma(baselines_dec_01,"gc_treatment","both",output_folder_01,"Bacteria","01")
+  das_limma(baselines_dec_05,"gc_treatment","both",output_folder_05,"Bacteria","05")
 }
 
 execute_limma()

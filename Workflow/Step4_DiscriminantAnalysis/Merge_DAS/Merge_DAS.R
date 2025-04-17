@@ -128,6 +128,23 @@ merge_das(baselines_decE, das_lefseE_GC, das_limmaE_GC, "GC", "Eukaryota_GC", ou
 
 dimension = c("001", "05", "01")
 analysis = c("lesion_burden", "spinal_cord_lesion", "gadolinium_contrast", "subtentorial_lesions")
+status = c("positive", "negative")
+
+for (i in seq_along(analysis)) {
+  for (j in seq_along(status)) {
+    lefse <- read_tsv(gsub(" ","",paste0("Output/LEFSE/MSHD/final_name/BACT_",analysis[j],"_", dimension[i],".res")))
+    gc_lefse <-read_tsv(gsub(" ","",paste0("Output/LEFSE/MSHD/final_name/BACT_","gc_treatment_", dimension[i],".res")))
+    lefse_fin<-remove_common_lefse(lefse,gc_lefse)
+
+    limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/MSHD/Bacteria_limma_",dimension[i],"_",analysis[j],"_both.csv")))
+    gc_limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/MSHD/Bacteria_limma_","gc_treatment_",dimension[i],"_both.csv")))
+    limma_fin<-remove_common_limma(limma,gc_limma)
+
+    merge_das(baselines_dec_001, lefse_fin, limma_fin, "msHd", paste0("Bacteria_", analysis[j], "_", dimension[i]),paste0(output_folderMSHD,dimension[i],"/"))
+  }
+}
+
+
 for (i in seq_along(dimension)) {
   for (j in seq_along(analysis)) {
     lefse <- read_tsv(gsub(" ","",paste0("Output/LEFSE/", dimension[i],"/final_name/BACT_",analysis[j],"_", dimension[i],".res")))

@@ -218,12 +218,24 @@ data.generation=function(baselines_dec){
 }
 
 ########################
+##########ALL##############
+generate.heatmap(
+  Bacteria = readRDS(file = ""),
+  Archaea = readRDS(file = ""),
+  Eukaryota = readRDS(file = ""),
+  ,filename = "category", output_folder)
 ######### MSHD ############
 generate.heatmap(
   Bacteria = readRDS(file = "Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds"),
   Archaea = readRDS(file = "Output/merge_DAS/MSHD/Archaea_MsHd_merged.rds"),
   Eukaryota = readRDS(file = "Output/merge_DAS/MSHD/Eukaryota_MsHd_merged.rds"),
   ,filename = "category", output_folder)
+#########GC_LESION############
+generate.heatmap(
+  Bacteria = readRDS("Output/MERGED_DAS/Bacteria/Bacteria_GC_Lesion_merged.rds"),
+  Archaea = readRDS("Output/MERGED_DAS/Archaea/Archaea_GC_Lesion_merged.rds"),
+  Eukaryota = readRDS("Output/MERGED_DAS/Eukaryota/Eukaryota_GC_Lesion_merged.rds"),
+  filename = "GC_LESION", output_folder)
 #########NO_GC_LESION############
 generate.heatmap(
   Bacteria = readRDS("Output/MERGED_DAS/Bacteria/Bacteria_NO_GC_Lesion_merged.rds") ,

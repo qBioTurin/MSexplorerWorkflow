@@ -94,39 +94,39 @@ generate.LEFSE1 <- function(Domain, metadata, column, status, fileName,output_fo
   glcLesionFinal <- glcLesionFinal[-2, ]
   
 
-  write.table(glcLesionFinal, file = gsub(" ","",paste0(output_folder, fileName)), sep = "\t", quote = FALSE, col.names = FALSE)
+  write.table(glcLesionFinal, file = gsub(" ","",paste0(output_folder, fileName,"_lefse")), sep = "\t", quote = FALSE, col.names = FALSE)
 }
 
 
-ARCH_Supervised_decontam <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-EUK_Supervised_decontam <- readRDS("Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam0.001.rds")
-BACT_Supervised_decontam001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-BACT_Supervised_decontam01 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
-BACT_Supervised_decontam05 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
+Archaea_Supervised_decontam <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
+Eukaryota_Supervised_decontam <- readRDS("Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam0.001.rds")
+Bacteria_Supervised_decontam001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
+Bacteria_Supervised_decontam01 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
+Bacteria_Supervised_decontam05 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
 
 metadataB <- read_delim("Output/AlphaMetadata/Bacteria_alpha_metadata.csv", delim = ",", escape_double = FALSE, trim_ws = TRUE)
 metadataA <- read_delim("Output/AlphaMetadata/Archaea_alpha_metadata.csv", delim = ",", escape_double = FALSE, trim_ws = TRUE)
 metadataE <- read_delim("Output/AlphaMetadata/Eukaryota_alpha_metadata.csv", delim = ",", escape_double = FALSE, trim_ws = TRUE)
 
-generate.LEFSE1(BACT_Supervised_decontam001, metadataB, "category", "both", "BACT_MsHd", output_folderMSHD)
-generate.LEFSE1(EUK_Supervised_decontam, metadataE, "category", "both", "EUK_MsHd", output_folderMSHD)
-generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "category", "both", "ARCH_MsHd", output_folderMSHD)
+generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, "category", "both", "Bacteria_MsHd", output_folderMSHD)
+generate.LEFSE1(Eukaryota_Supervised_decontam, metadataE, "category", "both", "Eukaryota_MsHd", output_folderMSHD)
+generate.LEFSE1(Archaea_Supervised_decontam, metadataA, "category", "both", "Archaea_MsHd", output_folderMSHD)
 
-generate.LEFSE1(BACT_Supervised_decontam001, metadataB, "gc_treatment", "both", "BACT_GC", output_folderGC)
-generate.LEFSE1(EUK_Supervised_decontam, metadataE, "gc_treatment", "both", "EUK_GC", output_folderGC)
-generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "gc_treatment", "both", "ARCH_GC", output_folderGC)
+generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, "gc_treatment", "both", "Bacteria_GC", output_folderGC)
+generate.LEFSE1(Eukaryota_Supervised_decontam, metadataE, "gc_treatment", "both", "Eukaryota_GC", output_folderGC)
+generate.LEFSE1(Archaea_Supervised_decontam, metadataA, "gc_treatment", "both", "Archaea_GC", output_folderGC)
 
 analysis <- c("lesion_burden", "spinal_cord_lesion", "gadolinium_contrast", "subtentorial_lesions","gc_treatment")
 status <- c("positive", "negative")
 for (i in 1:length(analysis)) {
-  name <- gsub(" ","",paste("BACT_", analysis[i]))
-  generate.LEFSE1(BACT_Supervised_decontam001, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_001")), output_folder_001)
-  generate.LEFSE1(BACT_Supervised_decontam01, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_01")), output_folder_01)
-  generate.LEFSE1(BACT_Supervised_decontam05, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_05")), output_folder_05)
+  name <- gsub(" ","",paste("Bacteria_", analysis[i]))
+  generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_001")), output_folder_001)
+  generate.LEFSE1(Bacteria_Supervised_decontam01, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_01")), output_folder_01)
+  generate.LEFSE1(Bacteria_Supervised_decontam05, metadataB, analysis[i], "both", gsub(" ","",paste(name, "_05")), output_folder_05)
   for(j in 1:length(status)){
-    generate.LEFSE1(BACT_Supervised_decontam001, metadataB, "gc_treatment", status[j],paste0("BACT_", analysis[i], "_", status[j]), output_folder_GC_comp)
-    generate.LEFSE1(EUK_Supervised_decontam, metadataE, "gc_treatment", status[j], paste0("EUK_", analysis[i], "_", status[j]), output_folderGC_comp)
-    generate.LEFSE1(ARCH_Supervised_decontam, metadataA, "gc_treatment", status[j], paste0("ARCH_", analysis[i], "_", status[j]), output_folderGC_comp)
+    generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, "gc_treatment", status[j],paste0("Bacteria_", analysis[i], "_", status[j]), output_folderGC_comp)
+    generate.LEFSE1(Eukaryota_Supervised_decontam, metadataE, "gc_treatment", status[j], paste0("Eukaryote_", analysis[i], "_", status[j]), output_folderGC_comp)
+    generate.LEFSE1(Archaea_Supervised_decontam, metadataA, "gc_treatment", status[j], paste0("Archaea_", analysis[i], "_", status[j]), output_folderGC_comp)
   }
 }
 
