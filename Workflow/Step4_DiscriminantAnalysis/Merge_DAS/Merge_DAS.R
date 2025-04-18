@@ -49,7 +49,7 @@ merge_das <- function(baselines_dec, das_lefse, das_limma, type, name, output_fo
   lefse_list<- das_lefse$Genus_Species
   limma_list<- das_limma$Genus_Species
   if(length(lefse_list)==0 && length(limma_list)==0){
-    print(paste("Error: both lefse and limma list are empty. Please check the lefse file", name, "for incorrect species.(could be also both empty)you will not see this rds"))
+    print(paste("Warning: both lefse and limma list are empty. Please check the lefse file", name, "for incorrect species.(could be also both empty)you will not see this rds"))
   }
   else {
     if(length(lefse_list)>0 && length(limma_list)>0){
@@ -64,7 +64,7 @@ merge_das <- function(baselines_dec, das_lefse, das_limma, type, name, output_fo
     DAS_dimension<-length(DAS)
     unique_species<-length(union(lefse_list,limma_list)) 
     if(DAS_dimension!=unique_species){
-      print(paste("Error: DAS list is not equal to the union of lefse and limma list. Please check the lefse file", name, "for incorrect species."))
+      print(paste("Warning: DAS list is not equal to the union of lefse and limma list. Please check the lefse file", name, "for incorrect species."))
     }
     taxa <- taxa[taxa$Genus_Species %in% DAS, ]
     taxa <- taxa[, -8]
@@ -141,7 +141,7 @@ for (i in seq_along(analysis)) {
     gc_limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/",dimension[j],"/Bacteria_gc_treatment_",dimension[j],"_limma.csv")))
     limma_fin<-remove_common_limma(limma,gc_limma)
 
-    merge_das(baselines_dec_001, lefse_fin, limma_fin, "msHd", paste0("Bacteria_", analysis[i], "_", dimension[j]),paste0(output_folder,dimension[j],"/"))
+    merge_das(baselines_dec_001, lefse_fin, limma_fin, "GC", paste0("Bacteria_", analysis[i], "_", dimension[j]),paste0(output_folder,dimension[j],"/"))
   }
 }
 for (i in seq_along(domain)) {

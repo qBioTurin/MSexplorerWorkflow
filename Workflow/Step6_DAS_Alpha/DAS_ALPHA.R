@@ -1,68 +1,11 @@
-source("utilities.R")
+source("Settings/utilities.R")
 output_folder = "Output/DAS_ALPHA/"
-output_mod="Output/modDAS_ALPHA/"
 createFolder(output_folder)
-createFolder(output_mod)
-
-#setPath
-base_path <- "Output/MERGED_DAS/"
-
-output_folder39 = "Output/Alpha/39/"
-output_folder116 = "Output/Alpha/116/"
-output_folder167 = "Output/Alpha/167/"
-output_folder264 = "Output/Alpha/264/"
-
-output_folder39LF="Output/DAS_ONLY_LEFSE/Alpha39/"
-output_folder116LF="Output/DAS_ONLY_LEFSE/Alpha116/"
-output_folder264LF="Output/DAS_ONLY_LEFSE/Alpha264/"
-
-createFolder(output_folder39LF)
-createFolder(output_folder116LF)
-createFolder(output_folder264LF)
-
-createFolder(output_folder39)
-createFolder(output_folder116)
-createFolder(output_folder167)
-createFolder(output_folder264)
-
-
-lesion_39<- readRDS("Output/MERGED_DAS/39/Bacteria_Lesion39_merged.rds")
-bm_39<- readRDS("Output/MERGED_DAS/39/Bacteria_BM_Lesion39_merged.rds")
-gado_39<- readRDS("Output/MERGED_DAS/39/Bacteria_Gadolinium39_merged.rds")
-sub_39<- readRDS("Output/MERGED_DAS/39/Bacteria_Subtentorial39_merged.rds")
-
-
-lesion_116<- readRDS("Output/MERGED_DAS/116/Bacteria_Lesion116_merged.rds")
-bm_116<- readRDS("Output/MERGED_DAS/116/Bacteria_BM_Lesion116_merged.rds")
-gado_116<- readRDS("Output/MERGED_DAS/116/Bacteria_Gadolinium116_merged.rds")
-sub_116<- readRDS("Output/MERGED_DAS/116/Bacteria_Subtentorial116_merged.rds")
-
-lesion_167<- readRDS("Output/MERGED_DAS/167/Bacteria_Lesion167_merged.rds")
-bm_167<- readRDS("Output/MERGED_DAS/167/Bacteria_BM_Lesion167_merged.rds")
-gado_167<- readRDS("Output/MERGED_DAS/167/Bacteria_Gadolinium167_merged.rds")
-sub_167<- readRDS("Output/MERGED_DAS/167/Bacteria_Subtentorial167_merged.rds")
-
-
-lesion_264<- readRDS("Output/MERGED_DAS/264/Bacteria_LesionAll_merged.rds")
-bm_264<- readRDS("Output/MERGED_DAS/264/Bacteria_BM_LesionAll_merged.rds")
-gado_264<- readRDS("Output/MERGED_DAS/264/Bacteria_GadoliniumAll_merged.rds")
-sub_264<- readRDS("Output/MERGED_DAS/264/Bacteria_SubtentorialAll_merged.rds")
-
-createTab(lesion_39,bm_39,gado_39,sub_39,"39",output_folder39,filtered_baselines_decB_table)
-createTab(lesion_116,bm_116,gado_116,sub_116,"116",output_folder116, filtered_baselines_decB_table)
-createTab(lesion_264,bm_264,gado_264,sub_264,"264",output_folder264, filtered_baselines_decB_table)
-createTab(lesion_167,bm_167,gado_167,sub_167,"167",output_folder167, filtered_baselines_decB_table)
-
-createTab(lef_lesion_39,lef_bm_39,lef_gado_39,lef_sub_39,"39",output_folder39LF,filtered_baselines_decB_table)
-createTab(lef_lesion_116,lef_bm_116,lef_gado_116,lef_sub_116,"116",output_folder116LF, filtered_baselines_decB_table)
-createTab(lef_lesion_264,lef_bm_264,lef_gado_264,lef_sub_264,"264",output_folder264LF, filtered_baselines_decB_table)
-
 #abundance
-bact_baselines_ds_abund = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontamOLD.rds")
-print(bact_baselines_ds_abund)
+bact_baselines_ds_abund = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
 baselines_decB_table = as.data.frame(abundances(bact_baselines_ds_abund, transform = "compositional"))
 #setPatientIds
-metaData <- read.csv("input/20241205_MetadataHSvsT0_modified.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+metaData <- read.csv("InputData/metadataMS.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 metadava_revised <- metaData[!is.na(metaData$gc_treatment),]%>%
   filter(gc_treatment == "positive" | gc_treatment == "negative")%>%
   select(id, gc_treatment)
@@ -97,7 +40,7 @@ normalize_abundance <- function(abundance_table) {
   return(abundance_table)  # Return the normalized table
 }
 
-createTab <- function(lesion, spinal, gado, sub, dataset, output_mod2, filtered_baselines_decB_table) {
+createTab <- function(lesion, spinal, gado, sub, filtered_baselines_decB_table) {
   lesion <- rownames(lesion@tax_table)
   spinal_cord <- rownames(spinal@tax_table)
   gadolinium <- rownames(gado@tax_table)
@@ -137,14 +80,78 @@ createTab <- function(lesion, spinal, gado, sub, dataset, output_mod2, filtered_
     EH_rows[nrow(EH_rows) - 1, i] <- EH_index(gado_table[, i])
     EH_rows[nrow(EH_rows), i] <- EH_index(sub_table[, i])
   }
-
-  colnames(shannon_rows) <- paste0(colnames(shannon_rows), "_39")
-  colnames(simpson_rows) <- paste0(colnames(simpson_rows), "_39")
-  colnames(EH_rows) <- paste0(colnames(EH_rows), "_39")
-
-  write.csv(shannon_rows, file = paste0(output_mod2, "shannon_alpha", "_", dataset, ".csv"), row.names = TRUE)
-  write.csv(simpson_rows, file = paste0(output_mod2, "simpson_alpha", "_", dataset, ".csv"), row.names = TRUE)
-  write.csv(EH_rows, file = paste0(output_mod2, "EH_alpha", "_", dataset, ".csv"), row.names = TRUE)
+  return(list(shannon=shannon_rows, simpson= simpson_rows, EH= EH_rows))
 }
 
+lesion_05<- readRDS("Output/merge_DAS/05/Bacteria_lesion_burden_05_merged.rds")
+bm_05<- readRDS("Output/merge_DAS/05/Bacteria_spinal_cord_lesion_05_merged.rds")
+gado_05<- readRDS("Output/merge_DAS/05/Bacteria_gadolinium_contrast_05_merged.rds")
+sub_05<- readRDS("Output/merge_DAS/05/Bacteria_subtentorial_lesions_05_merged.rds")
+
+lesion_01<- readRDS("Output/merge_DAS/01/Bacteria_lesion_burden_01_merged.rds")
+bm_01<- readRDS("Output/merge_DAS/01/Bacteria_spinal_cord_lesion_01_merged.rds")
+gado_01<- readRDS("Output/merge_DAS/01/Bacteria_gadolinium_contrast_01_merged.rds")
+sub_01<- readRDS("Output/merge_DAS/01/Bacteria_subtentorial_lesions_01_merged.rds")
+
+lesion_001<- readRDS("Output/merge_DAS/001/Bacteria_lesion_burden_001_merged.rds")
+bm_001<- readRDS("Output/merge_DAS/001/Bacteria_spinal_cord_lesion_001_merged.rds")
+gado_001<- readRDS("Output/merge_DAS/001/Bacteria_gadolinium_contrast_001_merged.rds")
+sub_001<- readRDS("Output/merge_DAS/001/Bacteria_subtentorial_lesions_001_merged.rds")
+
+
+tab_list_05=createTab(lesion_05,bm_05,gado_05,sub_05,filtered_baselines_decB_table)
+tab_list_01=createTab(lesion_01,bm_01,gado_01,sub_01,filtered_baselines_decB_table)
+tab_list_001=createTab(lesion_001,bm_001,gado_001,sub_001, filtered_baselines_decB_table)
+
+tabMod<-function(tab,Alpha,Method,Subset){
+  tab$Alpha <- Alpha
+  tab$Method <- Method
+  tab$Discriminant <- rownames(tab)
+  tab$Subset <- Subset
+  tab=t(tab)
+  tab <- cbind(id = rownames(tab), tab)
+  tab <- as.data.frame(tab) 
+  return(tab)
+}
+
+constructTab <- function(tab05, tab01, tab001, Alpha){
+  tab_05 <- tabMod(tab05, Alpha, "Alpha", "05")
+  tab_01 <- tabMod(tab01, Alpha, "Alpha", "01")
+  tab_001 <- tabMod(tab001, Alpha, "Alpha", "001")
+
+  merged_sh <- left_join(tab_05, tab_01, by = "id") %>%
+    left_join(tab_001, by = "id")
+
+  merged_sh <- t(merged_sh)
+
+  write.table(
+    merged_sh,
+    file = paste0(output_folder, "merged_", Alpha, "_alpha.tsv"),
+    sep = "\t",
+    row.names = FALSE,
+    col.names = FALSE,
+    quote = FALSE
+  )
+}
+
+
+constructTab(tab_list_05$shannon,tab_list_01$shannon,tab_list_001$shannon,"Shannon")
+constructTab(tab_list_05$simpson,tab_list_01$simpson,tab_list_001$simpson,"Simpson")
+constructTab(tab_list_05$EH,tab_list_01$EH,tab_list_001$EH,"EH")
+merged_sh <- left_join(sh_05, sh_01, by = "id") %>%
+  left_join(sh_001, by = "id")
+merged_sh<-t(merged_sh)
+write.table(merged_sh, file = paste0(output_folder, "merged_shannon_alpha.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE)
+
+sh_05=tab_list_05$shannon
+sh_05=tabMod(sh_05,"Shannon", "Alpha", "05")
+sh_01=tab_list_01$shannon
+sh_01=tabMod(sh_01,"Shannon", "Alpha", "01")
+sh_001=tab_list_001$shannon
+sh_001=tabMod(sh_001,"Shannon", "Alpha", "001")
+
+merged_sh <- left_join(sh_05, sh_01, by = "id") %>%
+  left_join(sh_001, by = "id")
+merged_sh<-t(merged_sh)
+write.table(merged_sh, file = paste0(output_folder, "merged_shannon_alpha.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE)
 

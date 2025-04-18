@@ -1,5 +1,5 @@
 B = readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-E = readRDS("Output/SUPERVISED_DEC/Eukaryota_Supervised_decontam0.001.rds")
+E = readRDS("Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
 A = readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
 baselines_dec = merge_phyloseq(A,B,E)
 
@@ -42,7 +42,8 @@ baselines_dec_metadata = baselines_dec_metadata %>%
 
 # Define predictors and outcomes
 ################################
-predictors = c("sex", "age", "bmi", "gc_treatment", "lesion_burden", "bone_marrow_lesions","subtentorial_lesions","gadolinium_contrast")
+predictors = c("sex", "age", "bmi", "gc_treatment", "lesion_burden", #"spinal_cord_lesion",
+"subtentorial_lesions","gadolinium_contrast")
 outcome = c("Observed", "Shannon", "Simpson")
 
 # Run function
