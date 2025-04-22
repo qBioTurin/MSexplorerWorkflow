@@ -133,27 +133,27 @@ for (i in 1:length(analysis)) {
 
 
 system(paste0(
-  "docker run -v",normalizePath(folder01),":/input_files/ -it ",
-  "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+  "docker run -v",normalizePath(folder01),":/input_files/ -d --rm ",
+  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folder001),":/input_files/ -it ",
-  "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+  "docker run -v",normalizePath(folder001),":/input_files/ -d --rm ",
+  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folder05),":/input_files/ -it ",
-  "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+  "docker run -v",normalizePath(folder05),":/input_files/ -d --rm ",
+  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folderMSHD),":/input_files/ -it ",
-  "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+  "docker run -v",normalizePath(folderMSHD),":/input_files/ -d --rm ",
+  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folderGC),":/input_files/ -it ",
-  "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+  "docker run -v",normalizePath(folderGC),":/input_files/ -d --rm ",
+  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folderGC_comp),":/input_files/ -it ",
-  "fpant/lefse bash Scripts/lefseEx.sh step0/"))
+  "docker run -v",normalizePath(folderGC_comp),":/input_files/ -d --rm ",
+  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
 
 

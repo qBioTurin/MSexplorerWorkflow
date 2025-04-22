@@ -2,43 +2,12 @@
 #######AUTOMATIZZARE SCRIPT################################
 ############################################################
 
-library(dplyr)
-library(ggplot2)
-library(phyloseq)
-library(ggsignif)
-library(ggsignif)
-library(patchwork)
-library(ape)
-library(DESeq2)
-library(microbiome)
-library(tidyr)
-library(MetBrewer)
-library(ggbreak)
-library(tibble)
-library(limma)
-library(microbiome)
-library(readr)
-library(pheatmap)
-library(microbiomeutilities)
-library(ggpubr)
-library(grid)
-library(leaps)
-library(UpSetR)
-library(NbClust)
-library(ggfortify)
-library(factoextra)
-library(cluster)
-library(ggalt)
-library(gridExtra)
-library(FDRestimation)
-
-
 # CRAN packages
 cran_packages <- c(
   "dplyr", "ggplot2", "tidyr", "tibble", "patchwork", "gridExtra", 
   "ggsignif", "ggbreak", "MetBrewer", "ggalt", "cluster", "NbClust",
   "ggfortify", "factoextra", "UpSetR", "leaps", "readr", "grid", 
-  "ggpubr", "rstatix", "pheatmap", "nloptr", "lme4", "pbkrtest", "car"
+  "ggpubr", "rstatix", "pheatmap", "nloptr", "lme4", "pbkrtest", "car","FDRestimation"
 )
 
 # Bioconductor Packages
@@ -92,3 +61,34 @@ main_packages <- c(cran_packages, bioc_packages, names(github_packages))
 suppressMessages(invisible(lapply(main_packages, function(p) {
   try(library(p, character.only = TRUE), silent = TRUE)
 })))
+
+
+library(dplyr)
+library(ggplot2)
+library(phyloseq)
+library(ggsignif)
+library(ggsignif)
+library(patchwork)
+library(ape)
+library(DESeq2)
+library(microbiome)
+library(tidyr)
+library(MetBrewer)
+library(ggbreak)
+library(tibble)
+library(microbiome)
+library(readr)
+library(pheatmap)
+library(microbiomeutilities)
+library(ggpubr)
+library(grid)
+library(leaps)
+library(UpSetR)
+library(NbClust)
+library(ggfortify)
+library(factoextra)
+library(cluster)
+library(ggalt)
+library(gridExtra)
+library(limma)
+library(FDRestimation)

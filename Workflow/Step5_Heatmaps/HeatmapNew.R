@@ -12,7 +12,7 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = F, 
   metadata_hm=rbind(rbind(data_bact[[2]],data_arch[[2]]),data_euk[[2]])
   metadata_kingdom=rbind(rbind(data_bact[[3]],data_arch[[3]]),data_euk[[3]])
  
-  ann_colors = list(
+  annotation_colors = list(
     Sex= setNames(c("blue", "pink"),
                   levels(as.factor(metadata_hm$Sex))),
     Status= setNames(c("#bad7f2","#ef6f6c"),
@@ -31,7 +31,7 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = F, 
   paletteLength = 35
   
   ### Kingdom separated ###### 
-  heatmap.kingdom = function(data,color,paletteLength, col_order = NULL,
+  heatmap.kingdom = function(data,color,paletteLength, col_order = NULL, ann_colors,
                              phylumPalette =  viridisLite::inferno, USEann_colors = T,filterRows ){
     norm_data_z = data[[1]]
     metadata_hm= data[[2]]
@@ -80,7 +80,7 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = F, 
     phil_name =  paste0("Phylum ", unique(metadata_kingdom$Kingdom))
     names(ann_colors)[names(ann_colors) == "Phylum"]  = phil_name
     metadata_kingdom = metadata_kingdom %>% select(Phylum)
-    colnames(metadata_kingdom) = phil_name
+    colnames(metadata_kingdom) ="Phylum"# phil_name
     
     heatmap<-pheatmap::pheatmap(norm_data_z, 
                                 annotation_col = metadata_hm, 
@@ -100,16 +100,18 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = F, 
   myColors2 = colorRampPalette(RColorBrewer::brewer.pal(9, "PuOr"))(paletteLength+1)
   myColors3 = colorRampPalette(RColorBrewer::brewer.pal(9, "BrBG"))(paletteLength+1)
   
-  heatmap_bact = heatmap.kingdom(data_bact,myColors1, 35,
+  heatmap_bact = heatmap.kingdom(data_bact,myColors1, 35, ann_colors = annotation_colors,
                                  phylumPalette = viridisLite::mako, filterRows = filterRows)
   
   ggplotify::as.ggplot(heatmap_bact) -> heatmap_bact_ggplot
   colOrder_bact = heatmap_bact_ggplot$plot_env$plot$tree_col$labels[heatmap_bact_ggplot$plot_env$plot$tree_col$order]
   
-  heatmap_euk = heatmap.kingdom(data_euk,col_order = colOrder_bact, myColors2, 35,
+  heatmap_euk = heatmap.kingdom(data_euk,col_order = colOrder_bact, ann_colors = annotation_colors,
+                                myColors2, 35,
                                 phylumPalette = viridisLite::magma,
                                 USEann_colors = F, filterRows = filterRows)
   heatmap_arch = heatmap.kingdom(data_arch,col_order = colOrder_bact, myColors3, 35,
+                                 ann_colors = annotation_colors,
                                  phylumPalette = viridisLite::cividis,
                                  USEann_colors = F, filterRows = filterRows)
   
@@ -187,7 +189,7 @@ data.generation=function(baselines_dec){
 
   samples = c(colnames(norm_data))
   metadata = metadata[metadata$id %in% samples,] # 71 samples
-  metadata = metadata[,-1]
+  #metadata = metadata[,-1]
   # 26 x 49
   rownames(metadata) = metadata$id
   
@@ -220,8 +222,8 @@ data.generation=function(baselines_dec){
 generate.heatmap(
   Bacteria = readRDS(file = "Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds"),
   Archaea = readRDS(file = "Output/merge_DAS/MSHD/Archaea_MsHd_merged.rds"),
-  Eukaryota = readRDS(file = "Output/merge_DAS/MSHD/Eukaryote_MsHd_merged.rds"),
-  ,filename = "category", output_folder)
+  Eukaryota = readRDS(file = "Output/merge_DAS/MSHD/Eukaryote_MsHd_merged.rds"),,
+  filename = "category", output_folder)
 #########GC_LESION############
 generate.heatmap(
   Bacteria = readRDS("Output/merge_DAS/GC/Bacteria_GC_merged.rds"),
