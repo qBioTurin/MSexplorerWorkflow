@@ -104,6 +104,7 @@ baselines_dec_05 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_dec
 das_lefseB_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Bacteria_MsHd_lefse.res")
 das_lefseA_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Archaea_MsHd_lefse.res")
 das_lefseE_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Eukaryote_MsHd_lefse.res")
+das_lefseB_05_MsHd <- read_tsv("Output/LEFSE/MSHD/final_name/Bacteria_MsHd_05_lefse.res")
 das_lefseB_GC<- read_tsv("Output/LEFSE/GC/final_name/Bacteria_GC_lefse.res")
 das_lefseA_GC<- read_tsv("Output/LEFSE/GC/final_name/Archaea_GC_lefse.res")
 das_lefseE_GC<- read_tsv("Output/LEFSE/GC/final_name/Eukaryote_GC_lefse.res")
@@ -111,6 +112,8 @@ das_lefseE_GC<- read_tsv("Output/LEFSE/GC/final_name/Eukaryote_GC_lefse.res")
 das_limmaB_MsHd<-read.csv("Output/LIMMA_score/MSHD/Bacteria_category_limma.csv")
 das_limmaA_MsHd<-read.csv("Output/LIMMA_score/MSHD/Archaea_category_limma.csv")
 das_limmaE_MsHd<-read.csv("Output/LIMMA_score/MSHD/Eukaryote_category_limma.csv")
+das_limmaB_05_MsHd<-read.csv("Output/LIMMA_score/MSHD/Bacteria_category_05_limma.csv")
+
 das_limmaB_GC<-read.csv("Output/LIMMA_score/GC/Bacteria_gc_treatment_limma.csv")
 das_limmaA_GC<-read.csv("Output/LIMMA_score/GC/Archaea_gc_treatment_limma.csv")
 das_limmaE_GC<-read.csv("Output/LIMMA_score/GC/Eukaryote_gc_treatment_limma.csv")
@@ -120,6 +123,7 @@ das_limmaE_GC<-read.csv("Output/LIMMA_score/GC/Eukaryote_gc_treatment_limma.csv"
 merge_das(baselines_dec_001, das_lefseB_MsHd, das_limmaB_MsHd, "msHd", "Bacteria_MsHd", output_folderMSHD)
 merge_das(baselines_decA, das_lefseA_MsHd, das_limmaA_MsHd, "msHd", "Archaea_MsHd", output_folderMSHD)
 merge_das(baselines_decE, das_lefseE_MsHd, das_limmaE_MsHd, "msHd", "Eukaryote_MsHd", output_folderMSHD)
+merge_das(baselines_dec_05, das_lefseB_05_MsHd, das_limmaB_05_MsHd, "msHd", "Bacteria_MsHd_05", output_folderMSHD)
 
 ##### Merge DAS for GC
 merge_das(baselines_dec_001, das_lefseB_GC, das_limmaB_GC, "GC", "Bacteria_GC", output_folderGC)

@@ -72,7 +72,7 @@ rownames(metadata) <- metadata$id
 ###for category #####
 ######################
 # select metadata to visualize in heatmap
-if(analisys=="category"){
+if(analisys == "category"){
   metadata_hm = metadata %>% 
     select(category) %>%
     mutate(category = as.factor(category))
@@ -274,6 +274,7 @@ execute_limma <- function() {
   das_limma(baselines_decA,"category","both",output_folderMSHD,"Archaea","")
   das_limma(baselines_decE,"category","both",output_folderMSHD,"Eukaryote","")
   das_limma(baselines_dec_001,"category","both",output_folderMSHD,"Bacteria","")
+  das_limma(baselines_dec_05,"category","both",output_folderMSHD,"Bacteria","05")
     
   das_limma(baselines_decA,"gc_treatment","both",output_folderGC,"Archaea","")
   das_limma(baselines_decE,"gc_treatment","both",output_folderGC,"Eukaryote","")

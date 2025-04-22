@@ -115,43 +115,87 @@ tabMod<-function(tab,Alpha,Method,Subset){
 }
 
 constructTab <- function(tab05, tab01, tab001, Alpha){
-  tab_05 <- tabMod(tab05, Alpha, "Alpha", "05")
-  tab_01 <- tabMod(tab01, Alpha, "Alpha", "01")
-  tab_001 <- tabMod(tab001, Alpha, "Alpha", "001")
+  tab_05 <- tabMod(tab05, Alpha, "Both", "05")
+  tab_01 <- tabMod(tab01, Alpha, "Both", "01")
+  tab_001 <- tabMod(tab001, Alpha, "Both", "001")
 
   merged_sh <- left_join(tab_05, tab_01, by = "id") %>%
     left_join(tab_001, by = "id")
 
   merged_sh <- t(merged_sh)
 
-  write.table(
-    merged_sh,
-    file = paste0(output_folder, "merged_", Alpha, "_alpha.tsv"),
-    sep = "\t",
-    row.names = FALSE,
-    col.names = FALSE,
-    quote = FALSE
-  )
+  return(merged_sh)
+}
+constructTab2<- function(tab05, tab001, Alpha){
+  tab_05 <- tabMod(tab05, Alpha, "Both", "05")
+  tab_001 <- tabMod(tab001, Alpha, "Both", "001")
+
+  merged_sh <- left_join(tab_05, tab_001, by = "id") 
+
+  merged_sh <- t(merged_sh)
+
+  return(merged_sh)
 }
 
 
-constructTab(tab_list_05$shannon,tab_list_01$shannon,tab_list_001$shannon,"Shannon")
-constructTab(tab_list_05$simpson,tab_list_01$simpson,tab_list_001$simpson,"Simpson")
-constructTab(tab_list_05$EH,tab_list_01$EH,tab_list_001$EH,"EH")
-merged_sh <- left_join(sh_05, sh_01, by = "id") %>%
-  left_join(sh_001, by = "id")
+Shannon=constructTab(tab_list_05$shannon,tab_list_01$shannon,tab_list_001$shannon,"Shannon")
+Shannon=t(Shannon)
+Simpson=constructTab(tab_list_05$simpson,tab_list_01$simpson,tab_list_001$simpson,"Simpson")
+Simpson=t(Simpson)
+EH=constructTab(tab_list_05$EH,tab_list_01$EH,tab_list_001$EH,"EH")
+EH=t(EH)
+merged_sh <- left_join(as.data.frame(Shannon), as.data.frame(Simpson), by = "id") %>%
+  left_join(as.data.frame(EH), by = "id")
 merged_sh<-t(merged_sh)
-write.table(merged_sh, file = paste0(output_folder, "merged_shannon_alpha.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE)
+write.table(merged_sh, file = paste0(output_folder, "merged_alpha.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
-sh_05=tab_list_05$shannon
-sh_05=tabMod(sh_05,"Shannon", "Alpha", "05")
-sh_01=tab_list_01$shannon
-sh_01=tabMod(sh_01,"Shannon", "Alpha", "01")
-sh_001=tab_list_001$shannon
-sh_001=tabMod(sh_001,"Shannon", "Alpha", "001")
+tab1<- readRDS("Output/merge_DAS/MSHD/Bacteria_MsHd_05_merged.rds")
+tab2<- readRDS("Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds")
 
-merged_sh <- left_join(sh_05, sh_01, by = "id") %>%
-  left_join(sh_001, by = "id")
+createTabone<- function(tab1,dataset,output_mod2,filtered_baselines_decB_table){
+
+  taxa_names1 <- rownames(tab1@tax_table)
+    
+    
+  filtered_baselines_decB_table <- baselines_decB_table
+  filtered_baselines_decB_table1<- filtered_baselines_decB_table[rownames(baselines_decB_table) %in% taxa_names1, ]
+
+
+  shannon_rows <- as.data.frame(matrix(0, nrow = 1, ncol = ncol(filtered_baselines_decB_table)))
+  colnames(shannon_rows) <- colnames(filtered_baselines_decB_table)
+  rownames(shannon_rows)<-c("HD")
+
+  simpson_rows <- as.data.frame(matrix(0, nrow = 1, ncol = ncol(filtered_baselines_decB_table)))
+  colnames(simpson_rows) <- colnames(filtered_baselines_decB_table)
+  rownames(simpson_rows)<-c("HD")
+
+  EH_rows <- as.data.frame(matrix(0, nrow = 1, ncol = ncol(filtered_baselines_decB_table)))
+  colnames(EH_rows) <- colnames(filtered_baselines_decB_table)
+  rownames(EH_rows)<-c("HD")
+
+
+    for(i in 1:ncol(EH_rows)){
+        shannon_rows[nrow(shannon_rows),i]<-shannon_index(filtered_baselines_decB_table1[,i])
+
+        simpson_rows[nrow(simpson_rows) ,i]<-simpson_index(filtered_baselines_decB_table1[,i])
+
+        EH_rows[nrow(EH_rows),i]<-EH_index(filtered_baselines_decB_table1[,i])
+
+    }
+  return(list(shannon=shannon_rows, simpson= simpson_rows, EH= EH_rows))
+}
+
+HD_05<-createTabone(tab1,"05",output_folder,filtered_baselines_decB_table)
+HD_001<-createTabone(tab2,"001",output_folder,filtered_baselines_decB_table)
+
+MSSh=constructTab2(HD_05$shannon,HD_001$shannon,"Shannon")
+MSSh=t(MSSh)
+MSSi=constructTab2(HD_05$simpson,HD_001$simpson,"Simpson")
+MSSi=t(MSSi)
+MSEh=constructTab2(HD_05$EH,HD_001$EH,"EH")
+MSEh=t(MSEh)
+merged_sh <- left_join(as.data.frame(MSSh), as.data.frame(MSSi), by = "id") %>%
+  left_join(as.data.frame(MSEh), by = "id")
 merged_sh<-t(merged_sh)
-write.table(merged_sh, file = paste0(output_folder, "merged_shannon_alpha.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE)
+write.table(merged_sh, file = paste0(output_folder, "merged_MSHD_alpha.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
 

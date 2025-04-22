@@ -1,3 +1,7 @@
+source("Settings/utilities.R")
+output_folder = "Output/Leaps/"
+createFolder(output_folder)
+
 B = readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
 E = readRDS("Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
 A = readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
@@ -61,6 +65,7 @@ print(paste("Shannon", " ", filename))
 print(res$Shannon$Intercept)
 print(paste("Simpson", " ", filename))
 print(res$Simpson$Intercept)
+
 sink()
 
 

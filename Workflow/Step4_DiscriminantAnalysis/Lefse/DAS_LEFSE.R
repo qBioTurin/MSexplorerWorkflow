@@ -111,6 +111,7 @@ metadataE <- read_delim("Output/AlphaMetadata/Eukaryote_alpha_metadata.csv", del
 generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, "category", "both", "Bacteria_MsHd", output_folderMSHD)
 generate.LEFSE1(Eukaryote_Supervised_decontam, metadataE, "category", "both", "Eukaryote_MsHd", output_folderMSHD)
 generate.LEFSE1(Archaea_Supervised_decontam, metadataA, "category", "both", "Archaea_MsHd", output_folderMSHD)
+generate.LEFSE1(Bacteria_Supervised_decontam05, metadataB, "category", "both", "Bacteria_MsHd_05", output_folderMSHD)
 
 generate.LEFSE1(Bacteria_Supervised_decontam001, metadataB, "gc_treatment", "both", "Bacteria_GC", output_folderGC)
 generate.LEFSE1(Eukaryote_Supervised_decontam, metadataE, "gc_treatment", "both", "Eukaryote_GC", output_folderGC)
