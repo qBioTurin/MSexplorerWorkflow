@@ -4,7 +4,6 @@ source("Settings/utilities.R")
 source("Settings/Packages.R")
 source("Settings/Colorpalette.R")
 
-
 # Step 0: Loading the data and metadata
 source("Workflow/Step0_DataImport/DataImport.R")
 
@@ -39,5 +38,4 @@ source("Workflow/Step5_Heatmaps/HeatmapNew.R")
 source("Workflow/Step6_DAS_Alpha/DAS_ALPHA.R")
 
 # Step 7: LEAPS
-source("Workflow/Step7_Leaps/FunctionLRM.R")
 source("Workflow/Step7_Leaps/LEAPS.R")

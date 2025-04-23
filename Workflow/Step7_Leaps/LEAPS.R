@@ -39,8 +39,7 @@ baselines_dec_metadata = baselines_dec_metadata %>%
                      naive, previous_therapy, antibiotic_use, sample_type,lesion_burden), 
                      .fns = as.factor),
     
-              across(.cols = c(age, bmi, EventTime
-              ), .fns = as.numeric),
+              across(.cols = c(age, bmi, EventTime), .fns = as.numeric),
               across(.cols = c(sample_collection_date), .fns = as.Date)
        )
 
@@ -52,7 +51,7 @@ outcome = c("Observed", "Shannon", "Simpson")
 
 # Run function
 ###############
-res = LRM_microbiome(metadata = baselines_dec_metadata %>% as.data.frame(), predictors = predictors,outcomes = outcome)
+res = LRM_microbiome(metadata = newbaselines_dec_metadata %>% as.data.frame(), predictors = predictors_ale,outcomes = outcome)
 
 # Save results
 ##############
