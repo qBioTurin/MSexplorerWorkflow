@@ -124,7 +124,7 @@ if(analisys=="lesion_burden"){
             filter(gc_treatment =="positive" | gc_treatment =="negative") %>%
             select(lesion_burden) %>%
             mutate(lesion_burden = as.factor(lesion_burden)) 
-        }
+       }
   
   norm_data = norm_data %>%
   select(rownames(metadata_hm))

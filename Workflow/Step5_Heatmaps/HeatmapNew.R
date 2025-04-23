@@ -249,8 +249,11 @@ for (i in seq_along(analysis)) {
     if (!file.exists(paste0("Output/merge_DAS/GC_comp/Bacteria_", analysis[i], "_", status[j], "_merged.rds")) ||
       !file.exists(paste0("Output/merge_DAS/GC_comp/Archaea_", analysis[i], "_", status[j], "_merged.rds")) ||
       !file.exists(paste0("Output/merge_DAS/GC_comp/Eukaryote_", analysis[i], "_", status[j], "_merged.rds"))) {
-      print(paste0("Missing files for ", analysis[i], " and ", status[j]))
-      next
+      generate.heatmap(
+      Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_",analysis[i],"_",status[j],"_merged.rds")) ,
+      Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_",analysis[i],"_",status[j],"_merged.rds")),
+      Eukaryota = NULL,,
+      filename = paste0(analysis[i],"_",status[j]), output_folder )
     }
     generate.heatmap(
       Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_",analysis[i],"_",status[j],"_merged.rds")) ,
@@ -259,3 +262,4 @@ for (i in seq_along(analysis)) {
       filename = paste0(analysis[i],"_",status[j]), output_folder )
   }
 }
+
