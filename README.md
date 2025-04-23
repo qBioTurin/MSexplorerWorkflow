@@ -307,4 +307,30 @@ The function filters the baseline data (filtered_baselines_decB_table) according
 
 ## [Step 7 Leaps](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step7_Leaps/FunzioneLRM.R)
 
-vedere se alla fine verra messo nel progetto
+In this step, the script *LEAPS.R* performs alpha diversity analysis and linear regression modeling on decontaminated microbiome datasets (Bacteria, Archaea, and Eukaryotes). The main steps include:
+
+  1. Data Loading & Merging: Reads in preprocessed .rds files and merges them into a unified phyloseq object.
+
+  2. Sample Filtering: Keeps only samples with IDs starting with "MS" (likely patient samples).
+
+  3. Alpha Diversity Calculation: Computes richness metrics (Observed, Shannon, Simpson, Chao1) using estimate_richness().
+
+  4. Metadata Processing: Merges sample metadata with calculated diversity indices and standardizes data types (e.g., factors, numerics, dates).
+
+  5. Regression Analysis: Uses the LRM_microbiome() function to perform exhaustive linear regression modeling for selected diversity outcomes based on a specified set of clinical and demographic predictors.
+
+Output: Saves model summaries (for models with intercepts) for each diversity metric to individual .txt files in the specified output folder.
+
+The function called *LRM_microbiome()* performs linear regression modeling on microbiome-related data. Given a metadata dataframe, a set of outcome variables, and predictor variables, it:
+
+  1 validates the presence of all specified variables,
+
+  2 handles factor variables by generating dummy encodings,
+
+  3 uses exhaustive subset selection (via regsubsets) to identify the best models with and without intercepts,
+
+  4 selects either the model with the lowest p-value (if none are significant) or the one with the highest adjusted R-squared (if at least one is significant),
+
+  5 computes model summaries and variance inflation factors (VIF) for multicollinearity assessment.
+
+It returns a structured list of regression results for each outcome variable.

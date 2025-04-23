@@ -872,7 +872,42 @@ index and dataset, facilitating further downstream analysis.</p>
 <div id="step-7-leaps" class="section level2">
 <h2><a href="https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step7_Leaps/FunzioneLRM.R">Step
 7 Leaps</a></h2>
-<p>vedere se alla fine verra messo nel progetto</p>
+<p>In this step, the script <em>LEAPS.R</em> performs alpha diversity
+analysis and linear regression modeling on decontaminated microbiome
+datasets (Bacteria, Archaea, and Eukaryotes). The main steps
+include:</p>
+<ol style="list-style-type: decimal">
+<li><p>Data Loading &amp; Merging: Reads in preprocessed .rds files and
+merges them into a unified phyloseq object.</p></li>
+<li><p>Sample Filtering: Keeps only samples with IDs starting with “MS”
+(likely patient samples).</p></li>
+<li><p>Alpha Diversity Calculation: Computes richness metrics (Observed,
+Shannon, Simpson, Chao1) using estimate_richness().</p></li>
+<li><p>Metadata Processing: Merges sample metadata with calculated
+diversity indices and standardizes data types (e.g., factors, numerics,
+dates).</p></li>
+<li><p>Regression Analysis: Uses the LRM_microbiome() function to
+perform exhaustive linear regression modeling for selected diversity
+outcomes based on a specified set of clinical and demographic
+predictors.</p></li>
+</ol>
+<p>Output: Saves model summaries (for models with intercepts) for each
+diversity metric to individual .txt files in the specified output
+folder.</p>
+<p>The function called <em>LRM_microbiome()</em> performs linear
+regression modeling on microbiome-related data. Given a metadata
+dataframe, a set of outcome variables, and predictor variables, it:</p>
+<p>1 validates the presence of all specified variables,</p>
+<p>2 handles factor variables by generating dummy encodings,</p>
+<p>3 uses exhaustive subset selection (via regsubsets) to identify the
+best models with and without intercepts,</p>
+<p>4 selects either the model with the lowest p-value (if none are
+significant) or the one with the highest adjusted R-squared (if at least
+one is significant),</p>
+<p>5 computes model summaries and variance inflation factors (VIF) for
+multicollinearity assessment.</p>
+<p>It returns a structured list of regression results for each outcome
+variable.</p>
 </div>
 </div>
 

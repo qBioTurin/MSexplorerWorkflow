@@ -51,7 +51,7 @@ outcome = c("Observed", "Shannon", "Simpson")
 
 # Run function
 ###############
-res = LRM_microbiome(metadata = newbaselines_dec_metadata %>% as.data.frame(), predictors = predictors_ale,outcomes = outcome)
+res = LRM_microbiome(metadata = baselines_dec_metadata %>% as.data.frame(), predictors = predictors,outcomes = outcome)
 
 # Save results
 ##############
