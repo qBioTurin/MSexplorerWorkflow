@@ -1,4 +1,25 @@
 source("Settings/utilities.R")
+
+check_or_pull_image <- function(image_name) {
+  # Check if image exists locally
+  result <- system(paste("docker image inspect", image_name), intern = TRUE, ignore.stderr = TRUE)
+  
+  if (length(result) == 0) {
+    message("Image not found locally. Pulling from Docker Hub...")
+    pull_status <- system(paste("docker pull", image_name))
+    
+    if (pull_status == 0) {
+      message("Image pulled successfully.")
+    } else {
+      stop("Failed to pull image from Docker Hub.")
+    }
+  } else {
+    message("Image exists locally.")
+  }
+}
+
+check_or_pull_image("qbioturin/lefse")
+
 createFolder("Output/LEFSE/")
 folder001="Output/LEFSE/001/"
 createFolder(folder001)
@@ -134,26 +155,26 @@ for (i in 1:length(analysis)) {
 
 system(paste0(
   "docker run -v",normalizePath(folder01),":/input_files/ -d --rm ",
-  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
+  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
   "docker run -v",normalizePath(folder001),":/input_files/ -d --rm ",
-  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
+  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
   "docker run -v",normalizePath(folder05),":/input_files/ -d --rm ",
-  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
+  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
   "docker run -v",normalizePath(folderMSHD),":/input_files/ -d --rm ",
-  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
+  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
   "docker run -v",normalizePath(folderGC),":/input_files/ -d --rm ",
-  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
+  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
   "docker run -v",normalizePath(folderGC_comp),":/input_files/ -d --rm ",
-  "franky2204/lefse bash Scripts/lefseEx.sh step0/"))
+  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 
