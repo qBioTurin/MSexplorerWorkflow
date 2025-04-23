@@ -217,6 +217,14 @@ data.generation=function(baselines_dec){
   return(list(norm_data_z,metadata_hm,metadata_kingdom))
 }
 
+######################
+##########ALL###########
+generate.heatmap(
+  Bacteria = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds"),
+  Archaea = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds"),
+  Eukaryota = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds"),,
+  filename = "ALL", output_folder)
+
 ########################
 ######### MSHD ############
 generate.heatmap(

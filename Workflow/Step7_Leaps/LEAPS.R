@@ -46,7 +46,7 @@ baselines_dec_metadata = baselines_dec_metadata %>%
 
 # Define predictors and outcomes
 ################################
-predictors = c("sex", "age", "bmi", "gc_treatment", "lesion_burden", #"spinal_cord_lesion",
+predictors = c("sex", "age", "bmi", "gc_treatment", "lesion_burden", "spinal_cord_lesion",
 "subtentorial_lesions","gadolinium_contrast")
 outcome = c("Observed", "Shannon", "Simpson")
 
