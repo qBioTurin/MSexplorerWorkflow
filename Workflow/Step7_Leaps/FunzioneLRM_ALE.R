@@ -18,7 +18,7 @@ LRM_microbiome = function(metadata, outcomes, predictors){
   
   # Start for cycle to compute 
   for(model_outcome in outcomes){
-  print(paste("##### BEGIN: ",model_outcome, " ######"))
+    #print(paste("##### BEGIN: ",model_outcome, " ######"))
   # remove NAs
   metadata_model = na.omit(metadata[, c(model_outcome, predictors)])
   
@@ -127,7 +127,7 @@ LRM_microbiome = function(metadata, outcomes, predictors){
   })  
   
   names(final_results[[model_outcome]]) = c("Intercept", "NoIntercept")
-  print(paste("##### END: ",model_outcome, " ######"))
+  #print(paste("##### END: ",model_outcome, " ######"))
   
   }  
   

@@ -6,6 +6,7 @@ Following decontamination, we performed alpha and beta diversity analyses, as we
 The results from both DAS tools were subsequently integrated to enhance robustness and biological interpretability. Notably, LEfSe can be executed through two methods: (i) via a pre-configured Docker container, which provides a streamlined and reproducible environment, or (ii) through manual installation involving Python, Conda, and LEfSe, including a required code modification and execution of the accompanying Bash script.
 
 Finally, we computed alpha diversity metrics and applied LEAPS (Learning with Embedded and Projected Subspaces) using these metrics as input, enabling feature selection and predictive modeling grounded in microbial diversity.
+
 ## Requirements
 
 The following tools are strictly necessary for the successful execution of the post-processing workflow.
@@ -113,7 +114,9 @@ In these four scripts, we focused on identifying and generating graphs that woul
 Our approach was to select graph types that could effectively capture the nuances of the data while maintaining clarity. In particular, we were interested in how glucocorticoid treatment might influence the observed patterns, both at the individual and group levels. This allowed us to assess the treatment’s impact on various biological and clinical factors in a manner that was both statistically rigorous and visually intuitive.
 
 Through the use of these graphs, we sought to make the results not only informative but also actionable, enabling further hypothesis testing or clinical applications. Ultimately, the goal was to ensure that the findings could be easily understood and communicated to a broad audience, whether researchers, clinicians, or stakeholders involved in the study.
+
 ### [Alpha diversity](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step3_Graphs/Alpha.R)
+
 This script takes as input the manually decontaminated RDS file and utilizes ggplot2 to create three distinct graphs. These graphs will be saved as RDS files and serve to visually demonstrate the differences in alpha diversity across various conditions. Specifically, the graphs will illustrate:
 
 - The comparison in alpha diversity between healthy individuals and those with multiple sclerosis (MS).
@@ -121,7 +124,9 @@ This script takes as input the manually decontaminated RDS file and utilizes ggp
 - The correlation between alpha diversity and the number of days since glucocorticoid treatment was administered.
 
 By using ggplot2, the script ensures that these plots are not only informative but also aesthetically clear, allowing for easy interpretation of the relationships between the biological variables and treatment conditions. The resulting RDS files can be used for further analysis or incorporated into reports to communicate the findings effectively.
+
 ### [Beta diversity](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step3_Graphs/Beta.R)
+
 Similar to the alpha diversity analysis, this script takes the manually decontaminated RDS file as input and uses ggplot2 to generate a beta diversity graph. The graph will be created based on two key factors:
 
 - The comparison between healthy individuals and those diagnosed with multiple sclerosis (MS).
@@ -129,6 +134,7 @@ Similar to the alpha diversity analysis, this script takes the manually decontam
 
 The resulting beta diversity plot will visually represent the dissimilarities between samples, providing insights into how these two conditions (health status and GC treatment) influence the microbiome structure. The use of ggplot2 ensures the graph is not only informative but also clear and easy to interpret for further analysis.
 The final outputs will be two RDS file.
+
 ### [StackBar](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step3_Graphs/Stack.R)
 
 Stackbars are designed to visually represent the top 10 most abundant species found within each domain, making it easier to compare species distributions across different datasets. To construct these stackbars in a clear and comprehensible manner, we created an array that includes each of the top 10 species, along with an additional category labeled 'Other.' This category accounts for the sum of all species that do not appear in the top 10, ensuring that no relevant data is omitted while maintaining visual clarity.
