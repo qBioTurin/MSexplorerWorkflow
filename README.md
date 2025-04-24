@@ -67,14 +67,6 @@ conda config --add channels conda-forge
 conda config --add channels bioconda
 conda install -c bioconda lefse -y
 ```
-lastly you need to change the 71th row of the run_lefse.py in wilcoxon_res[feat_name] = str(pv), the command i suggest to use is 
-```bash
-ed -s path/to/run_lefse.py <<EOF
-71s/.*/			wilcoxon_res[feat_name] = str(pv)
-w
-q
-EOF
-```
 You are now done! The following lines are an example of how to use LEfSe:
 ```bash
 conda activate lefse_env #only if you havent already
