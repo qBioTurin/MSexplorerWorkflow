@@ -87,9 +87,9 @@ merge_das <- function(baselines_dec, das_lefse, das_limma, type, name, output_fo
         droplevels()
         baselines_dec = prune_samples(samples$id, baselines_dec)
     }
-    final_output <- paste(output_folder, name, "_merged.rds", sep = "")
+    final_name <- paste(output_folder, name, "_merged.rds", sep = "")
     print(baselines_dec)
-    baselines_dec <- saveRDS(baselines_dec, paste(final_output))
+    baselines_dec <- saveRDS(baselines_dec, paste(final_name))
   }
   
 }
@@ -101,13 +101,13 @@ baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_deco
 baselines_dec_01 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
 baselines_dec_05 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
 
-das_lefseB_MsHd<- read_tsv("Output/LEFSE/MSHD/final_output/Bacteria_MsHd_lefse.res")
-das_lefseA_MsHd<- read_tsv("Output/LEFSE/MSHD/final_output/Archaea_MsHd_lefse.res")
-das_lefseE_MsHd<- read_tsv("Output/LEFSE/MSHD/final_output/Eukaryote_MsHd_lefse.res")
-das_lefseB_05_MsHd <- read_tsv("Output/LEFSE/MSHD/final_output/Bacteria_MsHd_05_lefse.res")
-das_lefseB_GC<- read_tsv("Output/LEFSE/GC/final_output/Bacteria_GC_lefse.res")
-das_lefseA_GC<- read_tsv("Output/LEFSE/GC/final_output/Archaea_GC_lefse.res")
-das_lefseE_GC<- read_tsv("Output/LEFSE/GC/final_output/Eukaryote_GC_lefse.res")
+das_lefseB_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Bacteria_MsHd_lefse.res")
+das_lefseA_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Archaea_MsHd_lefse.res")
+das_lefseE_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Eukaryote_MsHd_lefse.res")
+das_lefseB_05_MsHd <- read_tsv("Output/LEFSE/MSHD/final_name/Bacteria_MsHd_05_lefse.res")
+das_lefseB_GC<- read_tsv("Output/LEFSE/GC/final_name/Bacteria_GC_lefse.res")
+das_lefseA_GC<- read_tsv("Output/LEFSE/GC/final_name/Archaea_GC_lefse.res")
+das_lefseE_GC<- read_tsv("Output/LEFSE/GC/final_name/Eukaryote_GC_lefse.res")
 
 das_limmaB_MsHd<-read.csv("Output/LIMMA_score/MSHD/Bacteria_category_limma.csv")
 das_limmaA_MsHd<-read.csv("Output/LIMMA_score/MSHD/Archaea_category_limma.csv")
@@ -137,8 +137,8 @@ status = c("positive", "negative")
 
 for (i in seq_along(analysis)) {
   for (j in seq_along(dimension)) {
-    lefse <- read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output/Bacteria_",analysis[i],"_", dimension[j],"_lefse.res")))
-    gc_lefse <-read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output/Bacteria_","gc_treatment_", dimension[j],"_lefse.res")))
+    lefse <- read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_name/Bacteria_",analysis[i],"_", dimension[j],"_lefse.res")))
+    gc_lefse <-read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_name/Bacteria_","gc_treatment_", dimension[j],"_lefse.res")))
     lefse_fin<-remove_common_lefse(lefse,gc_lefse)
 
     limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/",dimension[j],"/Bacteria_",analysis[i],"_",dimension[j],"_limma.csv")))
@@ -151,19 +151,19 @@ for (i in seq_along(analysis)) {
 for (i in seq_along(domain)) {
   for (j in seq_along(analysis)){
     for(k in seq_along(status)){
-      lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output/", domain[i], "_",analysis[j], "_", status[k], "_lefse.res"))
-      gc_lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output/", domain[i], "_gc_treatment_", status[k], "_lefse.res"))
+      lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_name/", domain[i], "_",analysis[j], "_", status[k], "_lefse.res"))
+      gc_lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_name/", domain[i], "_gc_treatment_", status[k], "_lefse.res"))
       lefse_fin <- remove_common_lefse(lefse, gc_lefse)
 
       limma <- read.csv(paste0("Output/LIMMA_score/GC_comp/", domain[i], "_",analysis[j], "_", status[k], "_limma.csv"))
       gc_limma <- read.csv(paste0("Output/LIMMA_score/GC_comp/", domain[i], "_gc_treatment_", status[k], "_limma.csv"))
       limma_fin <- remove_common_limma(limma, gc_limma)
       if(domain[i] == "Bacteria") {
-        merge_das(baselines_dec_001, lefse_fin, limma_fin, domain[i], paste0("Bacteria_", analysis[j], "_", status[k]), output_folderGC_comp)
+        merge_das(baselines_dec_001, lefse_fin, limma_fin, status[k], paste0("Bacteria_", analysis[j], "_", status[k]), output_folderGC_comp)
       } else if (domain[i] == "Archaea") {
-        merge_das(baselines_decA, lefse_fin, limma_fin, domain[i], paste0("Archaea_", analysis[j], "_", status[k]),output_folderGC_comp)
+        merge_das(baselines_decA, lefse_fin, limma_fin, status[k], paste0("Archaea_", analysis[j], "_", status[k]),output_folderGC_comp)
       } else if (domain[i] == "Eukaryote") {
-        merge_das(baselines_decE, lefse_fin, limma_fin, domain[i], paste0("Eukaryote_", analysis[j], "_", status[k]), output_folderGC_comp)
+        merge_das(baselines_decE, lefse_fin, limma_fin,status[k] , paste0("Eukaryote_", analysis[j], "_", status[k]), output_folderGC_comp)
       }
     }
   }

@@ -23,7 +23,7 @@ baselines_metadata <- baselines_metadata %>%
                      naive, previous_therapy, antibiotic_use, sample_type,lesion_burden), 
            .fns = as.factor),
     
-    across(.cols = c(age, bmi, EventTime
+    across(.cols = c(age, bmi ,EventTime
           ), .fns = as.numeric),
     
     across(.cols = c(sample_collection_date), .fns = as.Date)

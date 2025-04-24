@@ -33,14 +33,6 @@ ENV PATH="/opt/conda/envs/lefse_env/bin:/opt/conda/envs/py3_env/bin:$PATH"
 # Copy scripts inside the container
 COPY Scripts/ ./Scripts/
   
-  #modify the run_lefse.py script to see non significant features
-  RUN ed -s /opt/conda/envs/lefse_env/bin/run_lefse.py <<EOF
-71s/.*/			wilcoxon_res[feat_name] = str(pv)
-w
-q
-EOF
-
-
 # Set the default shell to bash
 SHELL ["/bin/bash", "-c"]
 

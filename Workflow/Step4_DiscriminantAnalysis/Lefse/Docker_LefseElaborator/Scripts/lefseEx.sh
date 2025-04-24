@@ -38,4 +38,4 @@ else
     echo "Error: $input is nor a file nor a directory."
     exit 1
 fi
-rm -r "$folderHalf", "$folder1", "$folder4" 
+rm -r "$folderHalf", "$folder1", "$folder3"
