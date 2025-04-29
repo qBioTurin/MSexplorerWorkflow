@@ -133,7 +133,7 @@ Stackbars are designed to visually represent the top 10 most abundant species fo
 
 To enhance readability and consistency, we standardized the color scheme by assigning the same shade of grey to the 'Other' category across all stackbars. This allows viewers to quickly differentiate between the most abundant species and the aggregated remaining species. Additionally, our array structure enables us to assign a distinct, predetermined color to each species. By ensuring that each species is consistently represented by a unique color, we improve both the interpretability and overall comprehensibility of the visualization. This approach makes it easier to compare results across different domains, identify patterns, and extract meaningful insights from the data.
 
-### [Patchwork fuse graph](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step3_Graphs/Patchwork_ggplot.R)
+### [Patchwork fuse graph](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step3_Graphs/Patchwork.R)
 
 This step creates a visually harmonious and easy-to-read composition by integrating the previously generated graphs into a unified structure. It achieves this result by merging identical labels and efficiently managing space to arrange all elements into a structured table of parallel components.
 
@@ -161,7 +161,7 @@ This structured approach enhances clarity, allowing for a more intuitive compari
 
 
 
-## [Step 4 Discriminant Analysis](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/)
+## [Step 4 Discriminant Analysis](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step4_DiscriminantAnalysis)
 
 LEfSe is the acronime od Linear discrciminant ananlysis effect size and its used to determines the features most likely to explain difference between classes. The way it was implemented is:
 
@@ -286,7 +286,7 @@ The script then searches for the abundance values of all these species in the su
 The final output consists of 10 RDS files, each containing the full list of species for a given category, along with their corresponding abundance values.
 This process ensures that all species are considered, providing a complete view of the species distribution across various conditions, regardless of whether they appear in both the LEfSe and Limma results.
 
-## [Step 5 Heatmaps](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step5_Heatmaps/HeatmapNew.R)
+## [Step 5 Heatmaps](https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Workflow/Step5_Heatmaps/Heatmap.R)
 This script processes the DAS generated during the merge DAS step and creates a series of heatmaps designed to identify significant clusters. These clusters play a crucial role in refining the search for key species across different comparative analyses. By visually highlighting areas of interest, the heatmaps help researchers better interpret patterns and distributions within the dataset.
 
 To run this script, the DAS files produced in Step 5 are required as input. The output consists of a series of PDF document that presents important elements, such as gadolinium and subtentorial regions, each represented with a distinct color. The color scale is carefully structured to enhance interpretability: white indicates zero presence, while progressively more saturated hues correspond to increasing concentrations. This visual representation allows for a more intuitive understanding of the data, making it easier to detect significant variations and trends.
