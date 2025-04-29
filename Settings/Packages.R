@@ -7,7 +7,8 @@ cran_packages <- c(
   "dplyr", "ggplot2", "tidyr", "tibble", "patchwork", "gridExtra", 
   "ggsignif", "ggbreak", "MetBrewer", "ggalt", "cluster", "NbClust",
   "ggfortify", "factoextra", "UpSetR", "leaps", "readr", "grid", 
-  "ggpubr", "rstatix", "pheatmap", "nloptr", "lme4", "pbkrtest", "car","FDRestimation"
+  "ggpubr", "rstatix", "pheatmap", "nloptr", "lme4", "pbkrtest", "car",
+  "FDRestimation", "ggVennDiagram"
 )
 
 # Bioconductor Packages
@@ -92,3 +93,5 @@ library(ggalt)
 library(gridExtra)
 library(limma)
 library(FDRestimation)
+library(VennDiagram)
+library(ggVennDiagram)
