@@ -33,18 +33,7 @@ Ensure your user has the rights to run docker (without the use of ```sudo```). T
 
 ### [R](https://www.r-project.org/)
 
-To use this pipeline, you need a BIOM file created from the output of the Bracken program* and a TSV file containing the corresponding metadata.
-
-To properly use the programs included in your R environment, you must ensure that all the libraries listed in the Packages.R file are installed([Packaes](Settings/Packages.R/https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/) will automatically download all the necessary one); it will check if all dependencies are present and, if not, install them automatically (NOTE: automatic installation is not yet implemented, so you need to install them manually). This process is fairly time- and resource-intensive, so make sure you have a stable internet connection. If you are working on a laptop, ensure the charger is connected.
-
-Once you have all the necessary files, you can begin with the DataImport step. In this step, you must set the path to the BIOM file and the metadata file. Be careful to assign the correct type to each variable. Lastly, if needed, remove excess text in the Bracken file column names—for example, in our case, we removed "_bracken_species" to ensure the names match those in the metadata file.
-
-Next, you can remove a list of samples that are not relevant to your research. This step is necessary for our study but is completely optional. Finally, an RDS file is created for each Kingdom, which will be required in subsequent steps.
-
-*The BIOM file must result from the merging of multiple Bracken files, and the column names must correspond to the names of the individual Bracken files.
-To use this pipeline, you need a BIOM file generated from the output of the Bracken program* and a TSV file containing the corresponding metadata.
-
-Before running any scripts, make sure that all required R libraries listed in the [Packaes](Settings/Packages.R/https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/)  file are installed. This script now automatically checks for and installs all necessary dependencies in your R environment. The installation process may take some time and requires an active internet connection. If you're using a laptop, make sure it is plugged in to avoid interruptions.
+Before running any scripts, make sure that all required R libraries listed in the [Packaes](Settings/Packages.R/https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/Settings/Packages.R)  file are installed. This script automatically checks for and installs all necessary dependencies in your R environment. The installation process may take some time and requires an active internet connection. If you're using a laptop, make sure it is plugged in to avoid interruptions.
 
 Once you have all the necessary files, begin with the DataImport step. Here, you must set the correct paths to the BIOM and metadata files. Ensure that each metadata column is assigned the correct data type. You may also need to clean the BIOM file column names—for example, by removing suffixes like "_bracken_species"—to ensure they match the sample names in the metadata file.
 
