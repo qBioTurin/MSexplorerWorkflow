@@ -153,27 +153,23 @@ for (i in 1:length(analysis)) {
 }
 
 
-system(paste0(
-  "docker run -v ",normalizePath(folder01),":/input_files/ --rm ",
-  "qbioturin//lefse:latest bash Scripts/lefseEx.sh step0/"))
+folders <- list(folder01, folder001, folder05, folderMSHD, folderGC, folderGC_comp)
+docker_name <- "franky2204/lefse:latest"
+container_ids <- c()
 
-system(paste0(
-  "docker run -v ",normalizePath(folder001),":/input_files/ --rm ",
-  "qbioturin//lefse:latest bash Scripts/lefseEx.sh step0/"))
+# Avvia i container in background e salva gli ID
+for (folder in folders) {
+  cmd <- paste0(
+    "docker run -v ", normalizePath(folder), ":/input_files/ -d ",
+    docker_name, " bash Scripts/lefseEx.sh step0/")
+  container_id <- system(cmd, intern = TRUE)
+  container_ids <- c(container_ids, container_id)
+}
 
-system(paste0(
-  "docker run -v ",normalizePath(folder05),":/input_files/ --rm ",
-  "qbioturin//lefse:latest bash Scripts/lefseEx.sh step0/"))
+# Aspetta la fine di tutti i container e poi li rimuove
+for (id in container_ids) {
+  system(paste("docker wait", id))
+  system(paste("docker rm", id))
+}
 
-system(paste0(
-  "docker run -v ",normalizePath(folderMSHD),":/input_files/ --rm ",
-  "qbioturin//lefse:latest bash Scripts/lefseEx.sh step0/"))
-
-system(paste0(
-  "docker run -v ",normalizePath(folderGC),":/input_files/ --rm ",
-  "qbioturin//lefse:latest bash Scripts/lefseEx.sh step0/"))
-
-system(paste0(
-  "docker run -v ",normalizePath(folderGC_comp),":/input_files/ --rm ",
-  "qbioturin//lefse:latest bash Scripts/lefseEx.sh step0/"))
-
+print("All containers have finished processing.")
