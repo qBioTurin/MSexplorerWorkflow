@@ -118,6 +118,7 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FAL
     heatmap_arch = heatmap.kingdom(data_arch,col_order = colOrder_bact, myColors3, 35,
                                    phylumPalette = viridisLite::cividis,
                                    USEann_colors = F, filterRows = filterRows)
+    if (!is.null(data_bact[[1]]))  heatmap_arch$gtable$widths = heatmap_bact$gtable$widths 
     heatmap_list$Archaea = heatmap_arch
   }
   if (!is.null(data_euk[[1]])) {
@@ -125,10 +126,11 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FAL
                                   col_order = colOrder_bact, myColors2, 35,
                                   phylumPalette = viridisLite::magma,
                                   USEann_colors = F, filterRows = filterRows)
+    if (!is.null(data_bact[[1]])) heatmap_euk$gtable$widths <- heatmap_bact$gtable$widths 
+    else if(!is.null(data_euk[[1]])) heatmap_euk$gtable$widths <- heatmap_arch$gtable$widths
     heatmap_list$Eukaryota = heatmap_euk
   }
-  
-  # heatmap_bact$gtable$widths <-heatmap_euk$gtable$widths <-heatmap_arch$gtable$widths 
+
   # row_counts <- c(nrow(data_bact[[1]]), nrow(data_arch[[1]]), nrow(data_euk[[1]]))
   # total_rows <- sum(row_counts)
   # relative_heights <- row_counts / total_rows + c(0.05,0,0.05)
