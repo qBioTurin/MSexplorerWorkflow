@@ -269,11 +269,12 @@ generate.heatmap(
 
 
 #########spinal_cord_lesion############
-#generate.heatmap(
-        #Bacteria = NULL,
-        #Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_spinal_cord_lesion_positive_merged.rds")),
-        #Eukaryota =NULL,,
-        #filename = paste0("spinal_cord_lesion_positive"), output_folder )
+generate.heatmap(
+        Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_positive_merged.rds")) ,
+        Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_spinal_cord_lesion_positive_merged.rds")),
+        Eukaryota =NULL,,
+        filename = paste0("spinal_cord_lesion_positive"), output_folder )########lol
+print(readRDS("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_positive_merged.rds"))
 
 generate.heatmap(
         Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_negative_merged.rds")) ,
