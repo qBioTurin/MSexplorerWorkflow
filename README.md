@@ -3,7 +3,7 @@ We developed and employed a comprehensive post-processing workflow designed to a
 
 Following decontamination, we performed alpha and beta diversity analyses, as well as stacked bar plots, to facilitate a global visualization of microbial community structure and composition. To identify differentially abundant species (DAS), we utilized two complementary statistical approaches: limma, which employs a linear modeling framework after voom transformation of count data, and LEfSe (Linear discriminant analysis Effect Size), which identifies features characterizing statistical differences between groups.
 
-The results from both DAS tools were subsequently integrated to enhance robustness and biological interpretability. Notably, LEfSe can be executed through two methods: (i) via a pre-configured Docker container, which provides a streamlined and reproducible environment, or (ii) through manual installation involving Python, Conda, and LEfSe, including a required code modification and execution of the accompanying Bash script.
+The results from both DAS tools were subsequently integrated to enhance robustness and biological interpretability. Notably, LEfSe can be executed through two methods: (i) via a pre-configured Docker container, which provides a streamlined and reproducible environment, or (ii) through manual installation involving Python, Conda, and LEfSe and execution of the accompanying Bash script.
 
 Finally, we computed alpha diversity metrics and applied LEAPS (Learning with Embedded and Projected Subspaces) using these metrics as input, enabling feature selection and predictive modeling grounded in microbial diversity.
 
@@ -35,14 +35,22 @@ Ensure your user has the rights to run docker (without the use of ```sudo```). T
 
 To use this pipeline, you need a BIOM file created from the output of the Bracken program* and a TSV file containing the corresponding metadata.
 
-To properly use the programs included in your R environment, you must ensure that all the libraries listed in the Packages.R file are installed. To achieve this, simply run the file; it will check if all dependencies are present and, if not, install them automatically (NOTE: automatic installation is not yet implemented, so you need to install them manually). This process is fairly time- and resource-intensive, so make sure you have a stable internet connection. If you are working on a laptop, ensure the charger is connected.
+To properly use the programs included in your R environment, you must ensure that all the libraries listed in the Packages.R file are installed([Packaes](Settings/Packages.R/https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/) will automatically download all the necessary one); it will check if all dependencies are present and, if not, install them automatically (NOTE: automatic installation is not yet implemented, so you need to install them manually). This process is fairly time- and resource-intensive, so make sure you have a stable internet connection. If you are working on a laptop, ensure the charger is connected.
 
 Once you have all the necessary files, you can begin with the DataImport step. In this step, you must set the path to the BIOM file and the metadata file. Be careful to assign the correct type to each variable. Lastly, if needed, remove excess text in the Bracken file column names—for example, in our case, we removed "_bracken_species" to ensure the names match those in the metadata file.
 
 Next, you can remove a list of samples that are not relevant to your research. This step is necessary for our study but is completely optional. Finally, an RDS file is created for each Kingdom, which will be required in subsequent steps.
 
 *The BIOM file must result from the merging of multiple Bracken files, and the column names must correspond to the names of the individual Bracken files.
+To use this pipeline, you need a BIOM file generated from the output of the Bracken program* and a TSV file containing the corresponding metadata.
 
+Before running any scripts, make sure that all required R libraries listed in the [Packaes](Settings/Packages.R/https://github.com/qBioTurin/MSexplorerWorkflow/blob/main/)  file are installed. This script now automatically checks for and installs all necessary dependencies in your R environment. The installation process may take some time and requires an active internet connection. If you're using a laptop, make sure it is plugged in to avoid interruptions.
+
+Once you have all the necessary files, begin with the DataImport step. Here, you must set the correct paths to the BIOM and metadata files. Ensure that each metadata column is assigned the correct data type. You may also need to clean the BIOM file column names—for example, by removing suffixes like "_bracken_species"—to ensure they match the sample names in the metadata file.
+
+You can optionally remove samples that are not relevant to your analysis. While this step was necessary for our study, it is not required for general use. After this step, an .RDS file will be created for each taxonomic kingdom, which will be used in subsequent analyses.
+
+* The BIOM file should be the result of merging multiple Bracken output files. The column names in the BIOM file must match the original filenames used during merging.
 
 ### [Lefse(optional)](https://huttenhower.sph.harvard.edu/lefse/)
 
