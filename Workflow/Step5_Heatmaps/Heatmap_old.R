@@ -2,8 +2,7 @@ source("Settings/utilities.R")
 output_folder = "Image/Heatmap/"
 createFolder(output_folder)
 #### Functions ############
-generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FALSE,output_folder)
-{
+generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = F, output_folder){
   data_bact=data.generation(Bacteria)
   data_arch=data.generation(Archaea)
   data_euk=data.generation(Eukaryota)
@@ -13,7 +12,7 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FAL
   metadata_hm=rbind(rbind(data_bact[[2]],data_arch[[2]]),data_euk[[2]])
   metadata_kingdom=rbind(rbind(data_bact[[3]],data_arch[[3]]),data_euk[[3]])
  
-  ann_colors = list(
+  annotation_colors = list(
     Sex= setNames(c("blue", "pink"),
                   levels(as.factor(metadata_hm$Sex))),
     Status= setNames(c("#bad7f2","#ef6f6c"),
@@ -32,9 +31,8 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FAL
   paletteLength = 35
   
   ### Kingdom separated ###### 
-  heatmap.kingdom = function(data,color,paletteLength, col_order = NULL,
+  heatmap.kingdom = function(data,color,paletteLength, col_order = NULL, ann_colors,
                              phylumPalette =  viridisLite::inferno, USEann_colors = T,filterRows ){
-    row_number=(nrow(data[[1]])>1)
     norm_data_z = data[[1]]
     metadata_hm= data[[2]]
     metadata_kingdom= data[[3]]
@@ -42,6 +40,10 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FAL
     norm_data_z[is.na(norm_data_z) | is.nan(norm_data_z)] = 0
     
     if(filterRows){
+      #norm_data_z = norm_data_z[rownames(norm_data_z) %in% c("Thomasclavelia ramosa","Escherichia coli",
+       #                                                      "Parabacteroides merdae","Phocaeicola vulgatus",
+        #                                                     "Olsenella uli","Bacteroides thetaiotaomicron","Parafannyhessea umbonata","Faecalibacillus intestinalis","Collinsella stercoris","Coprococcus catus","Bacteroides xylanisolvens","Bacteroides sp. A1C1","Bacteroides caecimuris","Claveliimonas bilis","Lachnoclostridium phocaeense","Ruminococcus champanellensis","Thomasclavelia [Clostridium] innocuum","Parolsenella massiliensis","Thermophilibacter immobilis","Eggerthella lenta","Halorubrum hochsteinianum","Halosimplex rubrum","Haloarcula sp. CBA1115","Pyrococcus sp. ST04","Halovivax limisalsi","Methanoculleus receptaculi","Natrinema caseinilyticum","Halorhabdus sp. CBA1104","Natronobeatus ordinarius","Methanobrevibacter olleyae","Methanococcoides orientis","Halomicroarcula sp. XH51","Halobacterium litoreum","Methanoplanus endosymbiosus","Methanofervidicoccus sp. A16","Methanosarcina acetivorans","Halomicroarcula sp. ZS-22-S1","Methanococcus maripaludis","Methanosarcina sp. MTP4","Sulfolobus sp. S-194","Sulfolobus acidocaldarius","Cryptococcus gattii","Ustilaginoidea virens","Saccharomyces cerevisiae","Cercospora beticola","Thermothielavioides terrestris",
+         #                                                    "Kazachstania africana","Plasmodium cynomolgi","Trichoderma breve"),]
       norm_data_z = norm_data_z[, grep(x = colnames(norm_data_z),pattern = "MS")]
      }
     
@@ -78,21 +80,19 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FAL
     phil_name =  paste0("Phylum ", unique(metadata_kingdom$Kingdom))
     names(ann_colors)[names(ann_colors) == "Phylum"]  = phil_name
     metadata_kingdom = metadata_kingdom %>% select(Phylum)
-    colnames(metadata_kingdom) = phil_name
+    colnames(metadata_kingdom) ="Phylum"# phil_name
     
     heatmap<-pheatmap::pheatmap(norm_data_z, 
                                 annotation_col = metadata_hm, 
                                 annotation_colors = ann_colors,
-                                annotation_row = metadata_kingdom, 
+                                annotation_row = metadata_kingdom, #select(Domain=Kingdom,Phylum),
                                 cluster_cols = ifelse(is.null(col_order), T, F ), 
-                                cluster_rows = row_number,
+                                cluster_rows = T,
                                 col=color,
                                 border_color = NA,
                                 breaks  = myBreaks,
                                 silent = T
     )
-    
-    
     return(heatmap)
   }
   
@@ -100,62 +100,44 @@ generate.heatmap = function(Bacteria,Archaea,Eukaryota,filename,filterRows = FAL
   myColors2 = colorRampPalette(RColorBrewer::brewer.pal(9, "PuOr"))(paletteLength+1)
   myColors3 = colorRampPalette(RColorBrewer::brewer.pal(9, "BrBG"))(paletteLength+1)
   
-  heatmap_bact = heatmap.kingdom(data_bact,myColors1, 35,
+  heatmap_bact = heatmap.kingdom(data_bact,myColors1, 35, ann_colors = annotation_colors,
                                  phylumPalette = viridisLite::mako, filterRows = filterRows)
   
-
-  heatmap_list = list()
-  colOrder_bact = NULL
+  ggplotify::as.ggplot(heatmap_bact) -> heatmap_bact_ggplot
+  colOrder_bact = heatmap_bact_ggplot$plot_env$plot$tree_col$labels[heatmap_bact_ggplot$plot_env$plot$tree_col$order]
   
-  if (!is.null(data_bact[[1]])) {
-    heatmap_bact = heatmap.kingdom(data_bact, myColors1, 35, phylumPalette = viridisLite::mako, filterRows = filterRows)
-    heatmap_list$Bacteria = heatmap_bact
-    ggplotify::as.ggplot(heatmap_bact) -> heatmap_bact_ggplot
-    colOrder_bact = heatmap_bact_ggplot$plot_env$plot$tree_col$labels[heatmap_bact_ggplot$plot_env$plot$tree_col$order]
-  }
+  heatmap_euk = heatmap.kingdom(data_euk,col_order = colOrder_bact, ann_colors = annotation_colors,
+                                myColors2, 35,
+                                phylumPalette = viridisLite::magma,
+                                USEann_colors = F, filterRows = filterRows)
+  heatmap_arch = heatmap.kingdom(data_arch,col_order = colOrder_bact, myColors3, 35,
+                                 ann_colors = annotation_colors,
+                                 phylumPalette = viridisLite::cividis,
+                                 USEann_colors = F, filterRows = filterRows)
   
-  if (!is.null(data_arch[[1]])) {
-    heatmap_arch = heatmap.kingdom(data_arch,col_order = colOrder_bact, myColors3, 35,
-                                   phylumPalette = viridisLite::cividis,
-                                   USEann_colors = F, filterRows = filterRows)
-    heatmap_list$Archaea = heatmap_arch
-  }
-  if (!is.null(data_euk[[1]])) {
-    heatmap_euk = heatmap.kingdom(data_euk,
-                                  col_order = colOrder_bact, myColors2, 35,
-                                  phylumPalette = viridisLite::magma,
-                                  USEann_colors = F, filterRows = filterRows)
-    heatmap_list$Eukaryota = heatmap_euk
-  }
+  heatmap_bact$gtable$widths <-heatmap_euk$gtable$widths <-heatmap_arch$gtable$widths 
   
-  # heatmap_bact$gtable$widths <-heatmap_euk$gtable$widths <-heatmap_arch$gtable$widths 
-  # row_counts <- c(nrow(data_bact[[1]]), nrow(data_arch[[1]]), nrow(data_euk[[1]]))
-  # total_rows <- sum(row_counts)
-  # relative_heights <- row_counts / total_rows + c(0.05,0,0.05)
-  # 
-  # tbac = textGrob("Bacteria", rot = 90, gp = gpar(fontsize=14))
-  # teuk = textGrob("Eukaryota", rot = 90, gp = gpar(fontsize=14))
-  # tarc = textGrob("Archaea", rot = 90, gp = gpar(fontsize=14))
+  row_counts <- c(nrow(data_bact[[1]]), nrow(data_arch[[1]]), nrow(data_euk[[1]]))
+  total_rows <- sum(row_counts)
+  relative_heights <- row_counts / total_rows + c(0.05,0,0.05)
   
-  row_counts = sapply(heatmap_list, function(hm) if (!is.null(hm)) nrow(hm$gtable) else 0)
-  total_rows = sum(row_counts)
-  relative_heights = row_counts / total_rows #+ c(0.05, 0, 0.05)
+  tbac = textGrob("Bacteria", rot = 90, gp = gpar(fontsize=14))
+  teuk = textGrob("Eukaryota", rot = 90, gp = gpar(fontsize=14))
+  tarc = textGrob("Archaea", rot = 90, gp = gpar(fontsize=14))
   
-  labels = names(heatmap_list)
-  text_grobs = lapply(labels, function(lbl) textGrob(lbl, rot = 90, gp = gpar(fontsize = 14)))
+  g = grid.arrange(grobs = list(tbac,heatmap_bact$gtable,
+                                tarc,heatmap_arch$gtable,
+                                teuk,heatmap_euk$gtable),
+                   ncol = 2,
+                   heights =relative_heights, #c(.21, .29, 0.1),
+                   widths = c(0.05,1.5) )
   
-  g = grid.arrange(grobs = c(rbind(text_grobs, lapply(heatmap_list, function(hm) hm$gtable))),
-                   ncol = 2, heights = relative_heights, widths = c(0.05, 1.5))
-  
-  ggsave(plot = g, filename = gsub(" ", "", paste0(output_folder, filename, ".pdf")),
-         height = 22, width = 18, limitsize = FALSE)
+  ggsave(plot = g, filename = paste0(output_folder,filename,".pdf"),
+         height = 22,width = 18,limitsize = FALSE)
   
   return(NULL)
 }
 data.generation=function(baselines_dec){
-  if(is.null(baselines_dec))
-    return(list(NULL,NULL,NULL))
-    
   taxatables = as.data.frame(tax_table(baselines_dec))
   taxatables = rownames_to_column(taxatables, var = "otu_id")
   
@@ -169,19 +151,24 @@ data.generation=function(baselines_dec){
   ## from combined tables, keep only columns otu_id, Genus+species + otu table)
   norm_data = combined_df %>%
     mutate(Genus_species = paste(Genus, Species, sep = " "))
-
+  #kingdom<-unique(norm_data$Kingdom)
+  #Phylum<-unique(norm_data$Phylum)
+  #Genus<-unique(norm_data$Genus)
   metadata_kingdom = norm_data%>%
     select(Kingdom,Phylum,Genus,Genus_species)
   rownames(metadata_kingdom) = metadata_kingdom$Genus_species
   metadata_kingdom = metadata_kingdom%>%select(-Genus_species)
   norm_data = norm_data[, -c(2:8)]
-
+  # 30 taxa x 26 samples (+2 cols)
+  # 10 taxa x 26 samples (+2 cols)
   
   rownames(norm_data) = norm_data$Genus_species
   norm_data = norm_data[,-c(1,length(norm_data))]
   colnames(norm_data)
 
-   metadata = read.csv("InputData/metadataMS.csv", 
+
+  ## seleziona nei metadati solo i campioni corretti (che ci sono anche in matrice)
+  metadata = read.csv("InputData/metadataMS.csv", 
                       header = TRUE, 
                       sep = ",",
                       na = c("", " ", "NA"), 
@@ -199,9 +186,11 @@ data.generation=function(baselines_dec){
           ), .fns = as.numeric),
     across(.cols = c(sample_collection_date), .fns = as.Date)
   )
-  
+
   samples = c(colnames(norm_data))
-  metadata = metadata[metadata$id %in% samples,] 
+  metadata = metadata[metadata$id %in% samples,] # 71 samples
+  #metadata = metadata[,-1]
+  # 26 x 49
   rownames(metadata) = metadata$id
   
   # select metadata to visualize in heatmap
@@ -269,9 +258,8 @@ generate.heatmap(
 generate.heatmap(
         Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_positive_merged.rds")) ,
         Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_spinal_cord_lesion_positive_merged.rds")),
-        Eukaryota =NULL,,
+        Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_spinal_cord_lesion_positive_merged.rds")),,
         filename = paste0("spinal_cord_lesion_positive"), output_folder )########lol
-
 
 generate.heatmap(
         Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_negative_merged.rds")) ,
@@ -302,3 +290,4 @@ generate.heatmap(
         Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_gadolinium_contrast_negative_merged.rds")),
         Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_gadolinium_contrast_negative_merged.rds")),,
         filename = paste0("gadolinium_contrast_negative"), output_folder )
+
