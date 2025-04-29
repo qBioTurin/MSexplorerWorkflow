@@ -101,13 +101,13 @@ baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_deco
 baselines_dec_01 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
 baselines_dec_05 = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
 
-das_lefseB_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Bacteria_MsHd_lefse.res")
-das_lefseA_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Archaea_MsHd_lefse.res")
-das_lefseE_MsHd<- read_tsv("Output/LEFSE/MSHD/final_name/Eukaryote_MsHd_lefse.res")
-das_lefseB_05_MsHd <- read_tsv("Output/LEFSE/MSHD/final_name/Bacteria_MsHd_05_lefse.res")
-das_lefseB_GC<- read_tsv("Output/LEFSE/GC/final_name/Bacteria_GC_lefse.res")
-das_lefseA_GC<- read_tsv("Output/LEFSE/GC/final_name/Archaea_GC_lefse.res")
-das_lefseE_GC<- read_tsv("Output/LEFSE/GC/final_name/Eukaryote_GC_lefse.res")
+das_lefseB_MsHd<- read_tsv("Output/LEFSE/MSHD/final_output_lefse/Bacteria_MsHd_lefse.res")
+das_lefseA_MsHd<- read_tsv("Output/LEFSE/MSHD/final_output_lefse/Archaea_MsHd_lefse.res")
+das_lefseE_MsHd<- read_tsv("Output/LEFSE/MSHD/final_output_lefse/Eukaryote_MsHd_lefse.res")
+das_lefseB_05_MsHd <- read_tsv("Output/LEFSE/MSHD/final_output_lefse/Bacteria_MsHd_05_lefse.res")
+das_lefseB_GC<- read_tsv("Output/LEFSE/GC/final_output_lefse/Bacteria_GC_lefse.res")
+das_lefseA_GC<- read_tsv("Output/LEFSE/GC/final_output_lefse/Archaea_GC_lefse.res")
+das_lefseE_GC<- read_tsv("Output/LEFSE/GC/final_output_lefse/Eukaryote_GC_lefse.res")
 
 das_limmaB_MsHd<-read.csv("Output/LIMMA_score/MSHD/Bacteria_category_limma.csv")
 das_limmaA_MsHd<-read.csv("Output/LIMMA_score/MSHD/Archaea_category_limma.csv")
@@ -137,8 +137,8 @@ status = c("positive", "negative")
 
 for (i in seq_along(analysis)) {
   for (j in seq_along(dimension)) {
-    lefse <- read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_name/Bacteria_",analysis[i],"_", dimension[j],"_lefse.res")))
-    gc_lefse <-read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_name/Bacteria_","gc_treatment_", dimension[j],"_lefse.res")))
+    lefse <- read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output_lefse/Bacteria_",analysis[i],"_", dimension[j],"_lefse.res")))
+    gc_lefse <-read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output_lefse/Bacteria_","gc_treatment_", dimension[j],"_lefse.res")))
     lefse_fin<-remove_common_lefse(lefse,gc_lefse)
 
     limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/",dimension[j],"/Bacteria_",analysis[i],"_",dimension[j],"_limma.csv")))
@@ -151,8 +151,8 @@ for (i in seq_along(analysis)) {
 for (i in seq_along(domain)) {
   for (j in seq_along(analysis)){
     for(k in seq_along(status)){
-      lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_name/", domain[i], "_",analysis[j], "_", status[k], "_lefse.res"))
-      gc_lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_name/", domain[i], "_gc_treatment_", status[k], "_lefse.res"))
+      lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output_lefse/", domain[i], "_",analysis[j], "_", status[k], "_lefse.res"))
+      gc_lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output_lefse/", domain[i], "_gc_treatment_", status[k], "_lefse.res"))
       lefse_fin <- remove_common_lefse(lefse, gc_lefse)
 
       limma <- read.csv(paste0("Output/LIMMA_score/GC_comp/", domain[i], "_",analysis[j], "_", status[k], "_limma.csv"))

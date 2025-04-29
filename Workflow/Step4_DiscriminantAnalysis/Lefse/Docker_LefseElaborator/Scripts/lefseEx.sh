@@ -15,11 +15,11 @@ process_file() {
 
 input="$1"
 path="/input_files/$input"
-folderHalf="/input_files/half"
-folder1="/input_files/step1"
-folder2="/input_files/step2"
-folder3="/input_files/final_output"
-folder4="/input_files/final_name"
+folderHalf="/dict"
+folder1="step1_lefse"
+folder2="input_files/unprocesssed_lefse"
+folder3="lefse_raw_names"
+folder4="/input_files/final_output_lefse"
 
 mkdir -p "$folderHalf" "$folder1" "$folder2" "$folder3" "$folder4"
 
@@ -38,4 +38,3 @@ else
     echo "Error: $input is nor a file nor a directory."
     exit 1
 fi
-rm -r "$folderHalf", "$folder1", "$folder3"

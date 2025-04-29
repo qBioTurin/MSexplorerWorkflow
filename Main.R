@@ -15,7 +15,7 @@ source("Workflow/Step2_Decontamination/Supervised_decontam.R")
 
 # Step 3: create graphs of Alpha, Beta diversity and Stackbars
 #Alpha
-source("Workflow/Step3_Graphs/Alpha.R") 
+source("Workflow/Step3_Graphs/Alpha.R")
 #Beta
 source("Workflow/Step3_Graphs/Beta.R")
 #Stackbars
@@ -32,7 +32,7 @@ source("Workflow/Step4_DiscriminantAnalysis/Lefse/DAS_LEFSE.R")
 source("Workflow/Step4_DiscriminantAnalysis/Merge_DAS/Merge_DAS.R")
 
 # Step 5: create of heatmaps
-source("Workflow/Step5_Heatmaps/HeatmapNew.R")
+source("Workflow/Step5_Heatmaps/HeatmapNew.R")#todo
 source("Workflow/Step5_Heatmaps/heatmap_Venn_patchmod.R")
 
 # Step 6 calculate Alpha diversity DAS

@@ -40,26 +40,21 @@ baselines_dec = input
                       sep = ",",
                       na = c("", " ", "NA"), 
                       check.names = TRUE)
-  metadata = metadata %>%
-    mutate(
-      across(id, .fns= as.character),
-      across(.cols = c(category, naive, 
-                       sex, smoking_habit, physical_activity, edss,
-                       antibiotic_use, spike_in, sample_type, therapy, sequencing_batch, 
-                       gc_treatment, age_terciles, pyr_median, simplified_batch,
-                       bmi_classes, disease_actvity, edss_t0, edss_t12, edss_t24, 
-                       gc_treatment, lesion_burden, spinal_cord_lesion, subtentorial_lesions, 
-                       gadolinium_contrast, clinical_presentation, full_recovery, 
-                       new_lesions_t12, relapse_t12, new_lesions_t24, relapse_t24, 
-                       medas_percent, therapy_change, prognosis_at_onset, center),
-             .fns = as.factor),
-      across(.cols = c(age, bmi, pyr_mds, dna_quantification, days_gc_collection, medas_percent, 
-                       percent_th17, treg_il10_pos, treg_cd39_pos), 
-             .fns = as.numeric),
-      across(c(sample_collection_date, onset_date, diagnosis_date, glc_date_before_t0), 
-             as.POSIXct, format = "%Y-%m-%d %H:%M:%S"))
-  samples = c(colnames(norm_data))
-  metadata = metadata[metadata$id %in% samples,] # 71 samples
+  baselines_metadata <- baselines_metadata %>%
+  mutate(
+    across(.cols = c(id), .fns = as.character),
+    
+    across(.cols = c(sex, category, clinical_presentation, gc_treatment,
+                     subtentorial_lesions, spinal_cord_lesion, gadolinium_contrast,
+                     sequencing_batch,WORSENING, EDSS_DIAGNOSI, EDSS_PROGRESSIONE, Event,
+                     naive, previous_therapy, antibiotic_use, sample_type,lesion_burden), 
+           .fns = as.factor),
+    
+    across(.cols = c(age, bmi ,EventTime
+          ), .fns = as.numeric),
+    
+    across(.cols = c(sample_collection_date), .fns = as.Date)
+  ) # 71 samples
 
   # 26 x 49
   rownames(metadata) = metadata$id

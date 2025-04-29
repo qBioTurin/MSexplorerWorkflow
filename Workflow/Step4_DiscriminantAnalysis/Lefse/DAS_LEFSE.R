@@ -97,7 +97,7 @@ generate.LEFSE1 <- function(Domain, metadata, column, status, fileName,output_fo
   if (column == "category" ) {
     new_joined_df <- joined_df 
   }
-  else if(column == "gc_treatment" | status == "both") {
+  else if(column == "gc_treatment" || status == "both") {
     new_joined_df <- joined_df %>%
       filter(gc_treatment == "positive" | gc_treatment == "negative")
   } 
@@ -154,25 +154,26 @@ for (i in 1:length(analysis)) {
 
 
 system(paste0(
-  "docker run -v",normalizePath(folder01),":/input_files/ -d --rm ",
-  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
+  "docker run -v ",normalizePath(folder01),":/input_files/ --rm ",
+  "franky2204/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folder001),":/input_files/ -d --rm ",
-  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
+  "docker run -v ",normalizePath(folder001),":/input_files/ --rm ",
+  "franky2204/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folder05),":/input_files/ -d --rm ",
-  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
+  "docker run -v ",normalizePath(folder05),":/input_files/ --rm ",
+  "franky2204/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folderMSHD),":/input_files/ -d --rm ",
-  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
+  "docker run -v ",normalizePath(folderMSHD),":/input_files/ --rm ",
+  "franky2204/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folderGC),":/input_files/ -d --rm ",
-  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
+  "docker run -v ",normalizePath(folderGC),":/input_files/ --rm ",
+  "franky2204/lefse:latest bash Scripts/lefseEx.sh step0/"))
 
 system(paste0(
-  "docker run -v",normalizePath(folderGC_comp),":/input_files/ -d --rm ",
-  "qbioturin/lefse:latest bash Scripts/lefseEx.sh step0/"))
+  "docker run -v ",normalizePath(folderGC_comp),":/input_files/ --rm ",
+  "franky2204/lefse:latest bash Scripts/lefseEx.sh step0/"))
+

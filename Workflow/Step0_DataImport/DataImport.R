@@ -1,6 +1,7 @@
 source("Settings/utilities.R")
 output_folder = "Output/RDS/"
 createFolder(output_folder)
+set.seed(9345678)
 # Import Data
 #############
 # Import Biom
@@ -77,7 +78,7 @@ ALL_baselines = merge_phyloseq(ALL_baselines, baselines_sampledata)
 
 
 # Quick overview of phyloseq object
-microbiome::summarize_phyloseq(ALL_baselines)
+#microbiome::summarize_phyloseq(ALL_baselines)
 
 # Save phyloseq with ALL kingdoms
 saveRDS(ALL_baselines, file = gsub(" ","",paste(output_folder,"ALL_baseline_phylo.rds"))) 

@@ -15,11 +15,13 @@ Alpha <- function(baselines_dec,Domain,output_folder) {
     baselines_dec_metadata = data.frame(baselines_dec@sam_data)
     baselines_dec_metadata = merge(baselines_dec_richness, baselines_dec_metadata, all.y=TRUE, by = "id")
 
-    baselines_dec_metadata1=baselines_dec_metadata%>%
-    tidyr::gather(Observed,Simpson,Shannon,key="index", value="value" )
+
 
     write.csv(baselines_dec_metadata, file = gsub(" ","",paste(meta_alpha,Domain,"_alpha_metadata.csv")), row.names = FALSE)
-######healty vs ms
+   
+    baselines_dec_metadata1=baselines_dec_metadata%>%
+    tidyr::gather(Observed,Simpson,Shannon,key="index", value="value" )
+    ######healty vs ms
 
     custom_labels <- c("negative" = "Untreated", "positive" = "Treated")
 
