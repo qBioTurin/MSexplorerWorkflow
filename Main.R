@@ -1,5 +1,5 @@
 
-# Loading all the necessary 
+# Loading all the necessary
 source("Settings/utilities.R")
 source("Settings/Packages.R")
 source("Settings/Colorpalette.R")
