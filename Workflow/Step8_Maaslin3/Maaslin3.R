@@ -4,11 +4,14 @@ library(maaslin3)
 
 
 
-Maaslin3 <- function(rds,output_folder,formulaInUse){
+Maaslin3 <- function(rds,output_folder,formulaInUse,categorySel, elements) {
 # Create data for maaslin3
 otu <- rds@otu_table
 taxa <- rds@tax_table
-
+metadata_df <- as(rds@sam_data, "data.frame")
+ids_to_retain <- rownames(metadata_df[metadata_df[[categorySel]] %in% elements, ])
+otu <- otu[, colnames(otu) %in% ids_to_retain]
+metadata_df <- metadata_df[rownames(metadata_df) %in% ids_to_retain, ]
 taxa <- as.data.frame(taxa)
 taxa$Genus_Species <- paste(taxa$Genus, taxa$Species, sep = "_")
 Tnew <- taxa %>% select(Genus_Species)
@@ -23,7 +26,7 @@ merged_df <- merged_df %>% select(-c(taxid, Genus_Species))
 merged_df <- t(merged_df)
 
 # Create metadata for masslin3
-metadata_df <- as(rds@sam_data, "data.frame")
+
 class(metadata_df)
 metadata_df <- metadata_df %>%
     select(category, gc_treatment, lesion_burden, spinal_cord_lesion, gadolinium_contrast, subtentorial_lesions)
@@ -59,4 +62,17 @@ fit_out <- maaslin3(input_data = merged_df,
 }
 
 rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-Maaslin3(rds_001, "Output/MAASLIN3/Bacteria_Supervised_decontam0.001","lesion_burden + spinal_cord_lesion + gadolinium_contrast + subtentorial_lesions + gc_treatment")
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_gctreatment_onlyMS",
+ formulaInUse = "gc_treatment", categorySel = "category", elements = c("MS"))
+
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_lesion_burden_onlygc",
+ formulaInUse = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_spinal_cord_lesion_onlygc",
+ formulaInUse = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_gadolinium_contrast_onlygc",
+ formulaInUse = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_subtentorial_lesions_onlygc",
+ formulaInUse = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"))
