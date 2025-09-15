@@ -137,13 +137,13 @@ status = c("positive", "negative")
 
 for (i in seq_along(analysis)) {
   for (j in seq_along(dimension)) {
-    lefse <- read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output_lefse/Bacteria_",analysis[i],"_", dimension[j],"_lefse.res")))
-    gc_lefse <-read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output_lefse/Bacteria_","gc_treatment_", dimension[j],"_lefse.res")))
-    lefse_fin<-remove_common_lefse(lefse,gc_lefse)
+    lefse_fin <- read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output_lefse/Bacteria_",analysis[i],"_", dimension[j],"_lefse.res")))
+    #gc_lefse <-read_tsv(gsub(" ","",paste0("Output/LEFSE/",dimension[j],"/final_output_lefse/Bacteria_","gc_treatment_", dimension[j],"_lefse.res")))
+    #lefse_fin<-remove_common_lefse(lefse,gc_lefse)
 
-    limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/",dimension[j],"/Bacteria_",analysis[i],"_",dimension[j],"_limma.csv")))
-    gc_limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/",dimension[j],"/Bacteria_gc_treatment_",dimension[j],"_limma.csv")))
-    limma_fin<-remove_common_limma(limma,gc_limma)
+    limma_fin <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/",dimension[j],"/Bacteria_",analysis[i],"_",dimension[j],"_limma.csv")))
+    #gc_limma <- read.csv(gsub(" ","",paste0("Output/LIMMA_score/",dimension[j],"/Bacteria_gc_treatment_",dimension[j],"_limma.csv")))
+    #limma_fin<-remove_common_limma(limma,gc_limma)
 
     merge_das(baselines_dec_001, lefse_fin, limma_fin, "GC", paste0("Bacteria_", analysis[i], "_", dimension[j]),paste0(output_folder,dimension[j],"/"))
   }
@@ -151,13 +151,13 @@ for (i in seq_along(analysis)) {
 for (i in seq_along(domain)) {
   for (j in seq_along(analysis)){
     for(k in seq_along(status)){
-      lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output_lefse/", domain[i], "_",analysis[j], "_", status[k], "_lefse.res"))
-      gc_lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output_lefse/", domain[i], "_gc_treatment_", status[k], "_lefse.res"))
-      lefse_fin <- remove_common_lefse(lefse, gc_lefse)
+      lefse_fin <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output_lefse/", domain[i], "_",analysis[j], "_", status[k], "_lefse.res"))
+      #gc_lefse <- read_tsv(paste0("Output/LEFSE/GC_comp/final_output_lefse/", domain[i], "_gc_treatment_", status[k], "_lefse.res"))
+      #lefse_fin <- remove_common_lefse(lefse, gc_lefse)
 
-      limma <- read.csv(paste0("Output/LIMMA_score/GC_comp/", domain[i], "_",analysis[j], "_", status[k], "_limma.csv"))
-      gc_limma <- read.csv(paste0("Output/LIMMA_score/GC_comp/", domain[i], "_gc_treatment_", status[k], "_limma.csv"))
-      limma_fin <- remove_common_limma(limma, gc_limma)
+      limma_fin <- read.csv(paste0("Output/LIMMA_score/GC_comp/", domain[i], "_",analysis[j], "_", status[k], "_limma.csv"))
+      #gc_limma <- read.csv(paste0("Output/LIMMA_score/GC_comp/", domain[i], "_gc_treatment_", status[k], "_limma.csv"))
+      #limma_fin <- remove_common_limma(limma, gc_limma)
       if(domain[i] == "Bacteria") {
         merge_das(baselines_dec_001, lefse_fin, limma_fin, status[k], paste0("Bacteria_", analysis[j], "_", status[k]), output_folderGC_comp)
       } else if (domain[i] == "Archaea") {

@@ -69,7 +69,7 @@ stackbar <- function(baseline_dec, SP_levels,Domain, output_folder) {
     scale_y_continuous(name = "Relative Abundance", 
                      labels = scales::percent) +
     theme_bw()+
-    theme(legend.position="bottom",axis.text.x = element_text(angle = 0, size = 8),
+    theme(legend.position="bottom",axis.text.x = element_text(angle = 45, size = 8),
         axis.text.y = element_text (color = "black",size=12),
         strip.text = element_text(face = "bold",size=20),
         strip.background = element_blank()) +

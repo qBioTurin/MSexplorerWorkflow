@@ -26,12 +26,12 @@ myfunction = function(input, filterhm) {
   norm_data = norm_data[, -c(1, length(norm_data))]
   colnames(norm_data)
   
-  metadata = read.csv("InputData/metadataMS.csv", 
+  metadata = read.csv("InputData/NewMetadataMS_fin.csv", 
             header = TRUE, 
             sep = ",",
             na = c("", " ", "NA"), 
             check.names = TRUE)
-  baselines_metadata <- baselines_metadata %>%
+  baselines_metadata <- metadata %>%
   mutate(
     across(.cols = c(id), .fns = as.character),
     

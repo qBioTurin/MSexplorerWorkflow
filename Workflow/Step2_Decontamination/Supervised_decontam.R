@@ -143,3 +143,8 @@ execute_sup_decontam <- function() {
 }
 
 execute_sup_decontam()
+r1ds = readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
+otu = data.frame(otu_table(r1ds))
+tax = data.frame(tax_table(r1ds))
+metadata <- as.data.frame(as.matrix(sample_data(r1ds)))
+

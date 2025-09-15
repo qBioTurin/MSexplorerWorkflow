@@ -5,7 +5,7 @@ source("Settings/Packages.R")
 source("Settings/Colorpalette.R")
 
 # Step 0: Loading the data and metadata
-source("Workflow/Step0_DataImport/DataImport.R")
+#source("Workflow/Step0_DataImport/DataImport.R")
 
 # Step 1: use Deseq to do unsupervised decontamination
 source("Workflow/Step1_Normalization/DeSeq.R")
@@ -30,7 +30,8 @@ source("Workflow/Step4_DiscriminantAnalysis/Limma/DAS_LIMMA.R")
 source("Workflow/Step4_DiscriminantAnalysis/Lefse/DAS_LEFSE.R")
 #fuse DAS
 source("Workflow/Step4_DiscriminantAnalysis/Merge_DAS/Merge_DAS.R")
-
+install.packages("circlize")
+library(circlize)
 # Step 5: create of heatmaps
 source("Workflow/Step5_Heatmaps/Heatmap.R")#todo
 source("Workflow/Step5_Heatmaps/heatmap_Venn_patchmod.R")

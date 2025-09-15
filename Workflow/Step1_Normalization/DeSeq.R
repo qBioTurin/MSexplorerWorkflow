@@ -3,13 +3,14 @@ output_folder = "Output/DESEQ_RDS/"
 createFolder(output_folder)
 # Input data
 ############
-ALL_baselines = readRDS("Output/RDS/ALL_baseline_phylo.rds")
+ALL_baselines = readRDS("Output/RDS/merged_phylo_renamed.rds")
 
 # Convert otu table to dataframe
 #prova_df = as.data.frame(prova@otu_table)
 ALL_baselines_df = as.data.frame(ALL_baselines@otu_table)
 
 coldata_filt = as.data.frame(ALL_baselines@sam_data)
+coldata_filt$sequencing_batch <- as.factor(coldata_filt$sequencing_batch)
 coldata_filt$sequencing_batch
 # Convert into a DESeq Dataset
 ALL_baselines_df <- DESeqDataSetFromMatrix(countData = round(ALL_baselines_df), 
@@ -47,4 +48,5 @@ saveRDS(archaea_baselines_ds, file = gsub(" ","",paste(output_folder,"Archaea_De
 # Subset Eukaryotes
 euk_baselines_ds = subset_taxa(ALL_baselines_ds, Kingdom == "Eukaryota")
 saveRDS(euk_baselines_ds, file = gsub(" ","",paste(output_folder,"Eukaryote_DeSeq.rds")))
+
 

@@ -7,7 +7,7 @@ stackbar.updating = function(pl){
   p1 = pl  +
     theme_bw()+
     theme(legend.position="bottom",
-          axis.text.x = element_text(angle = 0, size = 6, face = "bold"),
+          axis.text.x = element_text(angle = 90, size = 6, face = "bold"),
           axis.text.y = element_text(size=12, face = "bold"),
           strip.text = element_text(face = "bold",size=20),
           legend.key.size = unit(0.3, "cm"),
@@ -49,7 +49,7 @@ p3 = readRDS(file = "./Output/NEW_PLOT_RDS/Bacteria_beta_cat.rds") +
   theme(axis.text.x = element_text(size=24,face = "bold"))+
   scale_color_manual(values = unname(paletteStatus), breaks = c("HD","MS"),labels = c("HEALTHY","MS") )
 
-p4 = readRDS(file = "./Output/NEW_PLOT_RDS/Archaea_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10)) 
+p4 = readRDS(file = "./Output/NEW_PLOT_RDS/Archaea_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10),axis.text.x = element_text(angle = 45, hjust = 1))
 
 p4 = stackbar.updating(p4)
 
@@ -61,7 +61,7 @@ p5 = readRDS(file = "./Output/NEW_PLOT_RDS/Archaea_alpha_category.rds") +
 
 p6 = readRDS(file = "./Output/NEW_PLOT_RDS/Archaea_beta_cat.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))+
   scale_color_manual(values = unname(paletteStatus), breaks = c("HD","MS"),labels = c("HEALTHY","MS") )
-p7 = readRDS(file = "./Output/NEW_PLOT_RDS/Eukaryote_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10)) 
+p7 = readRDS(file = "./Output/NEW_PLOT_RDS/Eukaryote_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10),axis.text.x = element_text(angle = 45, hjust = 1)) 
 
 p7 = stackbar.updating(p7)
 
