@@ -109,7 +109,9 @@ p8 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryote_alpha_gc_treatment.rds") + th
                                                                          axis.ticks.x = element_blank())
 p9 = readRDS(file = "Output/NEW_PLOT_RDS/Eukaryote_beta_gc.rds") + theme(axis.text.x = element_text(size=24, face = "bold"))
 
-patchwork = (p2 + p5 + p8 + p3 + p6 + p9) + plot_layout(ncol = 3, widths = c(1, 1, 1), heights = c(1, 1))
+patchwork = (p2 / p3)| (p5 / p6) | (p8 / p9)
+
+patchwork = (p2 | p5 + p8 + p3 + p6 + p9) + plot_layout(ncol = 3, widths = c(1, 1, 1), heights = c(1, 1))
 
 patchwork & plot_annotation(tag_levels = 'A') &
   theme(plot.tag = element_text(size = 42, face = "bold"),
