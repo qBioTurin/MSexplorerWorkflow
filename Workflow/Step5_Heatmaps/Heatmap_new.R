@@ -292,6 +292,10 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
             annotation_row = metadata_kingdom,
             cluster_cols = FALSE,
             cluster_rows = TRUE,
+            fontsize = 14,          # testo generale
+            fontsize.legend = 18,
+            fontsize_row = 18,
+            fontsize_col = 12,
             col = myColors1,
             border_color = NA,
             breaks = myBreaks,
@@ -324,6 +328,10 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
             annotation_row = metadata_kingdom,
             cluster_cols = FALSE,
             cluster_rows = TRUE,
+            fontsize = 14,          # testo generale
+            fontsize.legend = 18,
+            fontsize_row = 18,
+            fontsize_col = 12,
             col = myColors3,
             border_color = NA,
             breaks = myBreaks,
@@ -358,6 +366,10 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
             cluster_cols = FALSE,
             cluster_rows = TRUE,
             col = myColors2,
+            fontsize = 14,          # testo generale
+            fontsize.legend = 18,
+            fontsize_row = 18,
+            fontsize_col = 12,
             border_color = NA,
             breaks = myBreaks,
             silent = T
@@ -390,7 +402,7 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
     ggsave(
         plot = g,
         filename = gsub(" ", "", paste0(output_folder, filename, ".pdf")),
-        height = 15+((bactrow + archrow + eukrow)/5), width = 20, limitsize = FALSE
+        height = 15+((bactrow + archrow + eukrow)/5), width = 25, limitsize = FALSE
     )
 }
 # --- Fine codice scompattato ---
@@ -481,3 +493,4 @@ create_heatmap(
          Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_gadolinium_contrast_negative_merged.rds")),
          filename = paste0("gadolinium_contrast_negative"), output_folder = output_folder, order = "gadolinium_contrast", topBar = "gadolinium_contrast", status = "negative"
  )
+
