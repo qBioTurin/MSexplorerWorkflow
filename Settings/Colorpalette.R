@@ -31,22 +31,44 @@ colors_EDA2 = c("#B6D1C9", "#5D6771")
 paletteStatus = c("HEALTHY" = "#bad7f2","MS"="#ef6f6c")
 
 paletteSpecies = c(
-    "#bad7f2", "#baf2d8", "#465362", "#b4436c", "#FDBF6F", "#edead0", 
-    "#8ea4d2", "#4d9078", "#414073", "#fface4", "#ef6f6c", "#1F78B4", 
-    "#c0df85", "#b1111f", "#ab87ff", "#f78154", "#c9b1bd", "#ef2d56", 
-    "#7e1a2f", "#553555", "#b6acc6", "#e4a3a7", "#ac6fe1", "#2e20ad", 
-    "#420fc9", "#fae5ef", "#18af2b", "#9f66e9", "#489541", "#bfd8c5",
+    "#bad7f2", "#baf2d8", "#465362", "#b4436c", "#FDBF6F",
+    "#edead0","#8ea4d2", "#4d9078", "#414073", "#fface4", 
+    "#ef6f6c", "#1F78B4", "#c0df85", "#b1111f", "#ab87ff",
+    "#f78154", "#c9b1bd", "#ef2d56", "#7e1a2f", "#553555",
+    "#b6acc6", "#e4a3a7", "#ac6fe1", "#2e20ad", "#420fc9",
+    "#fae5ef", "#18af2b", "#9f66e9", "#489541", "#bfd8c5",
     "#9b9a9a"
 )
-names(paletteSpecies)=c("Bifidobacterium adolescentis  ","Collinsella aerofaciens  ","Segatella copri  ","Phocaeicola dorei  ","Bifidobacterium longum  ","Faecalibacterium prausnitzii  ","Agathobacter rectalis  " ,"Bacteroides uniformis  ","Phocaeicola vulgatus  ", "Blautia wexlerae  ",
-                   "Methanomicrobium antiquum  ", "Methanosarcina barkeri  ", 
-                   "Methanococcus maripaludis  ", "Methanobrevibacter smithii  ", 
-                   "Methanosphaera sp. BMS  ", "Methanimicrococcus sp. Hf6  ", "Methanobrevibacter sp. TLL-48-HuF1  ", 
-                   "Methanolobus uncultured Methanolobus sp.  ", "Methanoregula uncultured Methanoregula sp.  ", 
-                   "Haloferax volcanii  ","Candida albicans  ","Saccharomyces cerevisiae  ","Aspergillus fumigatus  ",
-                   "Torulaspora globosa  ","Malassezia japonica  ","Saccharomyces mikatae  ","Aspergillus nidulans  ",
-                   "Penicillium oxalicum  ","Schizosaccharomyces pombe  ","Aspergillus puulaauensis  ",
-                   "Other" )
+names(paletteSpecies)=c("Bifidobacterium adolescentis  ", "Collinsella aerofaciens  ", 
+"Segatella copri  ", "Phocaeicola dorei  ", "Faecalibacterium prausnitzii  ", 
+"Agathobacter rectalis  ", "Bacteroides stercoris  ", "Bacteroides uniformis  ", 
+"Phocaeicola vulgatus  ", "Blautia wexlerae  ","Methanococcus maripaludis  ", "Methanobrevibacter smithii  ", 
+"Methanosphaera sp. BMS  ", "Methanimicrococcus sp. Hf6  ", "Methanobrevibacter sp. TLL-48-HuF1  ", 
+"Methanosphaera stadtmanae  ", "Methanolobus uncultured Methanolobus sp.  ", 
+"Methanoregula uncultured Methanoregula sp.  ", "Halomicrobium urmianum  ", 
+"Haloferax volcanii  ", "Candida albicans  ", "Saccharomyces cerevisiae  ", "Aspergillus chevalieri  ", 
+"Aspergillus fumigatus  ", "Malassezia japonica  ", "Saccharomyces mikatae  ", 
+"Aspergillus nidulans  ", "Penicillium oxalicum  ", "Schizosaccharomyces pombe  ", 
+"Aspergillus puulaauensis  ","Other" )
+
+
+paletteBact=c("Bifidobacterium adolescentis  "="#8ea4d2", "Collinsella aerofaciens  "= "#baf2d8", 
+"Segatella copri  "= "#465362", "Phocaeicola dorei  "= "#ef6f6c", "Faecalibacterium prausnitzii  "= "#FDBF6F", 
+"Agathobacter rectalis  "= "#edead0", "Bacteroides stercoris  "= "#8ea4d2", "Bacteroides uniformis  "= "#4d9078", 
+"Phocaeicola vulgatus  "= "#414073", "Blautia wexlerae  "= "#fface4", "Other"="grey"
+)
+paletteArchaea=c("Methanococcus maripaludis  "= "#ef6f6c", "Methanobrevibacter smithii  "= "#1F78B4", 
+"Methanosphaera sp. BMS  "= "#c0df85", "Methanimicrococcus sp. Hf6  "= "#b1111f", "Methanobrevibacter sp. TLL-48-HuF1  "= "#ab87ff", 
+"Methanosphaera stadtmanae  "="#f78154" , "Methanolobus uncultured Methanolobus sp.  "= "#c9b1bd", 
+"Methanoregula uncultured Methanoregula sp.  "="#ef2d56" , "Halomicrobium urmianum  "= "#7e1a2f", 
+"Haloferax volcanii  "= "#553555", "Other"="grey"
+)
+
+paletteEuk<-c("Bifidobacterium adolescentis  "= "#b6acc6", "Collinsella aerofaciens  "= "#e4a3a7", 
+"Segatella copri  "= "#ac6fe1", "Phocaeicola dorei  "= "#2e20ad", "Faecalibacterium prausnitzii  "="#0fc9c9", 
+"Agathobacter rectalis  "= "#fae5ef", "Bacteroides stercoris  "= "#18af2b", "Bacteroides uniformis  "= "#9f66e9", 
+"Phocaeicola vulgatus  "= "#489541", "Blautia wexlerae  "= "#bfd8c5", "Other"="grey")
+
 paletteAlpha_NO = c("#8ea4d2", "#baf2d8", "#465362", "#ef6f6c", "#FDBF6F", "#edead0", 
               "#bad7f2", "#4d9078", "#414073", "#fface4")
 paletteAlpha_GC = c("#edead0","#baf2d8", "#c0df85", "#011936", "#ab87ff", "#f78154", 

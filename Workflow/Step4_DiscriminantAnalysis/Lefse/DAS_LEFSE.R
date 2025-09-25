@@ -154,7 +154,7 @@ for (i in 1:length(analysis)) {
 
 
 folders <- list(folder01, folder001, folder05, folderMSHD, folderGC, folderGC_comp)
-docker_name <- "qbioturin/lefse:latest"
+docker_name <- "franky2204/oldlefse"
 container_ids <- c()
 
 # Avvia i container in background e salva gli ID

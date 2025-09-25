@@ -304,7 +304,7 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
         heatmap_list$Bacteria <- heatmap_bact
     }
 
-    if (!is.null(data_arch[[1]])) {
+    if (exists("data_arch") && !is.null(data_arch[[1]])) {
         norm_data_z <- data_arch[[1]]
         metadata_hm <- data_arch[[2]]
         metadata_kingdom <- data_arch[[3]]
@@ -382,12 +382,12 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
     ##################### àprova
     # Numero di righe effettive della matrice (non solo del gtable)
     bactrow <- if (!is.null(data_bact[[1]])) nrow(data_bact[[1]]) else 0
-    archrow <- if (!is.null(data_arch[[1]])) nrow(data_arch[[1]]) else 0
-    eukrow <- if (exists("data_euk")&&!is.null(data_euk[[1]])) nrow(data_euk[[1]]) else 0
+    archrow <- if (exists("data_arch") && !is.null(data_arch[[1]])) nrow(data_arch[[1]]) else 0
+    eukrow <- if (exists("data_euk") && !is.null(data_euk[[1]])) nrow(data_euk[[1]]) else 0
     sum <- bactrow + archrow + eukrow
     bactrow1 <- 7 + ((bactrow / sum) * 85)
-    archrow1 <- 4 + ((archrow / sum) * 85)
-    eukrow1 <- if (exists("data_euk")&&!is.null(data_euk[[1]])) 4 + ((eukrow / sum) * 85) else 0
+    archrow1 <- if (exists("data_arch") && !is.null(data_arch[[1]])) 4 + ((archrow / sum) * 85) else 0
+    eukrow1 <- if (exists("data_euk") && !is.null(data_euk[[1]])) 4 + ((eukrow / sum) * 85) else 0
 
     labels <- names(heatmap_list)
     text_grobs <- lapply(labels, function(lbl) textGrob(lbl, rot = 90, gp = gpar(fontsize = 14)))
@@ -398,7 +398,26 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
         heights = c(bactrow1, archrow1, eukrow1),
         widths = c(0.05, 1.5)
     )
-    
+    # Salva le taxa tables in un unico PDF
+    taxa_tables <- list(
+        Bacteria = if (!is.null(Bacteria)) as.data.frame(Bacteria@tax_table) else NULL,
+        Archaea = if (!is.null(Archaea)) as.data.frame(Archaea@tax_table) else NULL,
+        Eukaryota = if (exists("Eukaryota") && !is.null(Eukaryota)) as.data.frame(Eukaryota@tax_table) else NULL
+    )
+    taxa_tables <- taxa_tables[!sapply(taxa_tables, is.null)]
+    if (length(taxa_tables) > 0) {
+        max_cols <- max(sapply(taxa_tables, ncol))
+        max_rows <- max(sapply(taxa_tables, nrow))
+        pdf_height <- 0.2 + max_rows * 0.3
+        pdf_width <- 20
+        pdf(file = gsub(" ", "", paste0(output_folder, filename, "_taxa_tables.pdf")), width = pdf_width, height = pdf_height)
+        for (kingdom in names(taxa_tables)) {
+            grid::grid.newpage()
+            grid::grid.text(kingdom, y = 0.97, gp = grid::gpar(fontsize = 18, fontface = "bold"))
+            gridExtra::grid.table(as.data.frame(taxa_tables[[kingdom]]), rows = NULL)
+        }
+        dev.off()
+    }
     ggsave(
         plot = g,
         filename = gsub(" ", "", paste0(output_folder, filename, ".pdf")),
@@ -493,4 +512,36 @@ create_heatmap(
          Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_gadolinium_contrast_negative_merged.rds")),
          filename = paste0("gadolinium_contrast_negative"), output_folder = output_folder, order = "gadolinium_contrast", topBar = "gadolinium_contrast", status = "negative"
  )
+dim=c("01","05","001")
+d="001"
+for(d in dim){
+  create_heatmap(
+         Bacteria = readRDS(paste0("Output/merge_DAS/",d,"/Bacteria_gadolinium_contrast_",d,"_merged.rds")) ,
+         Archaea = NULL,
+         Eukaryota = NULL,
+         filename = paste0("gadolinium_contrast_",d), output_folder = output_folder,
+          order = "gadolinium_contrast", topBar = "gadolinium_contrast"
+ )
+ create_heatmap(
+         Bacteria = readRDS(paste0("Output/merge_DAS/",d,"/Bacteria_spinal_cord_lesion_",d,"_merged.rds")) ,
+         Archaea = NULL,
+         Eukaryota = NULL,
+         filename = paste0("spinal_cord_lesion_",d), output_folder = output_folder, 
+         order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions"
+ )
+    create_heatmap(
+         Bacteria = readRDS(paste0("Output/merge_DAS/",d,"/Bacteria_subtentorial_lesions_",d,"_merged.rds")) ,
+         Archaea = NULL,
+         Eukaryota = NULL,
+         filename = paste0("subtentorial_lesions_",d), output_folder = output_folder,
+          order = "subtentorial_lesions", topBar = "subtentorial_lesions")
+ 
+    create_heatmap(
+            Bacteria = readRDS(paste0("Output/merge_DAS/",d,"/Bacteria_lesion_burden_",d,"_merged.rds")) ,
+            Archaea = NULL,
+            Eukaryota = NULL,
+            filename = paste0("lesion_burden_",d), output_folder = output_folder, 
+            order = "Lesion_Burden", topBar = "Lesion_Burden")
+    
+}
 

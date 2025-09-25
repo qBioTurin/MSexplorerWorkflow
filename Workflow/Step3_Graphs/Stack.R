@@ -3,7 +3,7 @@ source("Settings/Colorpalette.R")
 output_folder = "Output/NEW_PLOT_RDS/"
 createFolder(output_folder)
 
-stackbar <- function(baseline_dec, SP_levels,Domain, output_folder) {
+stackbar <- function(baseline_dec, Domain, output_folder) {
 
   rel_abund = as.data.frame(abundances(baseline_dec, transform = "compositional"))
   baseline_dec = phyloseq(otu_table(rel_abund, taxa_are_rows = TRUE), tax_table(baseline_dec), sample_data(baseline_dec))
@@ -74,19 +74,20 @@ stackbar <- function(baseline_dec, SP_levels,Domain, output_folder) {
         strip.text = element_text(face = "bold",size=20),
         strip.background = element_blank()) +
     guides(fill=guide_legend(title="Species"))
+  pl
   saveRDS(pl, gsub(" ", "", paste(output_folder, Domain, "_StackedBar_Species.rds", sep = "")))
 }
 
 
 execute_stackbar<-function(){
-
+ 
   baseline_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
   baseline_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
   baseline_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
 
-  stackbar(baseline_decB, levelsB,"Bacteria", output_folder)
-  stackbar(baseline_decA, levelsA,"Archaea", output_folder)
-  stackbar(baseline_decE, levelsE,"Eukaryote", output_folder)
+  stackbar(baseline_dec = baseline_decB,  Domain = "Bacteria", output_folder)
+  stackbar(baseline_dec = baseline_decA,  Domain = "Archaea", output_folder)
+  stackbar(baseline_dec = baseline_decE,  Domain = "Eukaryote", output_folder)
 }
 
 execute_stackbar()

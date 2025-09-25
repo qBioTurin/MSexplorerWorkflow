@@ -42,7 +42,8 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
         } else {
           return(paste0("NS."))
         }
-      }
+      },
+      textsize = 6 
     ) +
     theme_classic() +
     scale_x_discrete(labels = custom_labels) +
@@ -109,7 +110,8 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
           } else {
             return("NS.")
           }
-        }
+        },
+        textsize = 6 
       ) +
       theme_classic() +
       scale_x_discrete(labels = custom_labels_gc) +
