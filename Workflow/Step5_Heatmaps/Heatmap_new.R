@@ -406,23 +406,22 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
     )
     taxa_tables <- taxa_tables[!sapply(taxa_tables, is.null)]
     if (length(taxa_tables) > 0) {
-        max_cols <- max(sapply(taxa_tables, ncol))
-        max_rows <- max(sapply(taxa_tables, nrow))
-        pdf_height <- 0.2 + max_rows * 0.3
-        pdf_width <- 20
-        pdf(file = gsub(" ", "", paste0(output_folder, filename, "_taxa_tables.pdf")), width = pdf_width, height = pdf_height)
         for (kingdom in names(taxa_tables)) {
-            grid::grid.newpage()
-            grid::grid.text(kingdom, y = 0.97, gp = grid::gpar(fontsize = 18, fontface = "bold"))
-            gridExtra::grid.table(as.data.frame(taxa_tables[[kingdom]]), rows = NULL)
+            write.table(
+                taxa_tables[[kingdom]],
+                file = gsub(" ", "", paste0(output_folder, filename, "_", kingdom, "_taxa_table.tsv")),
+                sep = "\t",
+                quote = FALSE,
+                row.names = TRUE,
+                col.names = NA
+            )
         }
-        dev.off()
     }
-    ggsave(
-        plot = g,
-        filename = gsub(" ", "", paste0(output_folder, filename, ".pdf")),
-        height = 15+((bactrow + archrow + eukrow)/5), width = 25, limitsize = FALSE
-    )
+    # ggsave(
+    #     plot = g,
+    #     filename = gsub(" ", "", paste0(output_folder, filename, ".pdf")),
+    #     height = 15+((bactrow + archrow + eukrow)/5), width = 25, limitsize = FALSE
+    # )
 }
 # --- Fine codice scompattato ---
 
@@ -513,7 +512,7 @@ create_heatmap(
          filename = paste0("gadolinium_contrast_negative"), output_folder = output_folder, order = "gadolinium_contrast", topBar = "gadolinium_contrast", status = "negative"
  )
 dim=c("01","05","001")
-d="001"
+d="05"
 for(d in dim){
   create_heatmap(
          Bacteria = readRDS(paste0("Output/merge_DAS/",d,"/Bacteria_gadolinium_contrast_",d,"_merged.rds")) ,

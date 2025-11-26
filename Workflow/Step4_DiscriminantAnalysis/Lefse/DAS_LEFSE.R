@@ -18,7 +18,7 @@ check_or_pull_image <- function(image_name) {
   }
 }
 
-check_or_pull_image("qbioturin/lefse")
+check_or_pull_image("franky22/lefse:25")
 
 createFolder("Output/LEFSE/")
 folder001="Output/LEFSE/001/"
@@ -154,7 +154,7 @@ for (i in 1:length(analysis)) {
 
 
 folders <- list(folder01, folder001, folder05, folderMSHD, folderGC, folderGC_comp)
-docker_name <- "franky2204/oldlefse"
+docker_name <- "franky22/lefse:25"
 container_ids <- c()
 
 # Avvia i container in background e salva gli ID

@@ -62,17 +62,44 @@ fit_out <- maaslin3(input_data = merged_df,
 }
 
 rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_gctreatment_onlyMS",
- formulaInUse = "gc_treatment", categorySel = "category", elements = c("MS"))
 
-Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_lesion_burden_onlygc",
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001/001_lesion_burden_onlygc",
  formulaInUse = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"))
 
-Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_spinal_cord_lesion_onlygc",
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001/001_spinal_cord_lesion_onlygc",
  formulaInUse = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"))
 
-Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_gadolinium_contrast_onlygc",
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001/001_gadolinium_contrast_onlygc",
  formulaInUse = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"))
 
-Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001_subtentorial_lesions_onlygc",
+Maaslin3(rds = rds_001, output_folder = "Output/MAASLIN3/001/001_subtentorial_lesions_onlygc",
+ formulaInUse = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+rds_01 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
+
+Maaslin3(rds = rds_01, output_folder = "Output/MAASLIN3/01/01_lesion_burden_onlygc",
+ formulaInUse = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_01, output_folder = "Output/MAASLIN3/01/01_spinal_cord_lesion_onlygc",
+ formulaInUse = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_01, output_folder = "Output/MAASLIN3/01/01_gadolinium_contrast_onlygc",
+ formulaInUse = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_01, output_folder = "Output/MAASLIN3/01/01_subtentorial_lesions_onlygc",
+ formulaInUse = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+
+rds_05 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
+
+Maaslin3(rds = rds_05, output_folder = "Output/MAASLIN3/05/05_lesion_burden_onlygc",
+ formulaInUse = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_05, output_folder = "Output/MAASLIN3/05/05_spinal_cord_lesion_onlygc",
+ formulaInUse = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_05, output_folder = "Output/MAASLIN3/05/05_gadolinium_contrast_onlygc",
+ formulaInUse = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"))
+
+Maaslin3(rds = rds_05, output_folder = "Output/MAASLIN3/05/05_subtentorial_lesions_onlygc",
  formulaInUse = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"))

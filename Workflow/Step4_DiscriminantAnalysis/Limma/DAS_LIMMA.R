@@ -236,8 +236,9 @@ das_limma <- function(baselines_dec, analisys, status, output_folder, Domain, in
   # Apply empirical Bayes moderation
   fit <- eBayes(fit)
 
-  top_table <- topTable(fit, coef = NULL, number = 100, adjust = "fdr")
-  top_table <- top_table[top_table$P.Value < 0.05, ]
+  top_table <- topTable(fit, coef = NULL, number = Inf, adjust = "fdr")
+ # top_table <- top_table[top_table$P.Value < 0.05, ] #add again if needed only significant
+  print("Dimensions of top table:")
   dim(top_table)
   # print(top_table)
   if (info != "") {

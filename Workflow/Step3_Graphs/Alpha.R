@@ -31,19 +31,21 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
     geom_signif(
       comparisons = list(c("HEALTHY", "MS")),
       map_signif_level = function(p) {
-        if (p < 0.001) {
-          return(paste0("*** (", signif(p, 2), ")"))
-        } else if (p < 0.01) {
-          return(paste0("** (", signif(p, 2), ")"))
-        } else if (p < 0.049) {
-          return(paste0("* (", signif(p, 2), ")"))
-        } else if (p < 0.055) {
-          return(paste0("NS. (", signif(p, 2), ")"))
-        } else {
-          return(paste0("NS."))
-        }
+        sapply(p, function(x) {
+          if (x < 0.001) {
+            paste0("*** (", signif(x, 2), ")")
+          } else if (x < 0.01) {
+            paste0("** (", signif(x, 2), ")")
+          } else if (x < 0.05) {
+            paste0("* (", signif(x, 2), ")")
+          } else if (x < 0.1) {
+            paste0("NS. (", signif(x, 2), ")")
+          } else {
+            "NS."
+          }
+        })
       },
-      textsize = 6 
+      textsize = 5
     ) +
     theme_classic() +
     scale_x_discrete(labels = custom_labels) +
@@ -75,7 +77,7 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
   custom_labels_gc <- c("healthy" = "Healthy", "positive" = "Treated", "negative" = "Untreated")
 
 
-  create_plot_gc_treatment <- function(plot_MS,y_name) {
+  create_plot_gc_treatment <- function(plot_MS, y_name) {
     plot_MS$gc_treatment <- factor(plot_MS$gc_treatment,
       levels = c("healthy", "positive", "negative")
     )
@@ -99,19 +101,21 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
         comparisons = comparisons,
         y_position = y_positions,
         map_signif_level = function(p) {
-          if (p < 0.001) {
-            return(paste0("*** (", signif(p, 2), ")"))
-          } else if (p < 0.01) {
-            return(paste0("** (", signif(p, 2), ")"))
-          } else if (p < 0.049) {
-            return(paste0("* (", signif(p, 2), ")"))
-          } else if (p < 0.055) {
-            return(paste0("NS. (", signif(p, 2), ")"))
-          } else {
-            return("NS.")
-          }
+          sapply(p, function(x) {
+            if (x < 0.001) {
+              paste0("*** (", signif(x, 2), ")")
+            } else if (x < 0.01) {
+              paste0("** (", signif(x, 2), ")")
+            } else if (x < 0.05) {
+              paste0("* (", signif(x, 2), ")")
+            } else if (x < 0.1) {
+              paste0("NS. (", signif(x, 2), ")")
+            } else {
+              "NS."
+            }
+          })
         },
-        textsize = 6 
+        textsize = 6
       ) +
       theme_classic() +
       scale_x_discrete(labels = custom_labels_gc) +
@@ -132,9 +136,9 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
         legend.position = "none"
       )
   }
-observed <- create_plot_gc_treatment(MS1 %>% filter(index == "Observed"), "Diversity Indexes") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
-shannon  <- create_plot_gc_treatment(MS1 %>% filter(index == "Shannon"), "")  + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
-simpson  <- create_plot_gc_treatment(MS1 %>% filter(index == "Simpson"), "")  + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
+  observed <- create_plot_gc_treatment(MS1 %>% filter(index == "Observed"), "Diversity Indexes") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
+  shannon <- create_plot_gc_treatment(MS1 %>% filter(index == "Shannon"), "") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
+  simpson <- create_plot_gc_treatment(MS1 %>% filter(index == "Simpson"), "") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
   gc_treatment <- observed + shannon + simpson
 
