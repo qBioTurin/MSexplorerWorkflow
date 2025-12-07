@@ -74,8 +74,8 @@ das_limma <- function(baselines_dec, analisys, status, output_folder, Domain, in
   # select metadata to visualize in heatmap
   if (analisys == "category") {
     metadata_hm <- metadata %>%
-      select(category) %>%
-      mutate(category = as.factor(category))
+      select(category,age,sex,bmi) %>%
+      mutate(category = as.factor(category,age,sex,bmi))
 
     norm_data <- norm_data %>%
       select(rownames(metadata_hm))

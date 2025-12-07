@@ -38,6 +38,11 @@ Aldex2_run <- function(rds, output_folder, categorySel, elements, discriminant) 
 
     # Salvataggio
     write.csv(tab, file.path(output_folder, paste0(discriminant,"_aldex2_results.csv")), row.names = FALSE)
+    # Salvataggio risultati significativi (p-value < 0.05)
+        tab_sig <- tab %>% filter(wi.eBH < 0.05)
+        if (nrow(tab_sig) > 0) {
+            write.csv(tab_sig, file.path(output_folder, paste0(discriminant,"_aldex2_significant.csv")), row.names = FALSE)
+        }
    # saveRDS(aldex_res, file.path(output_folder, "aldex2_results.rds"))
     print(min(aldex_res$wi.eBH, na.rm = TRUE))
    # return(aldex_res)
