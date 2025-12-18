@@ -102,6 +102,7 @@ DASLimma <- function(baselines_dec, metadata, analisys,
     fit <- lmFit(log_data, design)
     fit <- eBayes(fit)
 
+
     # remove NA coefficients
     estimable_coefs <- colnames(fit$coefficients)[!is.na(fit$coefficients[1, ])]
 
@@ -109,15 +110,54 @@ DASLimma <- function(baselines_dec, metadata, analisys,
         stop("Nessun coefficiente stimabile nel modello LIMMA.")
     }
 
-    top_table <- topTable(fit,
-        coef = estimable_coefs,
-        number = Inf,
-        adjust = "fdr"
-    )
+    TopTableClean <- function(fit,
+                              coef = NULL,
+                              number = Inf,
+                              adjust.method = "BH",
+                              sort.by = "P",
+                              p.value = 1) {
+        # Controlli di sicurezza
+        if (!inherits(fit, "MArrayLM")) {
+            stop("fit must be an MArrayLM object")
+        }
+
+        if (is.null(fit$coefficients)) {
+            stop("No coefficients found in fit object")
+        }
+
+        # Se non specifichi "coef", usa tutti i coefficienti tranne l'intercetta
+        if (is.null(coef)) {
+            coef <- colnames(fit$coefficients)
+            coef <- coef[coef != "(Intercept)"]
+        }
+
+        # Esegui la topTable di limma
+        tt <- limma::topTable(
+            fit,
+            coef = coef,
+            number = number,
+            adjust.method = adjust.method,
+            sort.by = sort.by,
+            p.value = p.value
+        )
+
+        # Aggiungi l'informazione su quali coefficienti sono stati testati
+        tt$Tested_Coefficients <- paste(coef, collapse = "; ")
+
+        return(tt)
+    }
+top_table <- TopTableClean(
+    fit,
+    coef = estimable_coefs,
+    number = Inf,
+    adjust.method = "fdr",
+    sort.by = "F"
+)
+    colnames(top_table)
     write.csv(top_table, file = gsub(".csv", "_toptable.csv", fullname))
     top_table_p <- top_table %>%
-        filter(P.Value < 0.05)    
-    top_table_adj<- top_table %>%
+        filter(P.Value < 0.05)
+    top_table_adj <- top_table %>%
         filter(adj.P.Val < 0.05)
     # Save results
     filter_for_heatmap_adj <- norm_data[rownames(top_table_adj), ]
@@ -130,13 +170,13 @@ source("Settings/Packages.R")
 source("Settings/utilities.R")
 source("Workflow/Step4_DiscriminantAnalysis/Limma/function.R")
 
-output_folderMSHD <- "Output/LIMMA_score_corr/MSHD/"
+output_folderMSHD <- "Output/LIMMA_score_corr_2/MSHD/"
 createFolder(output_folderMSHD)
-output_folder_001 <- "Output/LIMMA_score_corr/001/"
+output_folder_001 <- "Output/LIMMA_score_corr_2/001/"
 createFolder(output_folder_001)
-output_folder_01 <- "Output/LIMMA_score_corr/01/"
+output_folder_01 <- "Output/LIMMA_score_corr_2/01/"
 createFolder(output_folder_01)
-output_folder_05 <- "Output/LIMMA_score_corr/05/"
+output_folder_05 <- "Output/LIMMA_score_corr_2/05/"
 createFolder(output_folder_05)
 library(tibble)
 
@@ -147,7 +187,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_001,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
@@ -156,7 +196,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_01,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
@@ -165,7 +205,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_05,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
@@ -174,7 +214,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_001,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
@@ -183,7 +223,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_01,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
@@ -191,8 +231,8 @@ DASLimma(
     analisys = "gadolinium_contrast",
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
-    output_folder =    output_folder_05,
-    discriminant = c("age", "sex", "bmi")
+    output_folder = output_folder_05,
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
@@ -201,7 +241,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_001,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
@@ -210,7 +250,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_01,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
@@ -219,7 +259,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_05,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 DASLimma(
     baselines_dec = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
@@ -228,7 +268,7 @@ DASLimma(
     subcategory = "gc_treatment",
     sub_name = c("positive", "negative"),
     output_folder = output_folder_001,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 
 DASLimma(
@@ -238,7 +278,7 @@ DASLimma(
     subcategory = "category",
     sub_name = c("MS", "HEALTHY"),
     output_folder = output_folderMSHD,
-    discriminant = c("age", "sex", "bmi")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 
 DASLimma(
@@ -248,7 +288,7 @@ DASLimma(
     subcategory = "category",
     sub_name = c("MS", "HEALTHY"),
     output_folder = output_folderMSHD,
-    discriminant = c("age", "sex", "bmi ")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
 
 DASLimma(
@@ -258,6 +298,5 @@ DASLimma(
     subcategory = "category",
     sub_name = c("MS", "HEALTHY"),
     output_folder = output_folderMSHD,
-    discriminant = c("age", "sex", "bmi ")
+    discriminant = c("gc_treatment", "age", "sex", "bmi")
 )
-

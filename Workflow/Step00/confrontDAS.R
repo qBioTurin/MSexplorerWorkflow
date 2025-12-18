@@ -95,7 +95,7 @@ compare_and_save_lists <- function(list1, list2, outdir, nameFile,
     )
 
     # salva PDF
-    pdf(file.path(outdir, paste0(nameFile, "_venn.pdf")), width = 12, height = 10+(max(c(length(only1), length(only2), length(common)))*0.25))
+    pdf(file.path(outdir, paste0(nameFile, "_venn.pdf")), width = 12, height = 10 + (max(c(length(only1), length(only2), length(common))) * 0.25))
     grid.draw(final_plot)
     dev.off()
     invisible(list(only1 = only1, only2 = only2, common = common))
@@ -117,7 +117,7 @@ lesion_01 <- compare_species_lists(
     rds_path = "Output/merge_DAS/01/Bacteria_lesion_burden_01_merged.rds",
     csv_path = "Output/MAASLIN3/01_disc/01_lesion_burden_onlygc_T/lesion_burden_MAASLIN3_SR_features_01.csv"
 )
-compare_and_save_lists( 
+compare_and_save_lists(
     list1 = lesion_01$species_list_ll,
     list2 = lesion_01$species_list_maaslin,
     outdir = "Output/compare_DAS_MAASLIN3/lesion_burden_01",
@@ -165,11 +165,13 @@ dir.create(dir_final, recursive = TRUE, showWarnings = FALSE)
 
 # salva le liste combinate
 write.table(data.frame(Species = sort(combined_ll)),
-                        file = file.path(dir_final, "combined_limma_lefse_01.csv"),
-                        sep = ",", row.names = FALSE, quote = TRUE)
+    file = file.path(dir_final, "combined_limma_lefse_01.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
 write.table(data.frame(Species = sort(combined_ma)),
-                        file = file.path(dir_final, "combined_maaslin3_01.csv"),
-                        sep = ",", row.names = FALSE, quote = TRUE)
+    file = file.path(dir_final, "combined_maaslin3_01.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
 
 # esegue il confronto finale
 compare_and_save_lists(
@@ -186,6 +188,7 @@ gado_001 <- compare_species_lists(
     rds_path = "Output/merge_DAS/001/Bacteria_gadolinium_contrast_001_merged.rds",
     csv_path = "Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_001.csv"
 )
+
 compare_and_save_lists(
     list1 = gado_001$species_list_ll,
     list2 = gado_001$species_list_maaslin,
@@ -240,11 +243,13 @@ dir_final_001 <- "Output/compare_DAS_MAASLIN3/final_001"
 dir.create(dir_final_001, recursive = TRUE, showWarnings = FALSE)
 # salva le liste combinate
 write.table(data.frame(Species = sort(combined_ll_001)),
-            file = file.path(dir_final_001, "combined_limma_lefse_001.csv"),
-            sep = ",", row.names = FALSE, quote = TRUE)
+    file = file.path(dir_final_001, "combined_limma_lefse_001.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
 write.table(data.frame(Species = sort(combined_ma_001)),
-            file = file.path(dir_final_001, "combined_maaslin3_001.csv"),
-            sep = ",", row.names = FALSE, quote = TRUE)
+    file = file.path(dir_final_001, "combined_maaslin3_001.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
 # esegue il confronto finale
 compare_and_save_lists(
     list1 = combined_ll_001,
@@ -264,7 +269,7 @@ compare_and_save_lists(
     list2 = gado_05$species_list_maaslin,
     outdir = "Output/compare_DAS_MAASLIN3/gadolinium_contrast_05",
     nameFile = "gadolinium_contrast_05"
-)   
+)
 lesion_05 <- compare_species_lists(
     rds_path = "Output/merge_DAS/05/Bacteria_lesion_burden_05_merged.rds",
     csv_path = "Output/MAASLIN3/05_disc/05_lesion_burden_onlygc_T/lesion_burden_MAASLIN3_SR_features_05.csv"
@@ -294,7 +299,7 @@ compare_and_save_lists(
     list2 = subtentorial_05$species_list_maaslin,
     outdir = "Output/compare_DAS_MAASLIN3/subtentorial_lesions_05",
     nameFile = "subtentorial_lesions_05"
-)   
+)
 # combina le liste di specie dei 4 confronti e genera un confronto finale
 combined_ll_05 <- unique(as.character(na.omit(unlist(c(
     gado_05$species_list_ll,
@@ -312,11 +317,13 @@ dir_final_05 <- "Output/compare_DAS_MAASLIN3/final_05"
 dir.create(dir_final_05, recursive = TRUE, showWarnings = FALSE)
 # salva le liste combinate
 write.table(data.frame(Species = sort(combined_ll_05)),
-            file = file.path(dir_final_05, "combined_limma_lefse_05.csv"),
-            sep = ",", row.names = FALSE, quote = TRUE)
+    file = file.path(dir_final_05, "combined_limma_lefse_05.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
 write.table(data.frame(Species = sort(combined_ma_05)),
-            file = file.path(dir_final_05, "combined_maaslin3_05.csv"),
-            sep = ",", row.names = FALSE, quote = TRUE)
+    file = file.path(dir_final_05, "combined_maaslin3_05.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
 # esegue il confronto finale
 compare_and_save_lists(
     list1 = combined_ll_05,
@@ -328,7 +335,7 @@ compare_and_save_lists(
 )
 
 
-MS_HDBact<-compare_species_lists(
+MS_HDBact <- compare_species_lists(
     rds_path = "Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds",
     csv_path = "Output/MAASLIN3/Bacteria_MSHD_disc_T/category_MAASLIN3_SR_features_K.csv"
 )
@@ -339,7 +346,7 @@ compare_and_save_lists(
     nameFile = "MS_HD_Bacteria"
 )
 
-MS_HDArch<-compare_species_lists(
+MS_HDArch <- compare_species_lists(
     rds_path = "Output/merge_DAS/MSHD/Archaea_MsHd_merged.rds",
     csv_path = "Output/MAASLIN3/Archaea_MSHD_disc_T/category_MAASLIN3_SR_features_K.csv"
 )
@@ -349,7 +356,7 @@ compare_and_save_lists(
     outdir = "Output/compare_DAS_MAASLIN3/MS_HD_Archaea",
     nameFile = "MS_HD_Archaea"
 )
-MS_HDEuk<-compare_species_lists(
+MS_HDEuk <- compare_species_lists(
     rds_path = "Output/merge_DAS/MSHD/Eukaryote_MsHd_merged.rds",
     csv_path = "Output/MAASLIN3/Eukaryote_MSHD_disc_T/category_MAASLIN3_SR_features_K.csv"
 )
@@ -360,7 +367,7 @@ compare_and_save_lists(
     nameFile = "MS_HD_Eukaryote"
 )
 
-GC_Bact<-compare_species_lists(
+GC_Bact <- compare_species_lists(
     rds_path = "Output/merge_DAS/GC/Bacteria_GC_merged.rds",
     csv_path = "Output/MAASLIN3/Bacteria_GC_TREATMENT_disc_T/gc_treatment_MAASLIN3_SR_features_K.csv"
 )
@@ -370,7 +377,7 @@ compare_and_save_lists(
     outdir = "Output/compare_DAS_MAASLIN3/GC_Bacteria",
     nameFile = "GC_Bacteria"
 )
-GC_euk<-compare_species_lists(
+GC_euk <- compare_species_lists(
     rds_path = "Output/merge_DAS/GC/Eukaryote_GC_merged.rds",
     csv_path = "Output/MAASLIN3/Eukaryote_GC_TREATMENT_disc_T/gc_treatment_MAASLIN3_SR_features_K.csv"
 )
@@ -380,7 +387,7 @@ compare_and_save_lists(
     outdir = "Output/compare_DAS_MAASLIN3/GC_Eukaryote",
     nameFile = "GC_Eukaryote"
 )
-GC_Arch<-compare_species_lists(
+GC_Arch <- compare_species_lists(
     rds_path = "Output/merge_DAS/GC/Archaea_GC_merged.rds",
     csv_path = "Output/MAASLIN3/Archaea_GC_TREATMENT_disc_T/gc_treatment_MAASLIN3_SR_features_K.csv"
 )
@@ -389,4 +396,35 @@ compare_and_save_lists(
     list2 = GC_Arch$species_list_maaslin,
     outdir = "Output/compare_DAS_MAASLIN3/GC_Archaea",
     nameFile = "GC_Archaea"
+)
+
+combined_gado_001 <- unique(c(gado_001$species_list_ll, gado_001$species_list_maaslin))
+dir_gado_001 <- "Output/compare_DAS_MAASLIN3/gadolinium_contrast_001_union"
+dir.create(dir_gado_001, recursive = TRUE, showWarnings = FALSE)
+write.table(data.frame(Species = sort(combined_gado_001)),
+    file = file.path(dir_gado_001, "combined_species_001.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
+combined_lesion_001 <- unique(c(lesion_001$species_list_ll, lesion_001$species_list_maaslin))
+dir_lesion_001 <- "Output/compare_DAS_MAASLIN3/lesion_burden_001_union"
+dir.create(dir_lesion_001, recursive = TRUE, showWarnings = FALSE)
+write.table(data.frame(Species = sort(combined_lesion_001)),
+    file = file.path(dir_lesion_001, "combined_species_001.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
+
+combined_spinal_001 <- unique(c(spinal_001$species_list_ll, spinal_001$species_list_maaslin))
+dir_spinal_001 <- "Output/compare_DAS_MAASLIN3/spinal_cord_lesion_001_union"
+dir.create(dir_spinal_001, recursive = TRUE, showWarnings = FALSE)
+write.table(data.frame(Species = sort(combined_spinal_001)),
+    file = file.path(dir_spinal_001, "combined_species_001.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
+)
+
+combined_subtentorial_001 <- unique(c(subtentorial_001$species_list_ll, subtentorial_001$species_list_maaslin))
+dir_subtentorial_001 <- "Output/compare_DAS_MAASLIN3/subtentorial_lesions_001_union"
+dir.create(dir_subtentorial_001, recursive = TRUE, showWarnings = FALSE)
+write.table(data.frame(Species = sort(combined_subtentorial_001)),
+    file = file.path(dir_subtentorial_001, "combined_species_001.csv"),
+    sep = ",", row.names = FALSE, quote = TRUE
 )

@@ -1,5 +1,5 @@
 source("Settings/utilities.R")
-output_folder <- "Output/DAS_ALPHA_MAASLIN/"
+output_folder <- "Output/DAS_ALPHA_ANCOMBC2/"
 createFolder(output_folder)
 # abundance
 bact_baselines_ds_abund <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
@@ -102,20 +102,43 @@ print(lesion_05)
 tax<-as.data.frame(lesion_05@tax_table)
 otu<-as.data.frame(lesion_05@otu_table)
 metaData <- as.data.frame(as.matrix(sample_data(lesion_05)))
-lesion_05 <- readRDS("Output/BOI/05/Bacteria_lesion_05.rds")
-bm_05 <- readRDS("Output/BOI/05/Bacteria_spinal_cord_05.rds")
-gado_05 <- readRDS("Output/BOI/05/Bacteria_lesion_05.rds")
-sub_05 <- readRDS("Output/BOI/05/Bacteria_subtentorial_lesions_05.rds")
 
-lesion_01 <- readRDS("Output/BOI/01/Bacteria_lesion_01.rds")
-bm_01 <- readRDS("Output/BOI/01/Bacteria_spinal_cord_01.rds")
-gado_01 <- readRDS("Output/BOI/01/Bacteria_gadolinium_01.rds")
-sub_01 <- readRDS("Output/BOI/01/Bacteria_subtentorial_lesions_01.rds")
+# lesion_05 <- readRDS("Output/BOI/05/Bacteria_lesion_05.rds")
+# bm_05 <- readRDS("Output/BOI/05/Bacteria_spinal_cord_05.rds")
+# gado_05 <- readRDS("Output/BOI/05/Bacteria_gadolinium_05.rds")
+# sub_05 <- readRDS("Output/BOI/05/Bacteria_subtentorial_lesions_05.rds")
 
-lesion_001 <- readRDS("Output/BOI/001/Bacteria_lesion_001.rds")
-bm_001 <- readRDS("Output/BOI/001/Bacteria_spinal_cord_001.rds")
-gado_001 <- readRDS("Output/BOI/001/Bacteria_gadolinium_001.rds")
-sub_001 <- readRDS("Output/BOI/001/Bacteria_subtentorial_lesions_001.rds")
+# lesion_01 <- readRDS("Output/BOI/01/Bacteria_lesion_01.rds")
+# bm_01 <- readRDS("Output/BOI/01/Bacteria_spinal_cord_01.rds")
+# gado_01 <- readRDS("Output/BOI/01/Bacteria_gadolinium_01.rds")
+# sub_01 <- readRDS("Output/BOI/01/Bacteria_subtentorial_lesions_01.rds")
+
+# lesion_001 <- readRDS("Output/BOI/001/Bacteria_lesion_001.rds")
+# bm_001 <- readRDS("Output/BOI/001/Bacteria_spinal_cord_001.rds")
+# gado_001 <- readRDS("Output/BOI/001/Bacteria_gadolinium_001.rds")
+# sub_001 <- readRDS("Output/BOI/001/Bacteria_subtentorial_lesions_001.rds")
+
+# lesion_05 <- readRDS("Output/BOI2/05_unioned/Bacteria_subtentorial_05.rds")
+# bm_05 <- readRDS("Output/BOI2/05_unioned/Bacteria_subtentorial_05.rds")
+# gado_05 <- readRDS("Output/BOI2/05_unioned/Bacteria_subtentorial_05.rds")
+# sub_05 <- readRDS("Output/BOI2/05_unioned/Bacteria_subtentorial_05.rds")
+# lesion_01 <- readRDS("Output/BOI2/01_unioned/Bacteria_lesion_01.rds")
+# bm_01 <- readRDS("Output/BOI2/01_unioned/Bacteria_spinal_cord_01.rds")
+# gado_01 <- readRDS("Output/BOI2/01_unioned/Bacteria_gadolinium_01.rds")
+# sub_01 <- readRDS("Output/BOI2/01_unioned/Bacteria_subtentorial_01.rds")
+# lesion_001 <- readRDS("Output/BOI2/001_unioned/Bacteria_lesion_001.rds")
+# bm_001 <- readRDS("Output/BOI2/001_unioned/Bacteria_spinal_cord_001.rds")
+# gado_001 <- readRDS("Output/BOI2/001_unioned/Bacteria_gadolinium_001.rds")
+# sub_001 <- readRDS("Output/BOI2/001_unioned/Bacteria_subtentorial_001.rds")
+lesion_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_lesion_burden_01.rds")
+bm_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_spinal_cord_lesion_01.rds")
+gado_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_gadolinium_contrast_01.rds")
+sub_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_subtentorial_lesions_01.rds")
+lesion_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_lesion_burden_001.rds")
+bm_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_spinal_cord_lesion_001.rds")
+gado_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_gadolinium_contrast_001.rds")
+sub_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_subtentorial_lesions_001.rds")
+
 
 
 tab_list_05 <- createTab(lesion = lesion_05,
@@ -170,7 +193,7 @@ merged_sh<-Shannon
 # merged_sh <- left_join(as.data.frame(Shannon), as.data.frame(Simpson), by = "id") %>%
 #   left_join(as.data.frame(EH), by = "id") %>%
 #   left_join(as.data.frame(Observed), by = "id")
-write.table(merged_sh, file = paste0(output_folder, "merged_shannon.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(merged_sh, file = paste0(output_folder, "merged_shannon_union.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 tab1 <- readRDS("Output/merge_DAS/MSHD/Bacteria_MsHd_05_merged.rds")
 tab2 <- readRDS("Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds")
@@ -228,3 +251,7 @@ merged_sh <- left_join(as.data.frame(MSSh), as.data.frame(MSSi), by = "id") %>%
   left_join(as.data.frame(MSOb), by = "id")
 merged_sh <- t(merged_sh)
 write.table(merged_sh, file = paste0(output_folder, "merged_MSHD_alpha.tsv"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+t1<-read_tsv("Output/DAS_ALPHA_ANCOMBC2/merged_shannon_union.tsv",col_names=FALSE,row_names=TRUE)
+rownames
+t2<-t(t1)

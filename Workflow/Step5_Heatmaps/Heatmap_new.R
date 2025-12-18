@@ -1,5 +1,5 @@
 source("Settings/utilities.R")
-output_folder <- "Image/Heatmap_new_auto/"
+output_folder <- "Image/Heatmap_Maaslin_intersection_spec/BOI_U_DAS_final/"
 createFolder(output_folder)
 #### Functions ############
 # --- Inizio codice scompattato senza funzioni ---
@@ -105,6 +105,12 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
         # Ordine colonne
         if (order == "ALL") {
             colOrder <- sort(colnames(norm_data_z))
+
+            # Ordine alfanumerico corretto: prima HD, poi MS, numeri in ordine
+            nums <- suppressWarnings(as.numeric(gsub("\\D", "", colOrder)))
+            pref <- substr(colOrder, 1, 2)
+
+            colOrder <- colOrder[order(pref, nums)]
         } else {
             colOrder <- metadata_hm %>%
                 mutate(sample_id = rownames(metadata_hm)) %>%
@@ -114,10 +120,9 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
         }
 
         # Costruisci break e colori
-        myBreaks <- c(
-            seq(min(norm_data_z), 0, length.out = ceiling(paletteLength / 2) + 1),
-            seq(-1 / paletteLength, max(norm_data_z), length.out = floor(paletteLength / 2))
-        )
+        # Scala simmetrica centrata sullo zero
+        max_abs <- max(abs(range(norm_data_z)))
+        myBreaks <- seq(-max_abs, max_abs, length.out = paletteLength + 1)
         col_fun <- circlize::colorRamp2(myBreaks, colors_list[[kingdom]])
 
         # Annotazioni
@@ -126,7 +131,8 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
         colnames(ann_col) <- phil_name
 
         ann_row <- metadata_hm %>% select(all_of(topBar))
-        rownames(ann_row) <- colnames(norm_data_z)
+        ann_row <- ann_row[colOrder, , drop = FALSE]
+
 
         ann_colors <- ann_colors_base
         ann_colors[[phil_name]] <- setNames(viridisLite::mako(length(unique(metadata_kingdom$Phylum))), levels(as.factor(metadata_kingdom$Phylum)))
@@ -134,12 +140,22 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
 
         # Heatmap
         mat_t <- t(norm_data_z[, colOrder, drop = FALSE])
+        cluster_cols_flag <- ncol(mat_t) > 1
+        rownames(mat_t)
+        colOrder <- colOrder[order(
+            substr(colOrder, 1, 2), # HD/MS
+            as.numeric(sub("^[A-Z]+", "", colOrder)) # numeri
+        )]
+        norm_data_z <- norm_data_z[, colOrder, drop = FALSE]
+        mat_t <- t(norm_data_z)
+        rownames(mat_t) # ora do
+
         heatmap_list[[kingdom]] <- pheatmap(
             mat_t,
             annotation_col = ann_col,
             annotation_row = ann_row,
             annotation_colors = ann_colors,
-            cluster_cols = TRUE,
+            cluster_cols = cluster_cols_flag,
             cluster_rows = FALSE,
             legend = FALSE,
             annotation_legend = FALSE,
@@ -156,7 +172,7 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
             annotation_col = ann_col,
             annotation_row = ann_row,
             annotation_colors = ann_colors,
-            cluster_cols = TRUE,
+            cluster_cols = cluster_cols_flag,
             cluster_rows = FALSE,
             legend = TRUE, # necessario
             annotation_legend = TRUE, # necessario
@@ -192,14 +208,13 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
             ncol = 1,
             heights = c(8, 2) # altezza relativa della heatmap e delle legende
         )
-        
+
         ggsave(
             plot = final_merge,
             filename = paste0(output_folder, filename, "_", kingdom, "_legends.pdf"),
-            width = ceiling(nrow(ann_col) *0.2 + 5),
-            height = 40,limitsize = FALSE
+            width = ceiling(nrow(ann_col) * 0.2 + 5),
+            height = 40, limitsize = FALSE
         )
-
     }
 
     # Combina heatmap in grid
@@ -242,110 +257,225 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
 # )
 # ########################
 # ######### MSHD ############
-create_heatmap(
-    Bacteria = readRDS(file = "Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds"),
-    Archaea = readRDS(file = "Output/merge_DAS/MSHD/Archaea_MsHd_merged.rds"),
-    Eukaryota = readRDS(file = "Output/merge_DAS/MSHD/Eukaryote_MsHd_merged.rds"),
-    filename = "category", output_folder = output_folder, order = "ALL", topBar = "Status"
-)
-# #########GC_LESION############
-create_heatmap(
-    Bacteria = readRDS("Output/merge_DAS/GC/Bacteria_GC_merged.rds"),
-    Archaea = readRDS("Output/merge_DAS/GC/Archaea_GC_merged.rds"),
-    Eukaryota = readRDS("Output/merge_DAS/GC/Eukaryote_GC_merged.rds"),
-    filename = "GC_LESION", output_folder = output_folder, order = "gc_treatment", topBar = "gc_treatment"
-)
+# create_heatmap(
+#     Bacteria = readRDS(file = "Output/merge_DAS/MSHD/Bacteria_MsHd_merged.rds"),
+#     Archaea = readRDS(file = "Output/merge_DAS/MSHD/Archaea_MsHd_merged.rds"),
+#     Eukaryota = readRDS(file = "Output/merge_DAS/MSHD/Eukaryote_MsHd_merged.rds"),
+#     filename = "category", output_folder = output_folder, order = "ALL", topBar = "Status"
+# )
+# # #########GC_LESION############
+# create_heatmap(
+#     Bacteria = readRDS("Output/merge_DAS/GC/Bacteria_GC_merged.rds"),
+#     Archaea = readRDS("Output/merge_DAS/GC/Archaea_GC_merged.rds"),
+#     Eukaryota = readRDS("Output/merge_DAS/GC/Eukaryote_GC_merged.rds"),
+#     filename = "GC_LESION", output_folder = output_folder, order = "gc_treatment", topBar = "gc_treatment"
+# )
 
-# #########lesion_burden############
-create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_lesion_burden_positive_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_lesion_burden_positive_merged.rds")),
-    Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_lesion_burden_positive_merged.rds")),
-    filename = paste0("lesion_burden_positive"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "positive"
-)
+# # #########lesion_burden############
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_lesion_burden_positive_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_lesion_burden_positive_merged.rds")),
+#     Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_lesion_burden_positive_merged.rds")),
+#     filename = paste0("lesion_burden_positive"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "positive"
+# )
+
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_lesion_burden_negative_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_lesion_burden_negative_merged.rds")),
+#     Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_lesion_burden_negative_merged.rds")),
+#     filename = paste0("lesion_burden_negative"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "negative"
+# )
+
+
+# # #########spinal_cord_lesion############
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_positive_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_spinal_cord_lesion_positive_merged.rds")),
+#     Eukaryota = NULL,
+#     filename = paste0("spinal_cord_lesion_positive"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "positive"
+# )
+
+
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_negative_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_spinal_cord_lesion_negative_merged.rds")),
+#     Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_spinal_cord_lesion_negative_merged.rds")),
+#     filename = paste0("spinal_cord_lesion_negative"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "negative"
+# )
+
+# ######### subtentorial_lesions############
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_subtentorial_lesions_positive_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_subtentorial_lesions_positive_merged.rds")),
+#     Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_subtentorial_lesions_positive_merged.rds")),
+#     filename = paste0("subtentorial_lesions_positive"), output_folder = output_folder, order = "subtentorial_lesions", topBar = "subtentorial_lesions", status = "positive"
+# )
+
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_subtentorial_lesions_negative_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_subtentorial_lesions_negative_merged.rds")),
+#     Eukaryota = NULL,
+#     filename = paste0("subtentorial_lesions_negative"), output_folder = output_folder, order = "subtentorial_lesions", topBar = "subtentorial_lesions", status = "negative"
+# )
+
+# # #########gadolinium_contrast############
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_gadolinium_contrast_positive_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_gadolinium_contrast_positive_merged.rds")),
+#     Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_gadolinium_contrast_positive_merged.rds")),
+#     filename = paste0("gadolinium_contrast_positive"), output_folder = output_folder, order = "gadolinium_contrast", topBar = "gadolinium_contrast", status = "positive"
+# )
+# create_heatmap(
+#     Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_gadolinium_contrast_negative_merged.rds")),
+#     Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_gadolinium_contrast_negative_merged.rds")),
+#     Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_gadolinium_contrast_negative_merged.rds")),
+#     filename = paste0("gadolinium_contrast_negative"), output_folder = output_folder, order = "gadolinium_contrast", topBar = "gadolinium_contrast", status = "negative"
+# )
+# dim <- c("01", "05", "001")
+# for (d in dim) {
+#     create_heatmap(
+#         Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_gadolinium_contrast_", d, "_merged.rds")),
+#         Archaea = NULL,
+#         Eukaryota = NULL,
+#         filename = paste0("gadolinium_contrast_", d), output_folder = output_folder,
+#         order = "gadolinium_contrast", topBar = "gadolinium_contrast"
+#     )
+#     create_heatmap(
+#         Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_spinal_cord_lesion_", d, "_merged.rds")),
+#         Archaea = NULL,
+#         Eukaryota = NULL,
+#         filename = paste0("spinal_cord_lesion_", d), output_folder = output_folder,
+#         order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions"
+#     )
+#     create_heatmap(
+#         Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_subtentorial_lesions_", d, "_merged.rds")),
+#         Archaea = NULL,
+#         Eukaryota = NULL,
+#         filename = paste0("subtentorial_lesions_", d), output_folder = output_folder,
+#         order = "subtentorial_lesions", topBar = "subtentorial_lesions"
+#     )
+
+#     create_heatmap(
+#         Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_lesion_burden_", d, "_merged.rds")),
+#         Archaea = NULL,
+#         Eukaryota = NULL,
+#         filename = paste0("lesion_burden_", d), output_folder = output_folder,
+#         order = "Lesion_Burden", topBar = "Lesion_Burden"
+#     )
+# }
+
 
 create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_lesion_burden_negative_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_lesion_burden_negative_merged.rds")),
-    Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_lesion_burden_negative_merged.rds")),
-    filename = paste0("lesion_burden_negative"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "negative"
-)
-
-
-# #########spinal_cord_lesion############
-create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_positive_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_spinal_cord_lesion_positive_merged.rds")),
+    Bacteria = readRDS("Output/BOI2/MSHD/Bacteria_MSHD.rds"),
+    Archaea = NULL,
     Eukaryota = NULL,
-    filename = paste0("spinal_cord_lesion_positive"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "positive"
+    filename = paste0("MSHD"), output_folder = output_folder,
+    order = "Status", topBar = "Status"
 )
-
-
 create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_spinal_cord_lesion_negative_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_spinal_cord_lesion_negative_merged.rds")),
-    Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_spinal_cord_lesion_negative_merged.rds")),
-    filename = paste0("spinal_cord_lesion_negative"), output_folder = output_folder, order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions", status = "negative"
-)
-
-######### subtentorial_lesions############
-create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_subtentorial_lesions_positive_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_subtentorial_lesions_positive_merged.rds")),
-    Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_subtentorial_lesions_positive_merged.rds")),
-    filename = paste0("subtentorial_lesions_positive"), output_folder = output_folder, order = "subtentorial_lesions", topBar = "subtentorial_lesions", status = "positive"
-)
-
-create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_subtentorial_lesions_negative_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_subtentorial_lesions_negative_merged.rds")),
+    Bacteria = readRDS("Output/BOI2/GC/Bacteria_GC.rds"),
+    Archaea = NULL,
     Eukaryota = NULL,
-    filename = paste0("subtentorial_lesions_negative"), output_folder = output_folder, order = "subtentorial_lesions", topBar = "subtentorial_lesions", status = "negative"
+    filename = paste0("GC"), output_folder = output_folder,
+    order = "gc_treatment", topBar = "gc_treatment"
 )
 
-# #########gadolinium_contrast############
 create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_gadolinium_contrast_positive_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_gadolinium_contrast_positive_merged.rds")),
-    Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_gadolinium_contrast_positive_merged.rds")),
-    filename = paste0("gadolinium_contrast_positive"), output_folder = output_folder, order = "gadolinium_contrast", topBar = "gadolinium_contrast", status = "positive"
+    Bacteria = NULL,
+    Archaea = readRDS("Output/BOI2/MSHD/Archaea_MSHD.rds"),
+    Eukaryota = NULL,
+    filename = paste0("MSHD_"), output_folder = output_folder,
+    order = "Status", topBar = "Status"
 )
 create_heatmap(
-    Bacteria = readRDS(paste0("Output/merge_DAS/GC_comp/Bacteria_gadolinium_contrast_negative_merged.rds")),
-    Archaea = readRDS(paste0("Output/merge_DAS/GC_comp/Archaea_gadolinium_contrast_negative_merged.rds")),
-    Eukaryota = readRDS(paste0("Output/merge_DAS/GC_comp/Eukaryote_gadolinium_contrast_negative_merged.rds")),
-    filename = paste0("gadolinium_contrast_negative"), output_folder = output_folder, order = "gadolinium_contrast", topBar = "gadolinium_contrast", status = "negative"
+    Bacteria = NULL,
+    Archaea = readRDS("Output/BOI2/GC/Archaea_GC.rds"),
+    Eukaryota = NULL,
+    filename = paste0("GC_Archaea"), output_folder = output_folder,
+    order = "gc_treatment", topBar = "gc_treatment"
 )
-dim <- c("01", "05", "001")
-d <- "05"
-for (d in dim) {
-    create_heatmap(
-        Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_gadolinium_contrast_", d, "_merged.rds")),
-        Archaea = NULL,
-        Eukaryota = NULL,
-        filename = paste0("gadolinium_contrast_", d), output_folder = output_folder,
-        order = "gadolinium_contrast", topBar = "gadolinium_contrast"
-    )
-    create_heatmap(
-        Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_spinal_cord_lesion_", d, "_merged.rds")),
-        Archaea = NULL,
-        Eukaryota = NULL,
-        filename = paste0("spinal_cord_lesion_", d), output_folder = output_folder,
-        order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions"
-    )
-    create_heatmap(
-        Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_subtentorial_lesions_", d, "_merged.rds")),
-        Archaea = NULL,
-        Eukaryota = NULL,
-        filename = paste0("subtentorial_lesions_", d), output_folder = output_folder,
-        order = "subtentorial_lesions", topBar = "subtentorial_lesions"
-    )
 
-    create_heatmap(
-        Bacteria = readRDS(paste0("Output/merge_DAS/", d, "/Bacteria_lesion_burden_", d, "_merged.rds")),
-        Archaea = NULL,
-        Eukaryota = NULL,
-        filename = paste0("lesion_burden_", d), output_folder = output_folder,
-        order = "Lesion_Burden", topBar = "Lesion_Burden"
-    )
+create_heatmap(
+    Bacteria = NULL,
+    Archaea = NULL,
+    Eukaryota = readRDS("Output/BOI2/MSHD/Eukaryote_MSHD.rds"),
+    filename = paste0("MSHD"), output_folder = output_folder,
+    order = "Status", topBar = "Status"
+)
+create_heatmap(
+    Bacteria = NULL,
+    Archaea = NULL,
+    Eukaryota = readRDS("Output/BOI2/GC/Eukaryote_GC.rds"),
+    filename = paste0("GC_Eukaryote"), output_folder = output_folder,
+    order = "gc_treatment", topBar = "gc_treatment"
+)
+
+dec <- c("001", "01", "05")
+for (d in dec) {
+    if (paste0("Output/BOI2/", d, "_unioned", "/Bacteria_gadolinium_", d, ".rds") %>% file.exists() != FALSE) {
+        create_heatmap(
+            Bacteria = readRDS(paste0("Output/BOI2/", d, "_unioned", "/Bacteria_gadolinium_", d, ".rds")),
+            Archaea = NULL,
+            Eukaryota = NULL,
+            filename = paste0("gadolinium_", d), output_folder = output_folder,
+            order = "gadolinium_contrast", topBar = "gadolinium_contrast"
+        )
+    }
+    if (paste0("Output/BOI2/", d, "_unioned", "/Bacteria_spinal_cord_", d, ".rds") %>% file.exists() != FALSE) {
+        create_heatmap(
+            Bacteria = readRDS(paste0("Output/BOI2/", d, "_unioned", "/Bacteria_", "spinal_cord_", d, ".rds")),
+            Archaea = NULL,
+            Eukaryota = NULL,
+            filename = paste0("spinal_cord_", d), output_folder = output_folder,
+            order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions"
+        )
+    }
+    if (paste0("Output/BOI2/", d, "_unioned", "/Bacteria_subtentorial_", d, ".rds") %>% file.exists() != FALSE) {
+        create_heatmap(
+            Bacteria = readRDS(paste0("Output/BOI2/", d, "_unioned", "/Bacteria_", "subtentorial_", d, ".rds")),
+            Archaea = NULL,
+            Eukaryota = NULL,
+            filename = paste0("subtentorial_", d), output_folder = output_folder,
+            order = "subtentorial_lesions", topBar = "subtentorial_lesions"
+        )
+    }
+    if (paste0("Output/BOI2/", d, "_unioned", "/Bacteria_lesion_", d, ".rds") %>% file.exists() != FALSE) {
+        create_heatmap(
+            Bacteria = readRDS(paste0("Output/BOI2/", d, "_unioned", "/Bacteria_lesion_", d, ".rds")),
+            Archaea = NULL,
+            Eukaryota = NULL,
+            filename = paste0("lesion_burden_", d), output_folder = output_folder,
+            order = "Lesion_Burden", topBar = "Lesion_Burden"
+        )
+    }
 }
+
+
+create_heatmap(
+    Bacteria = readRDS("Output/BOI/001/Bacteria_gadolinium_001_union.rds"),
+    Archaea = NULL,
+    Eukaryota = NULL,
+    filename = paste0("Gadolinium_001_"), output_folder = output_folder,
+    order = "gadolinium_contrast", topBar = "gadolinium_contrast"
+)
+create_heatmap(
+    Bacteria = readRDS("Output/BOI/001/Bacteria_spinal_cord_001_union.rds"),
+    Archaea = NULL,
+    Eukaryota = NULL,
+    filename = paste0("Spinal_cord_001_"), output_folder = output_folder,
+    order = "Spinal_cord_lesions", topBar = "Spinal_cord_lesions"
+)
+create_heatmap(
+    Bacteria = readRDS("Output/BOI/001/Bacteria_subtentorial_lesions_001_union.rds"),
+    Archaea = NULL,
+    Eukaryota = NULL,   
+    filename = paste0("Subtentorial_001_"), output_folder = output_folder,
+    order = "subtentorial_lesions", topBar = "subtentorial_lesions"
+)
+create_heatmap(
+    Bacteria = readRDS("Output/BOI/001/Bacteria_lesion_001_union.rds"),
+    Archaea = NULL,
+    Eukaryota = NULL,
+    filename = paste0("Lesion_burden_001_"), output_folder = output_folder,
+    order = "Lesion_Burden", topBar = "Lesion_Burden"
+)
