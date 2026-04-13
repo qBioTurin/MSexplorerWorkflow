@@ -62,6 +62,7 @@ merge_p_value <- function(limma_path, lefse_path, maaslin3_path, analysis_name, 
     colnames(maaslin3) <- c("species_m", paste0("P.val_maaslin_", analysis_name), "model_maaslin")
 
     # assicurati p-value numerico; rimuovi NA convertiti
+    #qua bisogna inoltre 
     pval_maas_col <- paste0("P.val_maaslin_", analysis_name)
     maaslin3[[pval_maas_col]] <- suppressWarnings(as.numeric(as.character(maaslin3[[pval_maas_col]])))
     maaslin3 <- maaslin3[!is.na(maaslin3[[pval_maas_col]]), ]

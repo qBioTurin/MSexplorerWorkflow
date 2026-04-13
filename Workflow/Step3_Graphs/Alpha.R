@@ -147,9 +147,9 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
 
 
 execute_alpha <- function() {
-  baselines_decB <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-  baselines_decA <- readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-  baselines_decE <- readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
+  baselines_decB <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds")
+  baselines_decA <- readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.rds")
+  baselines_decE <- readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.rds")
 
   Alpha(baselines_dec = baselines_decB, Domain = "Bacteria", output_folder)
   Alpha(baselines_dec = baselines_decA, Domain = "Archaea", output_folder)

@@ -5,10 +5,10 @@ set.seed(9345678)
 # Import Data
 #############
 # Import Biom
-baselines <- import_biom("InputData/fin_hs_vs_MS_T0.biom")
+baselines <- import_biom("InputData/MS_conf60_110326.biom")
 
 # Import metadata
-baselines_metadata = read.csv("InputData/metadataMS.csv", 
+baselines_metadata = read.csv("InputData/merged_data_cluster.csv", 
                               header = TRUE, 
                               sep = ",",
                               na = c("", " ", "NA"), 
@@ -21,7 +21,7 @@ baselines_metadata <- baselines_metadata %>%
     across(.cols = c(sex, category, clinical_presentation, gc_treatment,
                      subtentorial_lesions, spinal_cord_lesion, gadolinium_contrast,
                      sequencing_batch,WORSENING, EDSS_DIAGNOSI, EDSS_PROGRESSIONE, Event,
-                     naive, previous_therapy, antibiotic_use, sample_type,lesion_burden), 
+                     naive, previous_therapy, antibiotic_use, sample_type,lesion_burden,Cluster), 
            .fns = as.factor),
     
     across(.cols = c(age, bmi ,EventTime
@@ -40,7 +40,7 @@ TAXA_baselines = tax_table(baselines@tax_table@.Data)
 
 # Prep OTU table
 OTU_baselines = otu_table(baselines@otu_table@.Data, taxa_are_rows = TRUE)
-colnames(OTU_baselines) <- gsub("_bracken_species", "", colnames(OTU_baselines))
+colnames(OTU_baselines) <- gsub("_final_unmapped_bracken", "", colnames(OTU_baselines))
 # Create phyloseq obj
 ALL_baselines = phyloseq(OTU_baselines, TAXA_baselines)
 
@@ -59,9 +59,11 @@ TREE_baselines = rtree(ntaxa(ALL_baselines), rooted=TRUE, tip.label=taxa_names(A
 ALL_baselines = merge_phyloseq(ALL_baselines, TREE_baselines)
 
 # Remove non-naive samples from biom + subjects with antibiotic use
-keep_samples = baselines_metadata$id[baselines_metadata$naive %in% c("yes", "healthy")  & baselines_metadata$antibiotic_use == "no"]
+keep_samples = baselines_metadata$id[baselines_metadata$naive %in% c("yes", "healthy")]
 ALL_baselines = prune_samples(keep_samples, ALL_baselines)
-
+print(ALL_baselines)
+otu<- as.data.frame(otu_table(ALL_baselines))
+taxa<- as.data.frame(tax_table(ALL_baselines))
 # Create sample_data by associating metadata
 ##############################################
 # Remove non-naive patients from metadata

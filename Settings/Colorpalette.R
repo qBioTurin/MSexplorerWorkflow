@@ -52,22 +52,20 @@ names(paletteSpecies)=c("Bifidobacterium adolescentis  ", "Collinsella aerofacie
 "Aspergillus puulaauensis  ","Other" )
 
 
-paletteBact=c("Bifidobacterium adolescentis  "="#8ea4d2", "Collinsella aerofaciens  "= "#baf2d8", 
-"Segatella copri  "= "#465362", "Phocaeicola dorei  "= "#ef6f6c", "Faecalibacterium prausnitzii  "= "#FDBF6F", 
-"Agathobacter rectalis  "= "#edead0", "Bacteroides stercoris  "= "#8ea4d2", "Bacteroides uniformis  "= "#4d9078", 
-"Phocaeicola vulgatus  "= "#414073", "Blautia wexlerae  "= "#fface4", "Other"="grey"
+paletteBact=c("Bifidobacterium adolescentis"="#8ea4d2", "Alistipes putredinis"= "#baf2d8", 
+"Roseburia faecis"= "#465362", "Phocaeicola dorei"= "#ef6f6c", "Agathobacter rectalis"= "#FDBF6F", 
+"Blautia wexlerae"= "#edead0", "Bacteroides stercoris"= "#8ea4d2", "Bacteroides uniformis" = "#4d9078", 
+"Phocaeicola vulgatus"= "#414073", "Faecalibacterium prausnitzii"= "#fface4", "Other"="grey"
 )
-paletteArchaea=c("Methanococcus maripaludis  "= "#ef6f6c", "Methanobrevibacter smithii  "= "#1F78B4", 
-"Methanosphaera sp. BMS  "= "#c0df85", "Methanimicrococcus sp. Hf6  "= "#b1111f", "Methanobrevibacter sp. TLL-48-HuF1  "= "#ab87ff", 
-"Methanosphaera stadtmanae  "="#f78154" , "Methanolobus uncultured Methanolobus sp.  "= "#c9b1bd", 
-"Methanoregula uncultured Methanoregula sp.  "="#ef2d56" , "Halomicrobium urmianum  "= "#7e1a2f", 
-"Haloferax volcanii  "= "#553555", "Other"="grey"
+paletteArchaea=c("Methanomethylophilus alvi"= "#ef6f6c", "Methanobrevibacter arboriphilus"= "#1F78B4", 
+"Methanosphaera stadtmanae"= "#c0df85", "Methanobrevibacter smithii"= "#b1111f", "Methanomassiliicoccus Candidatus Methanomassiliicoccus intestinalis"= "#ab87ff", 
+"Methanobrevibacter sp. TLL-48-HuF1"="#f78154"
 )
 
-paletteEuk<-c("Bifidobacterium adolescentis  "= "#b6acc6", "Collinsella aerofaciens  "= "#e4a3a7", 
-"Segatella copri  "= "#ac6fe1", "Phocaeicola dorei  "= "#2e20ad", "Faecalibacterium prausnitzii  "="#0fc9c9", 
-"Agathobacter rectalis  "= "#fae5ef", "Bacteroides stercoris  "= "#18af2b", "Bacteroides uniformis  "= "#9f66e9", 
-"Phocaeicola vulgatus  "= "#489541", "Blautia wexlerae  "= "#bfd8c5", "Other"="grey")
+paletteEuk<-c("Komagataella phaffii"= "#b6acc6", "Debaryomyces hansenii"= "#e4a3a7", 
+"Saccharomyces cerevisiae"= "#ac6fe1", "Giardia intestinalis"= "#2e20ad", "Aspergillus chevalieri"="#0fc9c9", 
+"Malassezia restricta"= "#fae5ef", "Penicillium digitatum"= "#18af2b", "Candida albicans"= "#9f66e9", 
+"Lachancea thermotolerans"= "#489541", "Torulaspora delbrueckii" = "#bfd8c5")
 
 paletteAlpha_NO = c("#8ea4d2", "#baf2d8", "#465362", "#ef6f6c", "#FDBF6F", "#edead0", 
               "#bad7f2", "#4d9078", "#414073", "#fface4")

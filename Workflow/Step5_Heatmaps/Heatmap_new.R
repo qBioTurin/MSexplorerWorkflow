@@ -29,7 +29,7 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
         rownames(norm_data) <- norm_data$Genus_species
         norm_data <- norm_data[, -c(1, length(norm_data))]
 
-        metadata <- read.csv("InputData/NewMetadataMS_fin.csv", header = TRUE, sep = ",", na = c("", " ", "NA"), check.names = TRUE)
+        metadata <- read.csv("InputData/merged_data_cluster_name.csv", header = TRUE, sep = ",", na = c("", " ", "NA"), check.names = TRUE)
         metadata <- metadata %>%
             mutate(
                 across(c(id), as.character),
@@ -364,9 +364,9 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
 #     )
 # }
 
-
+output_folder <- "Image/Rebuttal/"
 create_heatmap(
-    Bacteria = readRDS("Output/BOI2/MSHD/Bacteria_MSHD.rds"),
+    Bacteria = readRDS("Output/rebuttal/Bacteria_category_heatmap.rds"),
     Archaea = NULL,
     Eukaryota = NULL,
     filename = paste0("MSHD"), output_folder = output_folder,

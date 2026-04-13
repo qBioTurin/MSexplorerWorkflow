@@ -1,21 +1,20 @@
 maaslin22 <- function(
-  input_data, input_metadata = NULL, output, formula = NULL,
-  fixed_effects = NULL, reference = NULL, random_effects = NULL,
-  group_effects = NULL, ordered_effects = NULL, strata_effects = NULL,
-  feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
-  feature_specific_covariate_record = NULL, min_abundance = 0,
-  min_prevalence = 0, zero_threshold = 0, min_variance = 0,
-  max_significance = 0.1, normalization = "TSS", transform = "LOG",
-  correction = "BH", standardize = TRUE, unscaled_abundance = NULL,
-  median_comparison_abundance = TRUE, median_comparison_prevalence = FALSE,
-  median_comparison_abundance_threshold = 0, median_comparison_prevalence_threshold = 0,
-  subtract_median = FALSE, warn_prevalence = TRUE, small_random_effects = FALSE,
-  augment = TRUE, evaluate_only = NULL, plot_summary_plot = TRUE,
-  summary_plot_first_n = 25, coef_plot_vars = NULL, heatmap_vars = NULL,
-  plot_associations = TRUE, max_pngs = 30, cores = 1, save_models = FALSE,
-  save_plots_rds = FALSE, verbosity = "FINEST", summary_plot_balanced = FALSE,
-  assay.type = 1
-) {
+    input_data, input_metadata = NULL, output, formula = NULL,
+    fixed_effects = NULL, reference = NULL, random_effects = NULL,
+    group_effects = NULL, ordered_effects = NULL, strata_effects = NULL,
+    feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
+    feature_specific_covariate_record = NULL, min_abundance = 0,
+    min_prevalence = 0, zero_threshold = 0, min_variance = 0,
+    max_significance = 0.1, normalization = "TSS", transform = "LOG",
+    correction = "BH", standardize = TRUE, unscaled_abundance = NULL,
+    median_comparison_abundance = TRUE, median_comparison_prevalence = FALSE,
+    median_comparison_abundance_threshold = 0, median_comparison_prevalence_threshold = 0,
+    subtract_median = FALSE, warn_prevalence = TRUE, small_random_effects = FALSE,
+    augment = TRUE, evaluate_only = NULL, plot_summary_plot = TRUE,
+    summary_plot_first_n = 25, coef_plot_vars = NULL, heatmap_vars = NULL,
+    plot_associations = TRUE, max_pngs = 30, cores = 1, save_models = FALSE,
+    save_plots_rds = FALSE, verbosity = "FINEST", summary_plot_balanced = FALSE,
+    assay.type = 1) {
     match.arg(verbosity, c(
         "FINEST", "FINER", "FINE", "DEBUG",
         "INFO", "WARN", "ERROR"
@@ -164,15 +163,14 @@ maaslin22 <- function(
 }
 
 maaslin_plot_results22 <- function(
-  output, transformed_data, unstandardized_metadata,
-  fit_data_abundance, fit_data_prevalence, normalization, transform,
-  feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
-  feature_specific_covariate_record = NULL, median_comparison_abundance = TRUE,
-  median_comparison_prevalence = FALSE, max_significance = 0.1,
-  plot_summary_plot = TRUE, summary_plot_first_n = 25, coef_plot_vars = NULL,
-  heatmap_vars = NULL, plot_associations = TRUE, max_pngs = 30,
-  balanced = FALSE, save_plots_rds = FALSE
-) {
+    output, transformed_data, unstandardized_metadata,
+    fit_data_abundance, fit_data_prevalence, normalization, transform,
+    feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
+    feature_specific_covariate_record = NULL, median_comparison_abundance = TRUE,
+    median_comparison_prevalence = FALSE, max_significance = 0.1,
+    plot_summary_plot = TRUE, summary_plot_first_n = 25, coef_plot_vars = NULL,
+    heatmap_vars = NULL, plot_associations = TRUE, max_pngs = 30,
+    balanced = FALSE, save_plots_rds = FALSE) {
     print("Starting Maaslin3 plotting...")
     ret_plots <- list()
     if (!file.exists(output)) {
@@ -257,11 +255,10 @@ maaslin_plot_results22 <- function(
 }
 
 maaslin3_summary_plot22 <- function(
-  merged_results, summary_plot_file, figures_folder,
-  first_n = 30, max_significance = 0.1, coef_plot_vars = NULL,
-  heatmap_vars = NULL, median_comparison_abundance = FALSE,
-  median_comparison_prevalence = FALSE, balanced = FALSE, save_plots_rds = FALSE
-) {
+    merged_results, summary_plot_file, figures_folder,
+    first_n = 30, max_significance = 0.1, coef_plot_vars = NULL,
+    heatmap_vars = NULL, median_comparison_abundance = FALSE,
+    median_comparison_prevalence = FALSE, balanced = FALSE, save_plots_rds = FALSE) {
     ret_plots <- list()
     if (first_n > 200) {
         logging::logerror(paste("At most 200 features can be plotted in the heatmap. \n                    Please choose a smaller first_n."))
@@ -485,10 +482,9 @@ preprocess_merged_results22 <- function(merged_results) {
     return(merged_results)
 }
 make_coef_plot <- function(
-  merged_results_sig, coef_plot_vars, max_significance,
-  median_comparison_prevalence, median_comparison_abundance,
-  median_df, plot_threshold = 10
-) {
+    merged_results_sig, coef_plot_vars, max_significance,
+    median_comparison_prevalence, median_comparison_abundance,
+    median_df, plot_threshold = 10) {
     coef_plot_data <- merged_results_sig[merged_results_sig$full_metadata_name %in%
         coef_plot_vars, ]
     quantile_df <- coef_plot_data %>%
@@ -631,11 +627,10 @@ make_coef_plot <- function(
 
 
 maaslin3_association_plots <- function(
-  merged_results, metadata, features, max_significance = 0.1,
-  figures_folder, max_pngs = 10, normalization, transform,
-  feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
-  feature_specific_covariate_record = NULL, save_plots_rds = FALSE
-) {
+    merged_results, metadata, features, max_significance = 0.1,
+    figures_folder, max_pngs = 10, normalization, transform,
+    feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
+    feature_specific_covariate_record = NULL, save_plots_rds = FALSE) {
     match.arg(normalization, c("TSS", "CLR", "NONE"))
     match.arg(transform, c("LOG", "PLOG", "NONE"))
     merged_results$error[grepl(
@@ -710,7 +705,7 @@ maaslin3_association_plots <- function(
             feature_name & merged_results$metadata == metadata_name &
             merged_results$model == model_name, ]
         if ("linear" == model_name) {
-            temp_plot <- maaslin3:::make_lm_plot(
+            temp_plot <- make_lm_plot(
                 this_signif_association,
                 joined_features_metadata, metadata, metadata_name,
                 feature_name, normalization, transformation,
@@ -718,7 +713,7 @@ maaslin3_association_plots <- function(
             )
         }
         if ("logistic" == model_name) {
-            temp_plot <- maaslin3:::make_logistic_plot(
+            temp_plot <- make_logistic_plot(
                 this_signif_association,
                 joined_features_metadata, metadata, metadata_name,
                 feature_name, normalization, transformation,
@@ -791,16 +786,15 @@ library(maaslin3)
 # Load an RDS file in R
 
 
-Maaslin3Fin <- function(
-  rds, output_folder, main_el, categorySel, elements, discr_els, perc = "K", median_comparison_abundance_in = TRUE,
-  fx_effects = NULL, random_effects = NULL, group_effects = NULL,
-  ordered_effects = NULL, strata_effects = NULL
-) {
+
+Maaslin3 <- function(
+    rds, output_folder, main_el, categorySel, elements, discr_els, perc = "K", median_comparison_abundance_in = TRUE,
+    fx_effects = NULL, random_effects = NULL, group_effects = NULL,
+    ordered_effects = NULL, strata_effects = NULL) {
     # Create data for maaslin3
     otu <- rds@otu_table
     taxa <- rds@tax_table
     metadata_df <- as(rds@sam_data, "data.frame")
-    levels(metadata_df$Cluster)
     ids_to_retain <- rownames(metadata_df[metadata_df[[categorySel]] %in% elements, ])
     otu <- otu[, colnames(otu) %in% ids_to_retain]
     metadata_df <- metadata_df[rownames(metadata_df) %in% ids_to_retain, ]
@@ -825,7 +819,7 @@ Maaslin3Fin <- function(
 
     class(metadata_df)
     metadata_df <- metadata_df %>%
-        select(category, gc_treatment, lesion_burden, spinal_cord_lesion, gadolinium_contrast, subtentorial_lesions, sex, age, bmi, Cluster)
+        select(category, gc_treatment, lesion_burden, spinal_cord_lesion, gadolinium_contrast, subtentorial_lesions, sex, age, bmi)
     if (main_el != "category") {
         metadata_df <- metadata_df %>%
             filter(category == "MS")
@@ -852,8 +846,8 @@ Maaslin3Fin <- function(
     metadata_df$sex <- as.factor(metadata_df$sex)
     metadata_df$age <- as.numeric(metadata_df$age)
     metadata_df$bmi <- as.numeric(metadata_df$bmi)
-    metadata_df$Cluster <- as.factor(metadata_df$Cluster)
-    levels(metadata_df$Cluster) <- c("bad_prognosis", "good_prognosis")
+
+
     if (!dir.exists(output_folder)) {
         dir.create(output_folder, recursive = TRUE)
     }
@@ -894,208 +888,10 @@ Maaslin3Fin <- function(
         summary_plot_first_n = 50,
         cores = 1
     )
-    summary_plot_file <- file.path(output_folder, "figures", "summary_plot.pdf")
-    if (median_comparison_abundance_in) {
-        last <- "T"
-    } else {
-        last <- "F"
-    }
+    summary_plot_file <- "Output/MAASLIN3/001_disc/001_spinal_cord_lesion_onlygc_plus_gc/figures/summary_plot.pdf"
     all_results <- read_tsv(file.path(output_folder, "all_results.tsv"), show_col_types = FALSE)
-    all_results_sig <- all_results %>% dplyr::filter(metadata == main_el & pval_individual < 0.05)
+    all_results_sig <- all_results %>% dplyr::filter(metadata == main_el)
     all_results_sig <- all_results_sig %>%
         select(feature, metadata, value, coef, null_hypothesis, pval_individual, qval_individual, pval_joint, pval_individual, model, stderr)
     write.csv(all_results_sig, file.path(output_folder, paste0(main_el, "_MAASLIN3_SR_", perc, "_", last, ".csv")), row.names = FALSE)
-    features_unique <- unique(all_results_sig$feature)
-    features_unique <- data.frame(Species = features_unique)
-    write.csv(features_unique, file.path(output_folder, paste0(main_el, "_MAASLIN3_SR_features_", perc, "_", last, ".csv")), row.names = FALSE, quote = FALSE)
 }
-
-rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-library(dplyr)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_lesion_burden_onlygc_plus_gc",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_spinal_cord_lesion_onlygc_plus_gc",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_plus_gc",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_subtentorial_lesions_onlygc_plus_gc",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-
-rds_01 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_lesion_burden_onlygc_T",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_spinal_cord_lesion_onlygc_T",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_gadolinium_contrast_onlygc_T",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_subtentorial_lesions_onlygc_T",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-rds_05 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_lesion_burden_onlygc_T",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_spinal_cord_lesion_onlygc_T",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_gadolinium_contrast_onlygc_T",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_subtentorial_lesions_onlygc_T",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-
-rds_Euk <- readRDS("Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
-Maaslin3(
-    rds = rds_Euk, output_folder = "Output/MAASLIN3/Eukaryote_MSHD_disc_T",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
-)
-rds_Arch <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-Maaslin3(
-    rds = rds_Arch, output_folder = "Output/MAASLIN3/Archaea_MSHD_disc_T",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
-)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/Bacteria_MSHD_disc_T",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
-)
-
-
-########################### false
-
-
-rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-library(dplyr)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_lesion_burden_onlygc_F",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_spinal_cord_lesion_onlygc_F",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_F",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_subtentorial_lesions_onlygc_F",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-rds_01 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_lesion_burden_onlygc_F",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_spinal_cord_lesion_onlygc_F",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_gadolinium_contrast_onlygc_F",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_subtentorial_lesions_onlygc_F",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-rds_05 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_lesion_burden_onlygc_F",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_spinal_cord_lesion_onlygc_F",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_gadolinium_contrast_onlygc_F",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_subtentorial_lesions_onlygc_F",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-
-rds_Euk <- readRDS("Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
-Maaslin3(
-    rds = rds_Euk, output_folder = "Output/MAASLIN3/Eukaryote_MSHD_disc_F",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi"),
-    median_comparison_abundance_in = FALSE
-)
-
-rds_Arch <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-
-Maaslin3(
-    rds = rds_Arch, output_folder = "Output/MAASLIN3/Archaea_MSHD_disc_F",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi"),
-    median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/Bacteria_MSHD_disc_F",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi"),
-    median_comparison_abundance_in = FALSE
-)

@@ -1,3 +1,4 @@
+
 createBOI <- function(rds_path, species_path, folder, name) {
     species_tab <- read.csv(species_path)
     species_list <- species_tab$Species
@@ -55,80 +56,106 @@ createBOI_ancomBC2<- function(
 }
 
 
-rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-species_tab <- read.csv("Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_001.csv")
+# rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds")
+# species_tab <- read.csv("Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_001.csv")
+createBOI(
+    "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds",
+    "Output/MAASLIN3/0_disc/0_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_0_T.csv",
+    "Output/BOI/0/",
+    "Bacteria_gadolinium_0"
+)
+createBOI(
+    "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds",
+    "Output/MAASLIN3/0_disc/0_lesion_burden_onlygc_plus_gc/lesion_burden_MAASLIN3_SR_features_0_T.csv",
+    "Output/BOI/0/",
+    "Bacteria_lesion_0"
+)
+createBOI(
+    "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds",
+    "Output/MAASLIN3/0_disc/0_spinal_cord_lesion_onlygc_plus_gc/spinal_cord_lesion_MAASLIN3_SR_features_0_T.csv",
+    "Output/BOI/0/",
+    "Bacteria_spinal_cord_0"
+)
+createBOI(
+    "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds",
+    "Output/MAASLIN3/0_disc/0_subtentorial_lesions_onlygc_plus_gc/subtentorial_lesions_MAASLIN3_SR_features_0_T.csv",
+    "Output/BOI/0/",
+    "Bacteria_subtentorial_lesions_0"
+)
+
+
 
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    "Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_001.csv",
+    "Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_001_T.csv",
     "Output/BOI/001/",
     "Bacteria_gadolinium_001"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    "Output/MAASLIN3/001_disc/001_lesion_burden_onlygc_plus_gc/lesion_burden_MAASLIN3_SR_features_001.csv",
+    "Output/MAASLIN3/001_disc/001_lesion_burden_onlygc_plus_gc/lesion_burden_MAASLIN3_SR_features_001_T.csv",
     "Output/BOI/001/",
     "Bacteria_lesion_001"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    "Output/MAASLIN3/001_disc/001_spinal_cord_lesion_onlygc_plus_gc/spinal_cord_lesion_MAASLIN3_SR_features_001.csv",
+    "Output/MAASLIN3/001_disc/001_spinal_cord_lesion_onlygc_plus_gc/spinal_cord_lesion_MAASLIN3_SR_features_001_T.csv",
     "Output/BOI/001/",
     "Bacteria_spinal_cord_001"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    "Output/MAASLIN3/001_disc/001_subtentorial_lesions_onlygc_plus_gc/subtentorial_lesions_MAASLIN3_SR_features_001.csv",
+    "Output/MAASLIN3/001_disc/001_subtentorial_lesions_onlygc_plus_gc/subtentorial_lesions_MAASLIN3_SR_features_001_T.csv",
     "Output/BOI/001/",
     "Bacteria_subtentorial_lesions_001"
 )
 
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    "Output/MAASLIN3/01_disc/01_gadolinium_contrast_onlygc_T/gadolinium_contrast_MAASLIN3_SR_features_01.csv",
+    "Output/MAASLIN3/01_disc/01_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_01_T.csv",
     "Output/BOI/01/",
     "Bacteria_gadolinium_01"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    "Output/MAASLIN3/01_disc/01_lesion_burden_onlygc_T/lesion_burden_MAASLIN3_SR_features_01.csv",
+    "Output/MAASLIN3/01_disc/01_lesion_burden_onlygc_plus_gc/lesion_burden_MAASLIN3_SR_features_01_T.csv",
     "Output/BOI/01/",
     "Bacteria_lesion_01"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    "Output/MAASLIN3/01_disc/01_spinal_cord_lesion_onlygc_T/spinal_cord_lesion_MAASLIN3_SR_features_01.csv",
+    "Output/MAASLIN3/01_disc/01_spinal_cord_lesion_onlygc_plus_gc/spinal_cord_lesion_MAASLIN3_SR_features_01_T.csv",
     "Output/BOI/01/",
     "Bacteria_spinal_cord_01"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    "Output/MAASLIN3/01_disc/01_subtentorial_lesions_onlygc_T/subtentorial_lesions_MAASLIN3_SR_features_01.csv",
+    "Output/MAASLIN3/01_disc/01_subtentorial_lesions_onlygc_plus_gc/subtentorial_lesions_MAASLIN3_SR_features_01_T.csv",
     "Output/BOI/01/",
     "Bacteria_subtentorial_lesions_01"
 )
 
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    "Output/MAASLIN3/05_disc/05_gadolinium_contrast_onlygc_T/gadolinium_contrast_MAASLIN3_SR_features_05.csv",
+    "Output/MAASLIN3/05_disc/05_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_05_T.csv",
     "Output/BOI/05/",
     "Bacteria_gadolinium_05"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    "Output/MAASLIN3/05_disc/05_lesion_burden_onlygc_T/lesion_burden_MAASLIN3_SR_features_05.csv",
+    "Output/MAASLIN3/05_disc/05_lesion_burden_onlygc_plus_gc/lesion_burden_MAASLIN3_SR_features_05_T.csv",
     "Output/BOI/05/",
     "Bacteria_lesion_05"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    "Output/MAASLIN3/05_disc/05_spinal_cord_lesion_onlygc_T/spinal_cord_lesion_MAASLIN3_SR_features_05.csv",
+    "Output/MAASLIN3/05_disc/05_spinal_cord_lesion_onlygc_plus_gc/spinal_cord_lesion_MAASLIN3_SR_features_05_T.csv",
     "Output/BOI/05/",
     "Bacteria_spinal_cord_05"
 )
 createBOI(
     "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    "Output/MAASLIN3/05_disc/05_subtentorial_lesions_onlygc_T/subtentorial_lesions_MAASLIN3_SR_features_05.csv",
+    "Output/MAASLIN3/05_disc/05_subtentorial_lesions_onlygc/subtentorial_lesions_MAASLIN3_SR_features_05_T.csv",
     "Output/BOI/05/",
     "Bacteria_subtentorial_lesions_05"
 )
@@ -256,82 +283,82 @@ createBOI2(
 )
 
 
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    species_path = "Output/AncomBC2_p/001_disc/001_subtentorial_lesions_onlygc/subtentorial_lesions_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/001/",
-    name = "Bacteria_subtentorial_lesions_001"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    species_path = "Output/AncomBC2_p/001_disc/001_spinal_cord_lesion_onlygc/spinal_cord_lesion_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/001/",
-    name = "Bacteria_spinal_cord_lesion_001"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    species_path = "Output/AncomBC2_p/001_disc/001_lesion_burden_onlygc/lesion_burden_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/001/",
-    name = "Bacteria_lesion_burden_001"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
-    species_path = "Output/AncomBC2_p/001_disc/001_gadolinium_contrast_onlygc/gadolinium_contrast_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/001/",
-    name = "Bacteria_gadolinium_contrast_001"
-)
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
+#     species_path = "Output/AncomBC2_p/001_disc/001_subtentorial_lesions_onlygc/subtentorial_lesions_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/001/",
+#     name = "Bacteria_subtentorial_lesions_001"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
+#     species_path = "Output/AncomBC2_p/001_disc/001_spinal_cord_lesion_onlygc/spinal_cord_lesion_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/001/",
+#     name = "Bacteria_spinal_cord_lesion_001"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
+#     species_path = "Output/AncomBC2_p/001_disc/001_lesion_burden_onlygc/lesion_burden_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/001/",
+#     name = "Bacteria_lesion_burden_001"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds",
+#     species_path = "Output/AncomBC2_p/001_disc/001_gadolinium_contrast_onlygc/gadolinium_contrast_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/001/",
+#     name = "Bacteria_gadolinium_contrast_001"
+# )
 
 
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    species_path = "Output/AncomBC2_p/05_disc/05_subtentorial_lesions_onlygc/subtentorial_lesions_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/05/",
-    name = "Bacteria_subtentorial_lesions_05"
-)
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
+#     species_path = "Output/AncomBC2_p/05_disc/05_subtentorial_lesions_onlygc/subtentorial_lesions_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/05/",
+#     name = "Bacteria_subtentorial_lesions_05"
+# )
 
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    species_path = "Output/AncomBC2_p/05_disc/05_spinal_cord_lesion_onlygc/spinal_cord_lesion_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/05/",
-    name = "Bacteria_spinal_cord_lesion_05"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    species_path = "Output/AncomBC2_p/05_disc/05_lesion_burden_onlygc/lesion_burden_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/05/",
-    name = "Bacteria_lesion_burden_05"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
-    species_path = "Output/AncomBC2_p/05_disc/05_gadolinium_contrast_onlygc/gadolinium_contrast_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/05/",
-    name = "Bacteria_gadolinium_contrast_05"
-)
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
+#     species_path = "Output/AncomBC2_p/05_disc/05_spinal_cord_lesion_onlygc/spinal_cord_lesion_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/05/",
+#     name = "Bacteria_spinal_cord_lesion_05"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
+#     species_path = "Output/AncomBC2_p/05_disc/05_lesion_burden_onlygc/lesion_burden_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/05/",
+#     name = "Bacteria_lesion_burden_05"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds",
+#     species_path = "Output/AncomBC2_p/05_disc/05_gadolinium_contrast_onlygc/gadolinium_contrast_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/05/",
+#     name = "Bacteria_gadolinium_contrast_05"
+# )
 
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    species_path = "Output/AncomBC2_p/01_disc/01_gadolinium_contrast_onlygc/gadolinium_contrast_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/01/",
-    name = "Bacteria_gadolinium_contrast_01"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    species_path = "Output/AncomBC2_p/01_disc/01_lesion_burden_onlygc/lesion_burden_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/01/",
-    name = "Bacteria_lesion_burden_01"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    species_path = "Output/AncomBC2_p/01_disc/01_spinal_cord_lesion_onlygc/spinal_cord_lesion_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/01/",
-    name = "Bacteria_spinal_cord_lesion_01"
-)
-createBOI_ancomBC2(
-    rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
-    species_path = "Output/AncomBC2_p/01_disc/01_subtentorial_lesions_onlygc/subtentorial_lesions_ANCOMBC2_significant_results.csv",
-    folder = "Output/BOI_AncomBC2/01/",
-    name = "Bacteria_subtentorial_lesions_01"
-)   
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
+#     species_path = "Output/AncomBC2_p/01_disc/01_gadolinium_contrast_onlygc/gadolinium_contrast_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/01/",
+#     name = "Bacteria_gadolinium_contrast_01"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
+#     species_path = "Output/AncomBC2_p/01_disc/01_lesion_burden_onlygc/lesion_burden_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/01/",
+#     name = "Bacteria_lesion_burden_01"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
+#     species_path = "Output/AncomBC2_p/01_disc/01_spinal_cord_lesion_onlygc/spinal_cord_lesion_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/01/",
+#     name = "Bacteria_spinal_cord_lesion_01"
+# )
+# createBOI_ancomBC2(
+#     rds_path = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds",
+#     species_path = "Output/AncomBC2_p/01_disc/01_subtentorial_lesions_onlygc/subtentorial_lesions_ANCOMBC2_significant_results.csv",
+#     folder = "Output/BOI_AncomBC2/01/",
+#     name = "Bacteria_subtentorial_lesions_01"
+# )   
 
 
 

@@ -3,7 +3,7 @@ output_folder = "Output/DESEQ_RDS/"
 createFolder(output_folder)
 # Input data
 ############
-ALL_baselines = readRDS("Output/RDS/merged_phylo_renamed.rds")
+ALL_baselines = readRDS("Output/RDS/ALL_baseline_phylo.rds")
 
 # Convert otu table to dataframe
 #prova_df = as.data.frame(prova@otu_table)

@@ -3,6 +3,10 @@ output_folder = "Output/NEW_PLOT_RDS/"
 createFolder(output_folder)
 
 Beta <- function(baselines_dec, kingdom, output_folder) {
+    # Remove empty taxa/samples before Bray distance
+    baselines_dec <- prune_taxa(taxa_sums(baselines_dec) > 0, baselines_dec)
+    baselines_dec <- prune_samples(sample_sums(baselines_dec) > 0, baselines_dec)
+
     ## CATEGORY
     ############
     # New labels for category
@@ -62,8 +66,10 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
     filtered_sample_data_df <- sample_data_df %>%
         filter(!is.na(gc_treatment)) 
 
-    # Update the phyloseq object with the filtered sample data
-    sample_data(MS) <- sample_data(filtered_sample_data_df)
+    # Keep only samples with non-missing gc_treatment
+    MS <- prune_samples(rownames(filtered_sample_data_df), MS)
+    MS <- prune_taxa(taxa_sums(MS) > 0, MS)
+    MS <- prune_samples(sample_sums(MS) > 0, MS)
 
     # Change legend label
     sample_data(MS)$gc_treatment <- factor(
@@ -104,9 +110,9 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
 }
 
 execute_beta <- function() {
-    baselines_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-    baselines_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-    baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
+    baselines_decB = readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds")
+    baselines_decA = readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.rds")
+    baselines_decE = readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.rds")
 
     Beta(baselines_dec = baselines_decB, kingdom = "Bacteria", output_folder)
     Beta(baselines_dec = baselines_decA, kingdom = "Archaea", output_folder)

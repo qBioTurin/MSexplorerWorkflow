@@ -1,21 +1,20 @@
-maaslin22 <- function(
-  input_data, input_metadata = NULL, output, formula = NULL,
-  fixed_effects = NULL, reference = NULL, random_effects = NULL,
-  group_effects = NULL, ordered_effects = NULL, strata_effects = NULL,
-  feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
-  feature_specific_covariate_record = NULL, min_abundance = 0,
-  min_prevalence = 0, zero_threshold = 0, min_variance = 0,
-  max_significance = 0.1, normalization = "TSS", transform = "LOG",
-  correction = "BH", standardize = TRUE, unscaled_abundance = NULL,
-  median_comparison_abundance = TRUE, median_comparison_prevalence = FALSE,
-  median_comparison_abundance_threshold = 0, median_comparison_prevalence_threshold = 0,
-  subtract_median = FALSE, warn_prevalence = TRUE, small_random_effects = FALSE,
-  augment = TRUE, evaluate_only = NULL, plot_summary_plot = TRUE,
-  summary_plot_first_n = 25, coef_plot_vars = NULL, heatmap_vars = NULL,
-  plot_associations = TRUE, max_pngs = 30, cores = 1, save_models = FALSE,
-  save_plots_rds = FALSE, verbosity = "FINEST", summary_plot_balanced = FALSE,
-  assay.type = 1
-) {
+maaslin22<- function(
+    input_data, input_metadata = NULL, output, formula = NULL,
+    fixed_effects = NULL, reference = NULL, random_effects = NULL,
+    group_effects = NULL, ordered_effects = NULL, strata_effects = NULL,
+    feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
+    feature_specific_covariate_record = NULL, min_abundance = 0,
+    min_prevalence = 0, zero_threshold = 0, min_variance = 0,
+    max_significance = 0.1, normalization = "TSS", transform = "LOG",
+    correction = "BH", standardize = TRUE, unscaled_abundance = NULL,
+    median_comparison_abundance = TRUE, median_comparison_prevalence = FALSE,
+    median_comparison_abundance_threshold = 0, median_comparison_prevalence_threshold = 0,
+    subtract_median = FALSE, warn_prevalence = TRUE, small_random_effects = FALSE,
+    augment = TRUE, evaluate_only = NULL, plot_summary_plot = TRUE,
+    summary_plot_first_n = 25, coef_plot_vars = NULL, heatmap_vars = NULL,
+    plot_associations = TRUE, max_pngs = 30, cores = 1, save_models = FALSE,
+    save_plots_rds = FALSE, verbosity = "FINEST", summary_plot_balanced = FALSE,
+    pval_filter = NULL, assay.type = 1) {
     match.arg(verbosity, c(
         "FINEST", "FINER", "FINE", "DEBUG",
         "INFO", "WARN", "ERROR"
@@ -142,7 +141,7 @@ maaslin22 <- function(
                         median_comparison_prevalence, max_significance,
                         plot_summary_plot, summary_plot_first_n, coef_plot_vars,
                         heatmap_vars, plot_associations, max_pngs,
-                        summary_plot_balanced, save_plots_rds
+                        summary_plot_balanced, save_plots_rds, pval_filter
                     )
                 },
                 warning = function(w) {
@@ -164,15 +163,14 @@ maaslin22 <- function(
 }
 
 maaslin_plot_results22 <- function(
-  output, transformed_data, unstandardized_metadata,
-  fit_data_abundance, fit_data_prevalence, normalization, transform,
-  feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
-  feature_specific_covariate_record = NULL, median_comparison_abundance = TRUE,
-  median_comparison_prevalence = FALSE, max_significance = 0.1,
-  plot_summary_plot = TRUE, summary_plot_first_n = 25, coef_plot_vars = NULL,
-  heatmap_vars = NULL, plot_associations = TRUE, max_pngs = 30,
-  balanced = FALSE, save_plots_rds = FALSE
-) {
+    output, transformed_data, unstandardized_metadata,
+    fit_data_abundance, fit_data_prevalence, normalization, transform,
+    feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
+    feature_specific_covariate_record = NULL, median_comparison_abundance = TRUE,
+    median_comparison_prevalence = FALSE, max_significance = 0.1,
+    plot_summary_plot = TRUE, summary_plot_first_n = 25, coef_plot_vars = NULL,
+    heatmap_vars = NULL, plot_associations = TRUE, max_pngs = 30,
+    balanced = FALSE, save_plots_rds = FALSE, pval_filter = NULL) {
     print("Starting Maaslin3 plotting...")
     ret_plots <- list()
     if (!file.exists(output)) {
@@ -222,7 +220,8 @@ maaslin_plot_results22 <- function(
             max_significance = max_significance, coef_plot_vars = coef_plot_vars,
             heatmap_vars = heatmap_vars, median_comparison_abundance = median_comparison_abundance,
             median_comparison_prevalence = median_comparison_prevalence,
-            balanced = balanced, save_plots_rds = save_plots_rds
+            balanced = balanced, save_plots_rds = save_plots_rds,
+            pval_filter = pval_filter
         )
         ret_plots[["summary_plot"]] <- summary_plot
     }
@@ -257,11 +256,11 @@ maaslin_plot_results22 <- function(
 }
 
 maaslin3_summary_plot22 <- function(
-  merged_results, summary_plot_file, figures_folder,
-  first_n = 30, max_significance = 0.1, coef_plot_vars = NULL,
-  heatmap_vars = NULL, median_comparison_abundance = FALSE,
-  median_comparison_prevalence = FALSE, balanced = FALSE, save_plots_rds = FALSE
-) {
+    merged_results, summary_plot_file, figures_folder,
+    first_n = 30, max_significance = 0.1, coef_plot_vars = NULL,
+    heatmap_vars = NULL, median_comparison_abundance = FALSE,
+    median_comparison_prevalence = FALSE, balanced = FALSE, save_plots_rds = FALSE,
+    pval_filter = NULL) {
     ret_plots <- list()
     if (first_n > 200) {
         logging::logerror(paste("At most 200 features can be plotted in the heatmap. \n                    Please choose a smaller first_n."))
@@ -282,19 +281,24 @@ maaslin3_summary_plot22 <- function(
             .groups = "drop"
         )
     if (!is.null(coef_plot_vars) | !is.null(heatmap_vars)) {
-        if (any(!c(coef_plot_vars, heatmap_vars) %in% unique(merged_results$full_metadata_name))) {
+        requested_coef_plot_vars <- coef_plot_vars
+        requested_heatmap_vars <- heatmap_vars
+        coef_plot_vars <- resolve_plot_vars22(coef_plot_vars, merged_results)
+        heatmap_vars <- resolve_plot_vars22(heatmap_vars, merged_results)
+        missing_vars <- setdiff(
+            c(requested_coef_plot_vars, requested_heatmap_vars),
+            c(unique(merged_results$metadata), unique(merged_results$full_metadata_name))
+        )
+        if (length(missing_vars) > 0) {
             logging::loginfo(paste0("The following specified variables were not \n                        found in the associations: ",
                 paste0(
-                    setdiff(
-                        c(coef_plot_vars, heatmap_vars),
-                        unique(merged_results$full_metadata_name)
-                    ),
+                    missing_vars,
                     collapse = ", "
                 ),
                 collapse = ""
             ))
             logging::loginfo(paste0("Available associations: ",
-                paste0(unique(merged_results$full_metadata_name),
+                paste0(unique(c(merged_results$metadata, merged_results$full_metadata_name)),
                     collapse = ", "
                 ),
                 collapse = ""
@@ -310,6 +314,15 @@ maaslin3_summary_plot22 <- function(
         "pval_individual", "full_metadata_name"
     )])
     merged_results_joint_only <- merged_results_joint_only[order(merged_results_joint_only$pval_individual), ]
+    if (!is.null(pval_filter)) {
+        sig_features <- unique(merged_results_joint_only$feature[
+            merged_results_joint_only$pval_individual < pval_filter
+        ])
+        if (length(sig_features) > 0) {
+            merged_results_joint_only <- merged_results_joint_only[
+                merged_results_joint_only$feature %in% sig_features, ]
+        }
+    }
     if (length(unique(merged_results_joint_only$feature)) < first_n) {
         first_n <- length(unique(merged_results_joint_only$feature))
         signif_taxa <- unique(merged_results_joint_only$feature)[seq(first_n)]
@@ -335,13 +348,31 @@ maaslin3_summary_plot22 <- function(
     }
     merged_results_sig <- merged_results %>% dplyr::filter(.data$feature %in%
         signif_taxa)
-    ord_feature <- with(merged_results_sig, reorder(
-        feature,
-        coef
-    ))
-    ord_feature <- levels(ord_feature)
+    order_source <- merged_results_sig
+    if (!is.null(coef_plot_vars) && any(merged_results_sig$full_metadata_name %in% coef_plot_vars)) {
+        order_source <- merged_results_sig %>%
+            dplyr::filter(.data$full_metadata_name %in% coef_plot_vars)
+    } else if (!is.null(heatmap_vars) && any(merged_results_sig$full_metadata_name %in% heatmap_vars)) {
+        order_source <- merged_results_sig %>%
+            dplyr::filter(.data$full_metadata_name %in% heatmap_vars)
+    }
+    feature_order_df <- order_source %>%
+        dplyr::group_by(.data$feature) %>%
+        dplyr::summarise(order_pval = min(.data$pval_individual, na.rm = TRUE), .groups = "drop") %>%
+        dplyr::arrange(.data$order_pval)
+    remaining_features_df <- merged_results_sig %>%
+        dplyr::filter(!.data$feature %in% feature_order_df$feature) %>%
+        dplyr::group_by(.data$feature) %>%
+        dplyr::summarise(order_pval = min(.data$pval_individual, na.rm = TRUE), .groups = "drop") %>%
+        dplyr::arrange(.data$order_pval)
+    feature_order_df <- dplyr::bind_rows(feature_order_df, remaining_features_df)
+    utils::write.table(feature_order_df,
+        file = file.path(figures_folder, "summary_plot_feature_order.tsv"),
+        sep = "\t", row.names = FALSE, quote = FALSE
+    )
+    ord_feature <- feature_order_df$feature
     merged_results_sig$feature <- factor(merged_results_sig$feature,
-        levels = ord_feature
+        levels = rev(ord_feature)
     )
     if (is.null(coef_plot_vars)) {
         mean_log_qval <- merged_results_sig %>%
@@ -361,8 +392,11 @@ maaslin3_summary_plot22 <- function(
             dplyr::summarise(mean_value = mean(log(.data$pval_individual),
                 na.rm = TRUE
             ))
-        heatmap_vars <- mean_log_qval$full_metadata_name[order(mean_log_qval$mean_value)]
-        heatmap_vars <- setdiff(heatmap_vars, coef_plot_vars)
+        all_vars <- mean_log_qval$full_metadata_name[order(mean_log_qval$mean_value)]
+        heatmap_vars <- setdiff(all_vars, coef_plot_vars)
+        if (length(heatmap_vars) == 0) {
+            heatmap_vars <- all_vars
+        }
     }
     if (length(coef_plot_vars) > 0 & sum(merged_results_sig$full_metadata_name %in%
         coef_plot_vars) >= 1) {
@@ -381,7 +415,7 @@ maaslin3_summary_plot22 <- function(
     }
     if (length(heatmap_vars) > 0 & sum(merged_results_sig$full_metadata_name %in%
         heatmap_vars) >= 1) {
-        p2 <- make_heatmap_plot(
+        p2 <- make_heatmap_plot_22(
             merged_results_sig, heatmap_vars,
             max_significance, median_comparison_prevalence, median_comparison_abundance
         )
@@ -484,11 +518,34 @@ preprocess_merged_results22 <- function(merged_results) {
     ))
     return(merged_results)
 }
+
+resolve_plot_vars22 <- function(plot_vars, merged_results) {
+    if (is.null(plot_vars)) {
+        return(NULL)
+    }
+    plot_vars <- unique(trimws(plot_vars))
+    resolved_vars <- unlist(lapply(plot_vars, function(var_name) {
+        exact_matches <- unique(merged_results$full_metadata_name[
+            merged_results$full_metadata_name == var_name
+        ])
+        if (length(exact_matches) > 0) {
+            return(exact_matches)
+        }
+        metadata_matches <- unique(merged_results$full_metadata_name[
+            merged_results$metadata == var_name
+        ])
+        if (length(metadata_matches) > 0) {
+            return(metadata_matches)
+        }
+        character(0)
+    }), use.names = FALSE)
+    unique(resolved_vars)
+}
+
 make_coef_plot <- function(
-  merged_results_sig, coef_plot_vars, max_significance,
-  median_comparison_prevalence, median_comparison_abundance,
-  median_df, plot_threshold = 10
-) {
+    merged_results_sig, coef_plot_vars, max_significance,
+    median_comparison_prevalence, median_comparison_abundance,
+    median_df, plot_threshold = 10) {
     coef_plot_data <- merged_results_sig[merged_results_sig$full_metadata_name %in%
         coef_plot_vars, ]
     quantile_df <- coef_plot_data %>%
@@ -552,52 +609,32 @@ make_coef_plot <- function(
             color = "darkgray", linetype = "dashed"
         )
     }
-    scale_fill_gradient_limits <- c(
-        min(max_significance, 10^floor(log10(min(coef_plot_data$qval_individual)))),
-        1
-    )
-    if (min(coef_plot_data$qval_individual) < max_significance) {
-        scale_fill_gradient_breaks <- c(
-            10^floor(log10(min(coef_plot_data$qval_individual))),
-            max_significance, 1
-        )
-    } else {
-        scale_fill_gradient_breaks <- c(max_significance, 1)
-    }
-    if (min(coef_plot_data$qval_individual) < max_significance) {
-        scale_fill_gradient_labels <- c(
-            paste0("1e", floor(log10(min(coef_plot_data$qval_individual)))),
-            paste0(max_significance), "1"
-        )
-    } else {
-        scale_fill_gradient_labels <- c(
-            paste0(max_significance),
-            "1"
-        )
-    }
+    scale_fill_gradient_limits <- c(0.01, 1)
+    scale_fill_gradient_breaks <- c(0.01, 0.05, 0.1, 1)
+    scale_fill_gradient_labels <- c("0.01", "0.05", "0.1", "1")
     p1 <- p1 + ggplot2::geom_errorbar(ggplot2::aes(xmin = .data$coef -
         .data$stderr, xmax = .data$coef + .data$stderr), width = 0.2) +
         ggplot2::geom_point(data = coef_plot_data[coef_plot_data$model ==
             "Prevalence", ], ggplot2::aes(
             shape = .data$model,
-            fill = .data$qval_individual
+            fill = .data$pval_individual
         ), size = 4.5, color = "black") +
         ggplot2::scale_fill_gradient(
             low = "#008B8B", high = "white",
             limits = scale_fill_gradient_limits, breaks = scale_fill_gradient_breaks,
-            labels = scale_fill_gradient_labels, transform = scales::pseudo_log_trans(sigma = 0.001),
-            name = bquote("Prevalence" ~ P["FDR"])
+            labels = scale_fill_gradient_labels, transform = scales::pseudo_log_trans(sigma = 0.01), oob = scales::squish,
+            name = "Prevalence individual p-value"
         ) + ggnewscale::new_scale_fill() +
         ggplot2::geom_point(data = coef_plot_data[coef_plot_data$model ==
             "Abundance", ], ggplot2::aes(
             shape = .data$model,
-            fill = .data$qval_individual
+            fill = .data$pval_individual
         ), size = 4.5, color = "black") +
         ggplot2::scale_fill_gradient(
             low = "#8B008B", high = "white",
             limits = scale_fill_gradient_limits, breaks = scale_fill_gradient_breaks,
-            labels = scale_fill_gradient_labels, transform = scales::pseudo_log_trans(sigma = 0.001),
-            name = bquote("Abundance" ~ P["FDR"])
+            labels = scale_fill_gradient_labels, transform = scales::pseudo_log_trans(sigma = 0.01), oob = scales::squish,
+            name = "Abundance individual p-value"
         ) + ggplot2::scale_x_continuous(
             breaks = custom_break_fun(n = 6),
             limits = c(min(coef_plot_data$coef) - quantile(
@@ -631,11 +668,10 @@ make_coef_plot <- function(
 
 
 maaslin3_association_plots <- function(
-  merged_results, metadata, features, max_significance = 0.1,
-  figures_folder, max_pngs = 10, normalization, transform,
-  feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
-  feature_specific_covariate_record = NULL, save_plots_rds = FALSE
-) {
+    merged_results, metadata, features, max_significance = 0.1,
+    figures_folder, max_pngs = 10, normalization, transform,
+    feature_specific_covariate = NULL, feature_specific_covariate_name = NULL,
+    feature_specific_covariate_record = NULL, save_plots_rds = FALSE) {
     match.arg(normalization, c("TSS", "CLR", "NONE"))
     match.arg(transform, c("LOG", "PLOG", "NONE"))
     merged_results$error[grepl(
@@ -791,16 +827,15 @@ library(maaslin3)
 # Load an RDS file in R
 
 
-Maaslin3Fin <- function(
-  rds, output_folder, main_el, categorySel, elements, discr_els, perc = "K", median_comparison_abundance_in = TRUE,
-  fx_effects = NULL, random_effects = NULL, group_effects = NULL,
-  ordered_effects = NULL, strata_effects = NULL
-) {
+
+Maaslin3 <- function(
+    rds, output_folder, main_el, categorySel, elements, discr_els, perc = "K", median_comparison_abundance_in = TRUE,
+    fx_effects = NULL, random_effects = NULL, group_effects = NULL,
+    ordered_effects = NULL, strata_effects = NULL, heatmap_vars = NULL) {
     # Create data for maaslin3
     otu <- rds@otu_table
     taxa <- rds@tax_table
     metadata_df <- as(rds@sam_data, "data.frame")
-    levels(metadata_df$Cluster)
     ids_to_retain <- rownames(metadata_df[metadata_df[[categorySel]] %in% elements, ])
     otu <- otu[, colnames(otu) %in% ids_to_retain]
     metadata_df <- metadata_df[rownames(metadata_df) %in% ids_to_retain, ]
@@ -825,7 +860,7 @@ Maaslin3Fin <- function(
 
     class(metadata_df)
     metadata_df <- metadata_df %>%
-        select(category, gc_treatment, lesion_burden, spinal_cord_lesion, gadolinium_contrast, subtentorial_lesions, sex, age, bmi, Cluster)
+        select(category, gc_treatment, lesion_burden, spinal_cord_lesion, gadolinium_contrast, subtentorial_lesions, sex, age, bmi)
     if (main_el != "category") {
         metadata_df <- metadata_df %>%
             filter(category == "MS")
@@ -852,8 +887,8 @@ Maaslin3Fin <- function(
     metadata_df$sex <- as.factor(metadata_df$sex)
     metadata_df$age <- as.numeric(metadata_df$age)
     metadata_df$bmi <- as.numeric(metadata_df$bmi)
-    metadata_df$Cluster <- as.factor(metadata_df$Cluster)
-    levels(metadata_df$Cluster) <- c("bad_prognosis", "good_prognosis")
+
+
     if (!dir.exists(output_folder)) {
         dir.create(output_folder, recursive = TRUE)
     }
@@ -870,6 +905,9 @@ Maaslin3Fin <- function(
             d # continuous
         }
     }))
+    ##for stability of results across runs
+    set.seed(2204)
+    Sys.setenv(OMP_NUM_THREADS=1, MKL_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1)
     fit_out <- maaslin3(
         input_data = merged_df,
         input_metadata = metadata_df,
@@ -878,7 +916,7 @@ Maaslin3Fin <- function(
         fixed_effects = fx_effects,
         plot_summary_plot = TRUE,
         coef_plot_vars = coef_plot_vars,
-        # heatmap_vars =  discr_els_formatted,
+        heatmap_vars = heatmap_vars,
         random_effects = random_effects,
         group_effects = group_effects,
         ordered_effects = ordered_effects,
@@ -891,10 +929,16 @@ Maaslin3Fin <- function(
         median_comparison_abundance = median_comparison_abundance_in,
         median_comparison_prevalence = FALSE,
         max_pngs = 30,
-        summary_plot_first_n = 50,
+        summary_plot_first_n = 200,
+       # pval_filter = 0.05,
         cores = 1
     )
     summary_plot_file <- file.path(output_folder, "figures", "summary_plot.pdf")
+    # if (file.exists(summary_plot_file)) {
+    #     try(system2("xdg-open", summary_plot_file), silent = TRUE)
+    # } else {
+    #     message("summary_plot.pdf not generated for this run (no plottable/significant associations).")
+    # }
     if (median_comparison_abundance_in) {
         last <- "T"
     } else {
@@ -909,193 +953,68 @@ Maaslin3Fin <- function(
     features_unique <- data.frame(Species = features_unique)
     write.csv(features_unique, file.path(output_folder, paste0(main_el, "_MAASLIN3_SR_features_", perc, "_", last, ".csv")), row.names = FALSE, quote = FALSE)
 }
+make_heatmap_plot_22 <- function (merged_results_sig, heatmap_vars, max_significance, 
+    median_comparison_prevalence, median_comparison_abundance) 
+{
+    merged_results_sig$sig_star <- cut(merged_results_sig$qval_individual, 
+        breaks = c(-Inf, max_significance/10, max_significance, 
+            Inf), label = c("**", "*", ""))
+    coefficient_thresh <- round(max(abs(quantile(merged_results_sig$coef, 
+        c(0.1, 0.9))))/10, 1) * 5
+    if (coefficient_thresh == 0) {
+        coefficient_thresh <- 0.5
+    }
+    coef_breaks <- c(-coefficient_thresh, -coefficient_thresh/2, 
+        0, coefficient_thresh/2, coefficient_thresh, Inf)
+    threshold_set <- c(paste0("(-Inf,", -1 * coefficient_thresh, 
+        "]"), paste0("(", -1 * coefficient_thresh, ",", -1/2 * 
+        coefficient_thresh, "]"), paste0("(", -1/2 * coefficient_thresh, 
+        ",0]"), paste0("(0,", 1/2 * coefficient_thresh, "]"), 
+        paste0("(", 1/2 * coefficient_thresh, ",", 1 * coefficient_thresh, 
+            "]"), paste0("(", 1 * coefficient_thresh, ",Inf)"))
+    threshold_indices <- vapply(merged_results_sig$coef, function(value) {
+        which(value < coef_breaks)[1]
+    }, FUN.VALUE = 0)
+    merged_results_sig <- merged_results_sig %>% dplyr::mutate(coef_cat = threshold_set[threshold_indices])
+    merged_results_sig$coef_cat <- factor(merged_results_sig$coef_cat, 
+        levels = threshold_set)
+    scale_fill_values <- rev((RColorBrewer::brewer.pal(n = 6, 
+        name = "RdBu")))
+    names(scale_fill_values) <- threshold_set
+    heatmap_data <- merged_results_sig[merged_results_sig$full_metadata_name %in% 
+        heatmap_vars, ]
+    grid <- expand.grid(feature = unique(heatmap_data$feature), 
+        full_metadata_name = unique(heatmap_data$full_metadata_name), 
+        model = unique(heatmap_data$model))
+    if (length(unique(grid$model)) == 2) {
+        grid$model <- factor(grid$model, levels = c("Prevalence", 
+            "Abundance"))
+    }
+    heatmap_data <- merge(grid, heatmap_data, by = c("feature", 
+        "full_metadata_name", "model"), all.x = TRUE)
+    heatmap_data$coef[is.na(heatmap_data$coef)] <- NA
+    p2 <- ggplot2::ggplot(heatmap_data, ggplot2::aes(x = factor(.data$full_metadata_name, 
+        unique(heatmap_vars)), y = .data$feature)) + ggplot2::geom_tile(data = heatmap_data, 
+        ggplot2::aes(fill = .data$coef_cat), colour = "white", 
+        linewidth = 0.2) + ggplot2::scale_fill_manual(name = "Beta coefficient", 
+        na.value = "#EEEEEE", values = scale_fill_values) + ggplot2::geom_text(ggplot2::aes(label = .data$sig_star, 
+        color = .data$sig_star), size = 6, vjust = 0.75, hjust = 0.5, 
+        key_glyph = ggplot2::draw_key_blank) + ggplot2::scale_color_manual(name = bquote("Covariates" ~ 
+        P["FDR"]), breaks = c("*", "**", ""), values = c("black", 
+        "black", "black"), labels = c(paste0("* < ", round(max_significance, 
+        3)), paste0("** < ", round(max_significance/10, 5)), 
+        ""), drop = FALSE) + ggplot2::labs(x = "", y = "Feature", 
+        caption = "") + ggplot2::theme_bw() + ggplot2::theme(axis.title = ggplot2::element_text(size = 16), 
+        axis.text.x = ggplot2::element_text(size = 14, angle = 90, 
+            vjust = 0.5, hjust = 1), legend.title = ggplot2::element_text(size = 16), 
+        legend.text = ggplot2::element_text(size = 14, face = "plain"), 
+        legend.position = "right", legend.background = ggplot2::element_rect(fill = "transparent"), 
+        panel.spacing = ggplot2::unit(0, "lines"), panel.grid.minor = ggplot2::element_blank(), 
+        strip.text = ggplot2::element_text(size = 14), strip.background = ggplot2::element_rect(fill = "transparent")) + 
+        ggplot2::guides(fill = ggplot2::guide_legend(order = 1), 
+            color = ggplot2::guide_legend(order = 2), ) + ggplot2::facet_grid(~model, 
+        labeller = ggplot2::labeller(model = c(abundance = "Abundance", 
+            prevalence = "Prevalence")))
+    return(p2)
+}
 
-rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-library(dplyr)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_lesion_burden_onlygc_plus_gc",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_spinal_cord_lesion_onlygc_plus_gc",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_plus_gc",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_subtentorial_lesions_onlygc_plus_gc",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "001"
-)
-
-
-rds_01 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_lesion_burden_onlygc_T",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_spinal_cord_lesion_onlygc_T",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_gadolinium_contrast_onlygc_T",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_subtentorial_lesions_onlygc_T",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("gc_treatment", "age", "sex", "bmi"),
-    perc = "01"
-)
-
-rds_05 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_lesion_burden_onlygc_T",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_spinal_cord_lesion_onlygc_T",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_gadolinium_contrast_onlygc_T",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_subtentorial_lesions_onlygc_T",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05"
-)
-
-
-rds_Euk <- readRDS("Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
-Maaslin3(
-    rds = rds_Euk, output_folder = "Output/MAASLIN3/Eukaryote_MSHD_disc_T",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
-)
-rds_Arch <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-Maaslin3(
-    rds = rds_Arch, output_folder = "Output/MAASLIN3/Archaea_MSHD_disc_T",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
-)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/Bacteria_MSHD_disc_T",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
-)
-
-
-########################### false
-
-
-rds_001 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-library(dplyr)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_lesion_burden_onlygc_F",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_spinal_cord_lesion_onlygc_F",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_gadolinium_contrast_onlygc_F",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/001_disc/001_subtentorial_lesions_onlygc_F",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "001", median_comparison_abundance_in = FALSE
-)
-rds_01 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.01.rds")
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_lesion_burden_onlygc_F",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_spinal_cord_lesion_onlygc_F",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_gadolinium_contrast_onlygc_F",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_01, output_folder = "Output/MAASLIN3/01_disc/01_subtentorial_lesions_onlygc_F",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "01", median_comparison_abundance_in = FALSE
-)
-rds_05 <- readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.05.rds")
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_lesion_burden_onlygc_F",
-    main_el = "lesion_burden", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_spinal_cord_lesion_onlygc_F",
-    main_el = "spinal_cord_lesion", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_gadolinium_contrast_onlygc_F",
-    main_el = "gadolinium_contrast", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_05, output_folder = "Output/MAASLIN3/05_disc/05_subtentorial_lesions_onlygc_F",
-    main_el = "subtentorial_lesions", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("age", "sex", "bmi"),
-    perc = "05", median_comparison_abundance_in = FALSE
-)
-
-rds_Euk <- readRDS("Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
-Maaslin3(
-    rds = rds_Euk, output_folder = "Output/MAASLIN3/Eukaryote_MSHD_disc_F",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi"),
-    median_comparison_abundance_in = FALSE
-)
-
-rds_Arch <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
-
-Maaslin3(
-    rds = rds_Arch, output_folder = "Output/MAASLIN3/Archaea_MSHD_disc_F",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi"),
-    median_comparison_abundance_in = FALSE
-)
-Maaslin3(
-    rds = rds_001, output_folder = "Output/MAASLIN3/Bacteria_MSHD_disc_F",
-    main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi"),
-    median_comparison_abundance_in = FALSE
-)

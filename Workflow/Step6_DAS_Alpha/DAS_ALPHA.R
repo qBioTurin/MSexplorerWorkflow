@@ -1,5 +1,5 @@
 source("Settings/utilities.R")
-output_folder <- "Output/DAS_ALPHA_ANCOMBC2/"
+output_folder <- "Output/DAS_ALPHA_MAASLIN3/"
 createFolder(output_folder)
 # abundance
 bact_baselines_ds_abund <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
@@ -98,7 +98,7 @@ createTab <- function(lesion, spinal, gado, sub, filtered_baselines_decB_table) 
 }
 
 
-print(lesion_05)
+
 tax<-as.data.frame(lesion_05@tax_table)
 otu<-as.data.frame(lesion_05@otu_table)
 metaData <- as.data.frame(as.matrix(sample_data(lesion_05)))
@@ -130,17 +130,27 @@ metaData <- as.data.frame(as.matrix(sample_data(lesion_05)))
 # bm_001 <- readRDS("Output/BOI2/001_unioned/Bacteria_spinal_cord_001.rds")
 # gado_001 <- readRDS("Output/BOI2/001_unioned/Bacteria_gadolinium_001.rds")
 # sub_001 <- readRDS("Output/BOI2/001_unioned/Bacteria_subtentorial_001.rds")
-lesion_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_lesion_burden_01.rds")
-bm_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_spinal_cord_lesion_01.rds")
-gado_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_gadolinium_contrast_01.rds")
-sub_01 <- readRDS("Output/BOI_AncomBC2/01/Bacteria_subtentorial_lesions_01.rds")
-lesion_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_lesion_burden_001.rds")
-bm_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_spinal_cord_lesion_001.rds")
-gado_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_gadolinium_contrast_001.rds")
-sub_001 <- readRDS("Output/BOI_AncomBC2/001/Bacteria_subtentorial_lesions_001.rds")
 
-
-
+lesion_05 <- readRDS("Output/BOI/01/Bacteria_lesion_01.rds")
+tax_lesion <- tax_table(lesion_05)
+bm_05 <- readRDS("Output/BOI/01/Bacteria_spinal_cord_01.rds")
+tax_bm <- tax_table(bm_05)
+bm_05 <- prune_taxa(taxa_names(bm_05)[taxa_names(bm_05) != "2755405"], bm_05)
+tax_bm <- tax_table(bm_05)
+gado_05 <- readRDS("Output/BOI/01/Bacteria_gadolinium_01.rds")
+tax_gado <- tax_table(gado_05)
+sub_05 <- readRDS("Output/BOI/01/Bacteria_subtentorial_lesions_01.rds")
+tax_sub <- tax_table(sub_05)
+lesion_01 <- readRDS("Output/BOI/001/Bacteria_lesion_001.rds")
+bm_01 <- readRDS("Output/BOI/001/Bacteria_spinal_cord_001.rds")
+gado_01 <- readRDS("Output/BOI/001/Bacteria_gadolinium_001.rds")
+sub_01 <- readRDS("Output/BOI/001/Bacteria_subtentorial_lesions_001.rds")
+lesion_001 <- readRDS("Output/BOI/0/Bacteria_lesion_0.rds")
+bm_001 <- readRDS("Output/BOI/0/Bacteria_spinal_cord_0.rds")
+gado_001 <- readRDS("Output/BOI/0/Bacteria_gadolinium_0.rds")
+sub_001 <- readRDS("Output/BOI/0/Bacteria_subtentorial_lesions_0.rds")
+metaData<-sample_data(lesion_05) %>% as.data.frame() 
+print(lesion_05)
 tab_list_05 <- createTab(lesion = lesion_05,
  spinal = bm_05, gado = gado_05, sub = sub_05, filtered_baselines_decB_table)
 tab_list_01 <- createTab(lesion = lesion_01, spinal = bm_01, gado = gado_01, sub = sub_01, filtered_baselines_decB_table)
@@ -158,9 +168,9 @@ tabMod <- function(tab, Alpha, Method, Subset) {
 }
 
 constructTab <- function(tab05, tab01, tab001, Alpha) {
-  tab_05 <- tabMod(tab05, Alpha, "Both", "O5")
-  tab_01 <- tabMod(tab01, Alpha, "Both", "O1")
-  tab_001 <- tabMod(tab001, Alpha, "Both", "OO1")
+  tab_05 <- tabMod(tab05, Alpha, "Both", "O1")
+  tab_01 <- tabMod(tab01, Alpha, "Both", "OO1")
+  tab_001 <- tabMod(tab001, Alpha, "Both", "O")
 
   merged_sh <- left_join(tab_05, tab_01, by = "id") %>%
     left_join(tab_001, by = "id")
