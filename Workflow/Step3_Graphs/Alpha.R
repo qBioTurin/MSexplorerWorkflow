@@ -8,7 +8,7 @@ createFolder(meta_alpha)
 ######################
 
 Alpha <- function(baselines_dec, Domain, output_folder) {
-  baselines_dec_richness <- estimate_richness(baselines_dec, split = TRUE, measures = c("Observed", "Shannon", "Simpson", "Chao1"))
+  baselines_dec_richness <- estimate_richness(baselines_dec, split = TRUE, measures = c("Shannon", "Simpson"))
   baselines_dec_richness <- data.frame(id = row.names(baselines_dec_richness), baselines_dec_richness)
 
   baselines_dec_metadata <- data.frame(baselines_dec@sam_data)
@@ -19,7 +19,7 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
   write.csv(baselines_dec_metadata, file = gsub(" ", "", paste(meta_alpha, Domain, "_alpha_metadata.csv")), row.names = FALSE)
 
   baselines_dec_metadata1 <- baselines_dec_metadata %>%
-    tidyr::gather(Observed, Simpson, Shannon, key = "index", value = "value")
+    tidyr::gather(Shannon, Simpson, key = "index", value = "value")
   ###### healty vs ms
 
   custom_labels <- c("negative" = "Untreated", "positive" = "Treated")
@@ -136,11 +136,10 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
         legend.position = "none"
       )
   }
-  observed <- create_plot_gc_treatment(MS1 %>% filter(index == "Observed"), "Diversity Indexes") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
-  shannon <- create_plot_gc_treatment(MS1 %>% filter(index == "Shannon"), "") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
+  shannon <- create_plot_gc_treatment(MS1 %>% filter(index == "Shannon"), "Diversity Indexes") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
   simpson <- create_plot_gc_treatment(MS1 %>% filter(index == "Simpson"), "") + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
-  gc_treatment <- observed + shannon + simpson
+  gc_treatment <- shannon + simpson
 
   saveRDS(gc_treatment, gsub(" ", "", paste(output_folder, Domain, "_alpha_gc_treatment.rds")))
 }

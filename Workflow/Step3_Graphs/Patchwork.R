@@ -13,13 +13,14 @@ stackbar.updating <- function(pl, paletteFixed) {
     theme_bw() +
     theme(
       legend.position = "bottom",
-      axis.text.x = element_text(angle = 90, size = 6, face = "bold"),
+      axis.text.x = element_text(angle = 90, size = 15, face = "bold"),
       axis.text.y = element_text(size = 12, face = "bold"),
       strip.text = element_text(face = "bold", size = 20),
       legend.key.size = unit(0.3, "cm"),
       axis.title.x = element_text(size = 18, face = "bold"),
       axis.title.y = element_text(size = 18, face = "bold"),
-      legend.text = element_text(size = 10)
+      legend.text = element_text(size = 20),
+      legend.title = element_text(size = 20, face = "bold")
     ) +
     guides(fill = guide_legend(ncol = 3, title = "Species"))
 
@@ -72,14 +73,15 @@ p2 <- readRDS(file = "./Output/NEW_PLOT_RDS/Bacteria_alpha_category.rds") +
   theme(
     axis.text.x = element_blank(),
     axis.title.x = element_blank(),
-    axis.ticks.x = element_blank()
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
   ) +
   scale_fill_manual(values = paletteStatus) + labs(fill = "Disease Status")
 p2
 p3 <- readRDS(file = "./Output/NEW_PLOT_RDS/Bacteria_beta_cat.rds") +
   theme(axis.text.x = element_text(size = 15)) +
   scale_color_manual(values = unname(paletteStatus), breaks = c("HD", "MS"), labels = c("HEALTHY", "MS"))
-
+p3
 p4 <- readRDS(file = "./Output/NEW_PLOT_RDS/Archaea_StackedBar_Species.rds") + theme(plot.margin = margin(t = 10, r = 10, b = 80, l = 10), axis.text.x = element_text(angle = 45, hjust = 1))
 p4
 p4 <- stackbar.updating(pl = p4, paletteFixed = paletteArchaea)
@@ -109,11 +111,23 @@ p9 <- readRDS(file = "./Output/NEW_PLOT_RDS/Eukaryote_beta_cat.rds") +
   scale_color_manual(values = unname(paletteStatus), breaks = c("HD", "MS"), labels = c("HEALTHY", "MS"))
 lapply(list(p1$plot,p1$legend, p2, p3, p4$plot, p4$legend, p5, p6, p7$plot, p7$legend, p8, p9), class)
 
-patchwork <- (p1$plot + p4$plot + p7$plot + wrap_elements(p1$legend, ignore_tag = TRUE) + wrap_elements(p4$legend, ignore_tag = TRUE) + wrap_elements(p7$legend, ignore_tag = TRUE) + p2 + p5 + p8 + p3 + p6 + p9) + plot_layout(
-  ncol = 3,
-  widths = c(1, 1, 1),
-  heights = c(0.9,0.1, 0.5, 1)
-)
+# patchwork <- (p1$plot +wrap_elements(p1$legend, ignore_tag = TRUE) + p2 + p5 ) + plot_layout(
+#   ncol = 3,
+#   widths = c(1, 1, 1),
+#   heights = c(0.9,0.1, 0.5, 1)
+# )
+
+
+p2 <- p2 + theme(legend.position = "none")
+p3 <- p3 + theme(legend.position = "bottom")
+left_col <- p1$plot / wrap_elements(p1$legend, ignore_tag = TRUE) +
+  plot_layout(heights = c(0.9, 0.1))
+
+right_col <- p2 / p3+
+  plot_layout(heights = c(0.25, 0.25))
+
+patchwork <- (left_col | right_col) +
+  plot_layout(widths = c(1.75, 0.5))
 
 patchwork <- patchwork + plot_annotation(tag_levels = "A") &
   theme(
@@ -122,13 +136,13 @@ patchwork <- patchwork + plot_annotation(tag_levels = "A") &
     plot.title = element_text(size = 24, face = "bold"),
     legend.title = element_text(size = 24, face = "bold"),
     legend.text = element_text(size = 24, face = "bold"),
-    legend.position = "bottom",
+    #legend.position = "bottom",
     strip.text = element_text(colour = "black", size = 24, face = "bold"),
     strip.background = element_rect(colour = "black", fill = "white"),
     axis.ticks.x = element_blank()
   )
 patchwork
-ggsave(gsub(" ", "", paste(output_folder, "patchworkplot.pdf")), plot = patchwork, width = 30, height = 25, dpi = 300)
+ggsave(gsub(" ", "", paste(output_folder, "patchworkplot.pdf")), plot = patchwork, width = 30, height = 15, dpi = 300)
 
 p2 <- readRDS(file = "Output/NEW_PLOT_RDS/Bacteria_alpha_gc_treatment.rds") + theme(
   axis.text.x = element_blank(),
