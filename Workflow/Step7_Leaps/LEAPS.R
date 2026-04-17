@@ -55,7 +55,7 @@ res = LRM_microbiome(metadata = baselines_dec_metadata %>% as.data.frame(), pred
 
 # Save results
 ##############
-filename = gsub("rds","txt", i)
+filename = "Results_onlybact"
 filename = paste0(output_folder, filename)
 
 sink(file = filename, type = c("output", "message"), split = TRUE)
