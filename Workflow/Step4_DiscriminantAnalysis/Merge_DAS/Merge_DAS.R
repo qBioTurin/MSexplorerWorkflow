@@ -1,16 +1,16 @@
 source("Settings/utilities.R")
 output_folderMSHD="Output/merge_DAS/MSHD/"
 createFolder(output_folderMSHD)
-output_folderGC="Output/merge_DAS/GC/"
-createFolder(output_folderGC)
-output_folder = "Output/merge_DAS/"
-createFolder(output_folder)
+# output_folderGC="Output/merge_DAS/GC/"
+# createFolder(output_folderGC)
+# output_folder = "Output/merge_DAS/"
+# createFolder(output_folder)
 output_folder_001 = "Output/merge_DAS/001/"
 createFolder(output_folder_001)
-output_folder_01 = "Output/merge_DAS/01/"
-createFolder(output_folder_01)
-output_folder_05 = "Output/merge_DAS/05/"
-createFolder(output_folder_05)
+# output_folder_01 = "Output/merge_DAS/01/"
+# createFolder(output_folder_01)
+# output_folder_05 = "Output/merge_DAS/05/"
+# createFolder(output_folder_05)
 output_folderGC_comp="Output/merge_DAS/GC_comp/"
 createFolder(output_folderGC_comp)
 
