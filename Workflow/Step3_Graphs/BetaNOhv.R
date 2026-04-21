@@ -129,7 +129,6 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
         theme(plot.subtitle = element_text(size = 14))
     print(paste("PERMANOVA p-value for gc_treatment in", kingdom, ":", pval_cat))  # Print the p-value    
     saveRDS(gc_treatment, gsub(" ", "", paste(output_folder, kingdom, "_beta_gc.rds")))
-    saveRDS(gc_treatment, gsub(" ", "", paste(output_folder, kingdom, "_beta_gc.rds")))
 }
 
 execute_beta <- function() {
