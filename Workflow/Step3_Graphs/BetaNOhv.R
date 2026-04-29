@@ -1,8 +1,24 @@
 source("Settings/utilities.R")
 output_folder = "Output/NEW_PLOT_RDS/"
+seed_beta <- 123
 createFolder(output_folder)
 
+format_permanova_pvalue <- function(p_value) {
+    if (is.na(p_value)) {
+        return("NA")
+    }
+
+    if (p_value < 0.001) {
+        return("< 0.001")
+    }
+
+    formatC(signif(p_value, 3), format = "fg", flag = "#")
+}
+
 Beta <- function(baselines_dec, kingdom, output_folder) {
+    baselines_dec <- prune_taxa(taxa_sums(baselines_dec) > 0, baselines_dec)
+    baselines_dec <- prune_samples(sample_sums(baselines_dec) > 0, baselines_dec)
+
     ## CATEGORY
     ############
     # New labels for category
@@ -43,6 +59,18 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
             legend.text = element_text(size = 15),
             legend.title = element_text(size = 15)
         )
+    bray_dist <- phyloseq::distance(baselines_dec, method = "bray")
+    sample_df <- data.frame(sample_data(baselines_dec))
+    set.seed(seed_beta)
+    permanova_cat <- vegan::adonis2(bray_dist ~ category,
+                                data = sample_df,
+                                permutations = 9999)
+    pval_cat <- permanova_cat$`Pr(>F)`[1]
+    pval_cat_label <- paste0("PERMANOVA p = ", format_permanova_pvalue(pval_cat))
+    category <- category +
+        labs(subtitle = pval_cat_label) +
+        theme(plot.subtitle = element_text(size = 14))
+    print(paste("PERMANOVA p-value for category in", kingdom, ":", pval_cat))
   
     saveRDS(category, gsub(" ", "", paste(output_folder, kingdom, "_beta_cat.rds")))
 
@@ -58,6 +86,8 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
 
     # Update the phyloseq object with the filtered sample data
     sample_data(MS) <- sample_data(filtered_sample_data_df)
+    MS <- prune_taxa(taxa_sums(MS) > 0, MS)
+    MS <- prune_samples(sample_sums(MS) > 0, MS)
 
     # Change legend label
     sample_data(MS)$gc_treatment <- factor(
@@ -90,10 +120,14 @@ Beta <- function(baselines_dec, kingdom, output_folder) {
         )
     bray_dist <- phyloseq::distance(MS, method = "bray")
     sample_df <- data.frame(sample_data(MS))
+    set.seed(seed_beta)
     permanova_cat <- vegan::adonis2(bray_dist ~ gc_treatment, data = sample_df)
-    pval_cat <- signif(permanova_cat$`Pr(>F)`[1], 3) 
+    pval_cat <- permanova_cat$`Pr(>F)`[1]
+    pval_cat_label <- paste0("PERMANOVA p = ", format_permanova_pvalue(pval_cat))
+    gc_treatment <- gc_treatment +
+        labs(subtitle = pval_cat_label) +
+        theme(plot.subtitle = element_text(size = 14))
     print(paste("PERMANOVA p-value for gc_treatment in", kingdom, ":", pval_cat))  # Print the p-value    
-    saveRDS(gc_treatment, gsub(" ", "", paste(output_folder, kingdom, "_beta_gc.rds")))
     saveRDS(gc_treatment, gsub(" ", "", paste(output_folder, kingdom, "_beta_gc.rds")))
 }
 

@@ -17,7 +17,7 @@ source("Workflow/Step2_Decontamination/Supervised_decontam.R")
 #Alpha
 source("Workflow/Step3_Graphs/Alpha.R")
 #Beta
-source("Workflow/Step3_Graphs/Beta.R")
+source("Workflow/Step3_Graphs/BetaNOhv.R")
 #Stackbars
 source("Workflow/Step3_Graphs/Stack.R")
 #patchwork
