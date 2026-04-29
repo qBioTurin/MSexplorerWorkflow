@@ -322,4 +322,4 @@ The function called *LRM_microbiome()* performs linear regression modeling on mi
 
   5 computes model summaries and variance inflation factors (VIF) for multicollinearity assessment.
 
-It returns a structured list of regression results for each outcome variable.
+It returns a structured list of regression results for each outcome variable..
