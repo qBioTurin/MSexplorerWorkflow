@@ -8,7 +8,7 @@ library(cowplot)
 library(curatedMetagenomicData)
 
 ps = readRDS("Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
-#ps= subset_samples(ps, category == "MS")
+ps= subset_samples(ps, category == "MS")
 (ps_g <- tax_glom(ps, taxrank = "Genus"))
 
 taxa_names(ps_g) <- tax_table(ps_g)[, 6]
@@ -55,16 +55,20 @@ my_plot <- function (values){  #updating to allow plotting via cowplot::plot_gri
   p <- p + theme_bw() %+replace% theme(panel.grid.major.y = element_blank(), 
                                        panel.grid.minor.y = element_blank(), panel.grid.major.x = element_line(colour = "grey70"), 
                                        panel.grid.minor.x = element_blank(), legend.key = element_blank(), 
-                                       strip.text.y = element_text(angle = 90),
+                                       strip.text.y = element_text(angle = 90, size = 12),
+                                       axis.text = element_text(size = 12),
+                                       axis.title = element_text(size = 12),
+                                       legend.text = element_text(size = 12),
+                                       legend.title = element_text(size = 12),
                                        legend.position = "bottom")
   return(p)
 }
 
 (p1 <- my_plot(result)) ## choose 12, for genus HD vs MS; choose 7, for MS
-ggsave("Output/Topic_modeling/MS_choosetopic.png", plot = p1, width = 6, height = 12, dpi = 300)
+ggsave("Output/Topic_modeling/MS_choosetopic.png", plot = p1, width = 7, height = 7, dpi = 300)
 
-lda_k36 <- LDA(count_matrix, k = 12, method = "VEM", control = list(seed = 243)) # anche sani - genus
-#lda_k36 <- LDA(count_matrix, k = 7, method = "VEM", control = list(seed = 243)) # solo MS - genus
+#lda_k36 <- LDA(count_matrix, k = 12, method = "VEM", control = list(seed = 243)) # anche sani - genus
+lda_k36 <- LDA(count_matrix, k = 7, method = "VEM", control = list(seed = 243)) # solo MS - genus
 #lda_k36 <- LDA(count_matrix, k = 13, method = "VEM", control = list(seed = 243)) # solo MS - species
 #lda_k36 <- LDA(count_matrix, k = 42, method = "VEM", control = list(seed = 243)) # HD vs MS - species
 #lda_k36 <- LDA(count_matrix, k = 6, method = "VEM", control = list(seed = 243)) # MS pos 
@@ -104,20 +108,20 @@ tm_df <- lib_size_df %>%
   otu_table(tm_df, taxa_are_rows = TRUE)))
 
 meta = data.frame(sample_data(ps_topic_g))
-# meta <- meta %>%
-#   mutate(gc_treatment = as.factor(gc_treatment)
-#         gadolinium_contrast = as.factor(gadolinium_contrast), 
-#          lesion_burden = as.factor(lesion_burden), 
-#          spinal_cord_lesion = as.factor(spinal_cord_lesion), 
-#          subtentorial_lesions = as.factor(subtentorial_lesions), 
-#          sex = as.factor(sex), 
-#          age = as.numeric(age), 
-#          bmi = as.numeric(bmi)) # solo MS
 meta <- meta %>%
-   mutate(category = as.factor(category),
-          sex = as.factor(sex), 
-          age = as.numeric(age), 
-          bmi = as.numeric(bmi))# anche healthy
+  mutate(gc_treatment = as.factor(gc_treatment),
+        gadolinium_contrast = as.factor(gadolinium_contrast), 
+         lesion_burden = as.factor(lesion_burden), 
+         spinal_cord_lesion = as.factor(spinal_cord_lesion), 
+         subtentorial_lesions = as.factor(subtentorial_lesions), 
+         sex = as.factor(sex), 
+         age = as.numeric(age), 
+         bmi = as.numeric(bmi)) # solo MS
+# meta <- meta %>%
+#    mutate(category = as.factor(category),
+#           sex = as.factor(sex), 
+#           age = as.numeric(age), 
+#           bmi = as.numeric(bmi))# anche healthy
 
 
 ###### 
@@ -126,10 +130,10 @@ meta <- meta %>%
 ######
 
 linda <- LinDA::linda(otu.tab = data.frame(otu_table(ps_topic_g)), meta = meta, 
-               formula = '~ category + age + sex + bmi', alpha = 0.05, winsor.quan = 0.97,
+               formula = '~ subtentorial_lesions + gc_treatment + age + sex + bmi', alpha = 0.05, winsor.quan = 0.97,
                prev.cut = 0.3, lib.cut = 0, n.cores = 1)
 
-linda_res_df <- data.frame(linda$output$category) %>%
+linda_res_df <- data.frame(linda$output$subtentorial_lesions) %>%
   dplyr::arrange(padj) %>%
   rownames_to_column(var = "Topic")
 
@@ -143,17 +147,17 @@ fdr_linda <- linda_res_df %>%
 (p2 <- ggplot(data = fdr_linda, aes(x = Topic, y = log2FoldChange, fill = reject)) +
     geom_col(alpha = .8) +
     labs(y = "\nLog2 Fold-Change", x = "") +
-    theme(axis.text.x = element_text(color = "black", size = 8),
-          axis.text.y = element_text(color = "black", size = 8),
-          axis.title.y = element_text(size = 8),
-          axis.title.x = element_text(size = 10),
-          legend.text = element_text(size = 8),
-          legend.title = element_text(size = 8)) +
+    theme(axis.text.x = element_text(color = "black", size = 12),
+          axis.text.y = element_text(color = "black", size = 12),
+          axis.title.y = element_text(size = 12),
+          axis.title.x = element_text(size = 12),
+          legend.text = element_text(size = 12),
+          legend.title = element_text(size = 12)) +
     coord_flip() +
     scale_fill_manual(values = c("grey", "dodgerblue")) +
     geom_hline(yintercept = 0, linetype="dotted") +
     theme(legend.position = "none")) # HD vs MS: 2 signif topics!!
-ggsave("Output/Topic_modeling/MS_topics_subtentorial_lesions.png", plot = p2, width = 6, height = 12, dpi = 300)
+ggsave("Output/Topic_modeling/MS_topics_subtentorial_lesions.png", plot = p2, width = 7, height = 8, dpi = 300)
 # subtentorial_lesions: 1 signif
 # check topic 4
 b_plot <- b_df %>%
@@ -166,8 +170,11 @@ b_plot <- b_df %>%
 (p3 <- ggplot(data = b_plot, aes(x = beta, y = term, color = term)) +
     geom_point(aes(size = beta)) +
     labs(x = "\nTopic 11: HD vs MS: Genus-Topic Probabilities (beta)", y = "") +
-    theme(legend.position = "none"))
-ggsave("Output/Topic_modeling/MS_subtentorial_lesions_signiftopic4_probabilities.png", plot = p3, width = 6, height = 12, dpi = 300)
+    theme(axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 12),
+          axis.title = element_text(size = 12),
+          legend.position = "none"))
+ggsave("Output/Topic_modeling/HDMS_signiftopic11_probabilities.png", plot = p3, width = 7, height = 7, dpi = 300)
 
 # Selecting topic five as an example, we can use the information in the per-topic-per-word probabilities matrix to examine which genera have the highest probabilities of assignment to this Topic_modeling/community type.
 # Below we can see that Segatella has the highest probability of assignment followed by several others with lower values.
@@ -189,13 +196,13 @@ log2_df <- linda_res_g_df %>%
 (p4 <- ggplot(data = log2_df, aes(x = Genus, y = log2FoldChange, fill = Genus)) +
     geom_col(alpha = .8) +
     labs(y = "HD vs MS, Topic 11: \nLog2 Fold-Change", x = "") +
-    theme(axis.text.x = element_text(color = "black", size = 8),
-          axis.text.y = element_text(color = "black", size = 8),
-          axis.title.y = element_text(size = 8),
-          axis.title.x = element_text(size = 10),
-          legend.text = element_text(size = 8),
-          legend.title = element_text(size = 8)) +
+    theme(axis.text.x = element_text(color = "black", size = 12),
+          axis.text.y = element_text(color = "black", size = 12),
+          axis.title.y = element_text(size = 12),
+          axis.title.x = element_text(size = 12),
+          legend.text = element_text(size = 12),
+          legend.title = element_text(size = 12)) +
     coord_flip() +
     geom_hline(yintercept = 0, linetype="dotted") +
     theme(legend.position = "none"))
-ggsave("Output/Topic_modeling/HDMS_signiftopic11_FC.png", plot = p4, width = 6, height = 12, dpi = 300)
+ggsave("Output/Topic_modeling/HDMS_signiftopic11_FC.png", plot = p4, width = 7, height = 7, dpi = 300)
