@@ -7,5 +7,5 @@ delete.R
 Image/
 Rename/
 InputData/
-Workflow/Step4_DiscriminantAnalysis/Maaslin/Maaslin22.R
-Workflow/Step4_DiscriminantAnalysis/Maaslin/Maaslin_old.R
+Workflow/Step00/
+Workflow/Step9_RandomForest/

@@ -1,5 +1,5 @@
-Maaslin3 <- function(
-    rds, output_folder, main_el, categorySel, elements, discr_els, perc = "K", median_comparison_abundance_in = TRUE,
+Maaslin3_funct <- function(
+    rds, output_folder, main_el, categorySel, elements, discr_els, perc = "K",model_to_use="both", median_comparison_abundance_in = TRUE,
     fx_effects = NULL, random_effects = NULL, group_effects = NULL,
     ordered_effects = NULL, strata_effects = NULL, heatmap_vars = NULL) {
     # Create data for maaslin3
@@ -30,7 +30,7 @@ Maaslin3 <- function(
 
     class(metadata_df)
     metadata_df <- metadata_df %>%
-        select(category, gc_treatment, lesion_burden, spinal_cord_lesion, gadolinium_contrast, subtentorial_lesions, sex, age, bmi)
+        select(category, gc_treatment, lesion_burden, spinal_cord_lesion, gadolinium_contrast, subtentorial_lesions, sex, age, bmi,Cluster)
     if (main_el != "category") {
         metadata_df <- metadata_df %>%
             filter(category == "MS")
@@ -117,9 +117,34 @@ Maaslin3 <- function(
         last <- "F"
     }
     all_results <- read_tsv(file.path(output_folder, "all_results.tsv"), show_col_types = FALSE)
-    all_results_sig <- all_results %>% dplyr::filter(metadata == main_el & pval_individual < 0.05)
+    all_results_sig <- all_results %>% dplyr::filter(metadata == main_el & pval_individual < 0.05 & (model_to_use=="both" | model == model_to_use))
     all_results_sig <- all_results_sig %>%
         select(feature, metadata, value, coef, null_hypothesis, pval_individual, qval_individual, pval_joint, pval_individual, model, stderr)
+
+    if (model_to_use == "both") {
+        combined_pvals <- all_results %>%
+            dplyr::filter(metadata == main_el, model %in% c("abundance", "prevalence")) %>%
+            dplyr::select(feature, model, pval_individual) %>%
+            dplyr::group_by(feature, model) %>%
+            dplyr::summarise(
+                pval_individual = if (all(is.na(pval_individual))) NA_real_ else min(pval_individual, na.rm = TRUE),
+                .groups = "drop"
+            ) %>%
+            tidyr::pivot_wider(
+                names_from = model,
+                values_from = pval_individual,
+                names_glue = "pval_individual_{model}"
+            ) %>%
+            dplyr::filter(feature %in% unique(all_results_sig$feature)) %>%
+            dplyr::arrange(feature)
+
+        combined_pvals_csv <- file.path(
+            output_folder,
+            paste0(main_el, "_MAASLIN3_SR_species_pvals_abundance_prevalence_", perc, "_", last, ".csv")
+        )
+        write.csv(combined_pvals, combined_pvals_csv, row.names = FALSE)
+    }
+
     results_csv <- file.path(output_folder, paste0(main_el, "_MAASLIN3_SR_", perc, "_", last, ".csv"))
     write.csv(all_results_sig, results_csv, row.names = FALSE)
     features_unique <- unique(all_results_sig$feature)

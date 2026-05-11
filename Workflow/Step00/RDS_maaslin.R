@@ -161,4 +161,3 @@ write.table(lesion_table, "Output/rebuttal/lesion_table.tsv", sep = "\t", quote 
 write.table(spinal_table, "Output/rebuttal/spinal_table.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
 write.table(subt_table, "Output/rebuttal/subt_table.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
 write.table(union_table, "Output/rebuttal/union_table.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
-

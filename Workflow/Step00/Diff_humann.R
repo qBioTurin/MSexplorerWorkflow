@@ -4,12 +4,9 @@ library(maaslin3)
 library(stringr)
 # Percorsi ai file CSV
 metadata_path <- "InputData/Metadata_MS.csv"
-data_path <- "InputData/MS_pathabundance_cpm_230925.tsv"
-rename_path <- "InputData/rename.csv"
+data_path <- "InputData/merged_pathabundance.tsv"
 # Leggi il file CSV per la metadata
 metadata <- read_csv(metadata_path)
-rename<-read_csv(rename_path)
-rename<-as.data.frame(rename)
 # Leggi il file CSV per i dati
 data <- read_tsv(data_path)
 data <- as.data.frame(data)
@@ -17,17 +14,12 @@ colnames(data) <- sub("_.+", "", colnames(data))
 # Check the column names to find the correct one for pathway
 print(colnames(data))
 # Set rownames using the correct column name (adjust if needed)
-rownames(data)<-data$Pathway
-data<-data%>% select(-Pathway)
+rownames(data)<-data$`# Pathway`
+data<-data%>% select(-`# Pathway`)
 
 data1<-t(data)
 data1 <- as.data.frame(data1)
-data1$old_id <- rownames(data1)
-
-data1 <- merge(data1, rename, by.x = "old_id", by.y = "old_id", all.x = TRUE)
-data1 <- data1[!is.na(data1$id), ]
-rownames(data1)<-data1$id
-dataf <- data1 %>% select(-c(old_id,id))
+dataf <- data1
 dataf <- dataf[rownames(dataf) %in% metadata$id, ]
 datf<-t(dataf)
 datf <- as.data.frame(datf)
@@ -47,7 +39,7 @@ pathways <- datf[!grepl("UNINTEGRATED|UNMAPPED", rownames(datf)), ]
 library(dplyr)
 library(stringr)
 library(tibble)
-
+library(maaslin3)
 pathways2 <- pathways %>% tibble::rownames_to_column("Pathway")
 pathw_filt <- pathways2 %>%
   filter(!str_detect(Pathway, "\\|g__")) %>%
@@ -57,14 +49,23 @@ pathw_filt <- pathw_filt %>% select(-Pathway)
 res <- maaslin3(
   input_data = pathw_filt,       
   input_metadata = metadata,          
-  output = "Output/Diff_humann/category/",
+  output = "Output/Diff_humann/category_only/",
   formula = "~ category",
   normalization = "TSS",
   transform = "LOG",
   min_prevalence = 0.01,
   min_abundance = 0.0001
 )
-
+res <- maaslin3(
+  input_data = pathw_filt,       
+  input_metadata = metadata,          
+  output = "Output/Diff_humann/category_age_sex_bmi/",
+  formula = "~ category+age+sex+bmi",
+  normalization = "TSS",
+  transform = "LOG",
+  min_prevalence = 0.01,
+  min_abundance = 0.0001
+)
 
 metadataMS <- metadata[metadata$category == "MS",]
 metadataMSpos <- metadataMS[metadataMS$gc_treatment == "positive" & !is.na(metadataMS$gc_treatment), ]
@@ -163,7 +164,7 @@ res <- maaslin3(
 res <- maaslin3(
   input_data = dataMSpos,       
   input_metadata = metadataMSpos,          
-  output = "Output/Diff_humann/GC_THREATMENT_SPINAL/",
+  output = "Output/Diff_humann/GC_THREATMENT_POS_SPINAL/",
   formula = "~ spinal_cord_lesion",
   normalization = "TSS",
   transform = "LOG",

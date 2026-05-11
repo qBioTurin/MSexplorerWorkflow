@@ -64,7 +64,6 @@ decontam <- function(baselines, Domain, output_folder, dec_level,prevalence = FA
 }
 
 execute_sup_decontam <- function(){
-    contE=c(460519)
     bact_baselines_ds = readRDS(file = "Output/DESEQ_RDS/Bact_DeSeq.rds")
     archaea_baselines_ds = readRDS(file = "Output/DESEQ_RDS/Archaea_DeSeq.rds")
     euk_baselines_ds = readRDS(file = "Output/DESEQ_RDS/Eukaryote_DeSeq.rds")
@@ -75,10 +74,8 @@ execute_sup_decontam <- function(){
     decontam(baselines=bact_baselines_ds, Domain="Bacteria", output_folder=output_folder, dec_level=0)
     decontam(baselines=archaea_baselines_ds, Domain="Archaea", output_folder=output_folder, dec_level=0)
     decontam(baselines=archaea_baselines_ds, Domain="Archaea", output_folder=output_folder, dec_level=0.001)
-    decontam(baselines=euk_baselines_ds, Domain="Eukaryote", output_folder=output_folder, dec_level=0, contaminant = contE)
-    decontam(baselines=euk_baselines_ds, Domain="Eukaryote", output_folder=output_folder, dec_level=0.001, contaminant = contE)
+    decontam(baselines=euk_baselines_ds, Domain="Eukaryote", output_folder=output_folder, dec_level=0)
+    decontam(baselines=euk_baselines_ds, Domain="Eukaryote", output_folder=output_folder, dec_level=0.001)
 }
 
 execute_sup_decontam()
-prime<-readRDS("Output/DESEQ_RDS/Eukaryote_DeSeq.rds")
-taxa<-as.data.frame(phyloseq::tax_table(prime))

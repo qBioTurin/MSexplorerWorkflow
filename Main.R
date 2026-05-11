@@ -2,6 +2,8 @@
 # Loading all the necessary
 source("Settings/utilities.R")
 source("Settings/Packages.R")
+# add install.packages('VennDiagram')
+
 source("Settings/Colorpalette.R")
 
 # Step 0: Loading the data and metadata
@@ -24,16 +26,11 @@ source("Workflow/Step3_Graphs/Stack.R")
 source("Workflow/Step3_Graphs/Patchwork.R")
 
 # Step 4: creation of DAS using limma and lefse
-#limma
-source("Workflow/Step4_DiscriminantAnalysis/Limma/DAS_LIMMA.R")
-#lefse
-source("Workflow/Step4_DiscriminantAnalysis/Lefse/DAS_LEFSE.R")
-#fuse DAS
-source("Workflow/Step4_DiscriminantAnalysis/Merge_DAS/Merge_DAS.R")
-install.packages("circlize")
-library(circlize)
+source("Workflow/Step4_DiscriminantAnalysis/Maaslin/Maaslin3_funct.R")
+source("Workflow/Step4_DiscriminantAnalysis/Maaslin/MaaslinLaunch.R")
+
 # Step 5: create of heatmaps
-source("Workflow/Step5_Heatmaps/Heatmap.R")#todo
+source("Workflow/Step5_Heatmaps/Heatmap.R")
 source("Workflow/Step5_Heatmaps/heatmap_Venn_patchmod.R")
 
 # Step 6 calculate Alpha diversity DAS

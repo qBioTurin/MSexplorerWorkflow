@@ -8,7 +8,7 @@ cran_packages <- c(
   "ggsignif", "ggbreak", "MetBrewer", "ggalt", "cluster", "NbClust",
   "ggfortify", "factoextra", "UpSetR", "leaps", "readr", "grid", 
   "ggpubr", "rstatix", "pheatmap", "nloptr", "lme4", "pbkrtest", "car",
-  "FDRestimation", "ggVennDiagram"
+  "FDRestimation", "ggVennDiagram","circlize", "VennDiagram"
 )
 
 # Bioconductor Packages

@@ -91,7 +91,7 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
     geom_signif(
       comparisons = list(c("negative", "positive")),
       map_signif_level = function(p) {
-        if (p < 0.049) {
+        if (p < 0.05) {
           return(paste0("* (", signif(p, 2), ")"))
         } else if (p < 0.055) {
           return(paste0("NS. (", signif(p, 2), ")"))
