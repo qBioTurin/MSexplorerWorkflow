@@ -7,5 +7,6 @@ delete.R
 Image/
 Rename/
 InputData/
-Workflow/Step00/
-Workflow/Step9_RandomForest/
+Workflow/Step000/
+Workflow/Step9_RandomForest_ig/
+.gitignore
