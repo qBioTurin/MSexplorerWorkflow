@@ -26,7 +26,7 @@ myfunction = function(input, filterhm) {
   norm_data = norm_data[, -c(1, length(norm_data))]
   colnames(norm_data)
   
-  metadata = read.csv("InputData/NewMetadataMS_fin.csv", 
+  metadata = read.csv("InputData/merged_data_cluster.csv", 
             header = TRUE, 
             sep = ",",
             na = c("", " ", "NA"), 
@@ -87,6 +87,7 @@ myfunction = function(input, filterhm) {
   gadolinium_contrast = setNames(c("#E21277", "#0DC9A7"),
                    levels(as.factor(metadata_hm$gadolinium_contrast)))
   )
+  rds_Arch <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
   
   paletteLength = 35
   
@@ -121,10 +122,10 @@ myfunction = function(input, filterhm) {
   return(heatmap)
 }
 
-Les = readRDS("Output/merge_DAS/001/Bacteria_lesion_burden_001_merged.rds")
-Gad = readRDS("Output/merge_DAS/001/Bacteria_gadolinium_contrast_001_merged.rds")
-SC = readRDS("Output/merge_DAS/001/Bacteria_spinal_cord_lesion_001_merged.rds")
-ST = readRDS("Output/merge_DAS/001/Bacteria_subtentorial_lesions_001_merged.rds")
+Les = readRDS("Output/MAASLIN3_model/001_disc/001_lesion_burden_onlygc_plus_gc/lesion_burden_MAASLIN3_SR_features_001_T.rds")
+Gad = readRDS("Output/MAASLIN3_model/001_disc/001_gadolinium_contrast_onlygc_plus_gc/gadolinium_contrast_MAASLIN3_SR_features_001_T.rds")
+SC = readRDS("Output/MAASLIN3_model/001_disc/001_spinal_cord_lesion_onlygc_plus_gc/spinal_cord_lesion_MAASLIN3_SR_features_001_T.rds")
+ST = readRDS("Output/MAASLIN3_model/001_disc/001_subtentorial_lesions_onlygc_plus_gc/subtentorial_lesions_MAASLIN3_SR_features_001_T.rds")
 
 heatmap1 <- myfunction(
   Les, filterhm = function(df) df %>% select(Lesion_Burden))
@@ -141,7 +142,7 @@ heatmap4 <- myfunction(
 Les_ID = rownames(Les@tax_table)
 Gad_ID = rownames(Gad@tax_table)
 SC_ID = rownames(SC@tax_table)
-ST_ID = row.names(ST@tax_table)
+ST_ID = rownames(ST@tax_table)
 
 venn_list = list("Lesion" = Les_ID, "Gadolinium" = Gad_ID, "Spinal Cord" = SC_ID, "Subtentorial" = ST_ID)
 

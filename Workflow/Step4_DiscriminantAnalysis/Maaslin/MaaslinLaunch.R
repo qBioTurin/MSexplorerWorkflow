@@ -37,7 +37,8 @@ Maaslin3_funct(
     rds = rds_Euk, output_folder = "Output/MAASLIN3_model/Eukaryote_MSHD_disc",
     main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
 )
-rds_Arch <- readRDS("Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
+
+
 Maaslin3_funct(
     rds = rds_Arch, output_folder = "Output/MAASLIN3_model/Archaea_MSHD_disc",
     main_el = "category", categorySel = "category", elements = c("HEALTHY", "MS"), discr_els = c("sex", "age", "bmi")
@@ -51,18 +52,17 @@ Maaslin3_funct(
     rds = rds_001, output_folder = "Output/MAASLIN3_model/Bacteria_gc_treatment_disc",
     main_el = "gc_treatment", categorySel = "gc_treatment", elements = c("positive","negative"), discr_els = c("sex", "age", "bmi")
 )
-Maaslin3_funct(
-    rds = rds_Euk, output_folder = "Output/MAASLIN3_model/Eukaryote_gc_treatment_disc",
-    main_el = "category", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("sex", "age", "bmi")
-)
-Maaslin3_funct(
-    rds = rds_Arch, output_folder = "Output/MAASLIN3_model/Archaea_gc_treatment_disc",
-    main_el = "category", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("sex", "age", "bmi")
-)
+#not enough species
+# Maaslin3_funct(
+#     rds = rds_Euk, output_folder = "Output/MAASLIN3_model/Eukaryote_gc_treatment_disc",
+#     main_el = "category", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("sex", "age", "bmi")
+# )
+# Maaslin3_funct(
+#     rds = rds_Arch, output_folder = "Output/MAASLIN3_model/Archaea_gc_treatment_disc",
+#     main_el = "category", categorySel = "gc_treatment", elements = c("positive", "negative"), discr_els = c("sex", "age", "bmi")
+# )
 
 
-metadata<- data.frame(sample_data(rds_001))
-print(unique(metadata$Cluster))
 
 Maaslin3_funct(
     rds = rds_001, output_folder = "Output/MAASLIN3_model/001_disc_cluster/001_cluster_gc",

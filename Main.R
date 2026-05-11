@@ -25,7 +25,7 @@ source("Workflow/Step3_Graphs/Stack.R")
 #patchwork
 source("Workflow/Step3_Graphs/Patchwork.R")
 
-# Step 4: creation of DAS using limma and lefse
+# Step 4: creation of DAS using Maaslin3
 source("Workflow/Step4_DiscriminantAnalysis/Maaslin/Maaslin3_funct.R")
 source("Workflow/Step4_DiscriminantAnalysis/Maaslin/MaaslinLaunch.R")
 
