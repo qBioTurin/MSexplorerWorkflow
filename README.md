@@ -326,8 +326,12 @@ It returns a structured list of regression results for each outcome variable..
 
 ## Citation
 
-Please cite the associated publication and this repository if you use MSexplorerWorkflow. Update CITATION.cff with the final manuscript DOI and full author list before public release.
+If you use **MSexplorerWorkflow** in your research, please cite both the associated publication and this repository.
+
+Before the public release of the repository, update the `CITATION.cff` file with the final manuscript DOI and the complete list of authors.
 
 ## License
 
-No software license has been selected yet. Add the license approved by the authors/institution before making the repository public or linking it from a publication.
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+
+Please note that third-party software, Docker images, databases, and datasets used by this workflow remain subject to their respective licenses and terms of use.
