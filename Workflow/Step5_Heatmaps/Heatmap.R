@@ -144,13 +144,21 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
 
         # Heatmap
         mat_t <- t(norm_data_z[, colOrder, drop = FALSE])
+        species_labels <- parse(
+            text = paste0(
+                "italic('",
+                gsub("'", "\\\\'", colnames(mat_t)),
+                "')"
+            )
+        )
         cluster_cols_flag <- ncol(mat_t) > 1
 
-        heatmap_list[[kingdom]] <- pheatmap(
+        heatmap_list[[kingdom]] <- pheatmap::pheatmap(
             mat_t,
             annotation_col = ann_col,
             annotation_row = ann_row,
             annotation_colors = ann_colors,
+            labels_col = species_labels,
             cluster_cols = cluster_cols_flag,
             cluster_rows = FALSE,
             legend = FALSE,
@@ -158,16 +166,17 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
             fontsize = 14,
             fontsize_row = 18,
             fontsize_col = 18,
-            angle_col = 90,
+            angle_col = "90",
             col = colors_list[[kingdom]],
             border_color = NA,
             breaks = myBreaks
         )
-        ph <- pheatmap(
+        ph <- pheatmap::pheatmap(
             mat_t,
             annotation_col = ann_col,
             annotation_row = ann_row,
             annotation_colors = ann_colors,
+            labels_col = species_labels,
             cluster_cols = cluster_cols_flag,
             cluster_rows = FALSE,
             legend = TRUE, # necessario
@@ -175,7 +184,7 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
             fontsize = 14,
             fontsize_row = 18,
             fontsize_col = 18,
-            angle_col = 45,
+            angle_col = "45",
             col = colors_list[[kingdom]],
             border_color = NA,
             breaks = myBreaks
@@ -241,7 +250,6 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
     #     width = 40, height = 80, limitsize = FALSE
     # )
 }
-
 
 
 # ######################
@@ -361,10 +369,10 @@ create_heatmap <- function(Bacteria, Archaea, Eukaryota, filename, output_folder
 #     )
 # }
 
-output_folder <- "Image/Rebuttal2/"
+output_folder <- "Image/Rebuttal4/"
 create_heatmap(
     Bacteria = NULL,
-    Archaea = readRDS("Output/MAASLIN3/Archaea_MSHD_disc/category_MAASLIN3_SR_features_K_T.rds"),
+    Archaea = readRDS("Output/MAASLIN3_model/Archaea_MSHD_disc/category_MAASLIN3_SR_features_K_T.rds"),
     Eukaryota = NULL,
     filename = paste0("MSHD"), output_folder = output_folder,
     order = "Status", topBar = "Status"
@@ -373,13 +381,13 @@ create_heatmap(
 create_heatmap(
     Bacteria = NULL,
     Archaea = NULL,
-    Eukaryota = readRDS("Output/MAASLIN3/Eukaryote_MSHD_disc/category_MAASLIN3_SR_features_K_T.rds"),
+    Eukaryota = readRDS("Output/MAASLIN3_model/Eukaryote_MSHD_disc/category_MAASLIN3_SR_features_K_T.rds"),
     filename = paste0("MSHD"), output_folder = output_folder,
     order = "Status", topBar = "Status"
 )
 
 create_heatmap(
-    Bacteria = readRDS("Output/MAASLIN3/Bacteria_MSHD_disc_001/category_MAASLIN3_SR_features_K_T.rds"),
+    Bacteria = readRDS("Output/MAASLIN3_model/Bacteria_MSHD_disc_001/category_MAASLIN3_SR_features_K_T.rds"),
     Archaea = NULL,
     Eukaryota = NULL,
     filename = paste0("MSHD"), output_folder = output_folder,

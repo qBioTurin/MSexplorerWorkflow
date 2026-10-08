@@ -134,7 +134,7 @@ stackbar <- function(baseline_dec, Domain, output_folder) {
     theme_bw() +
     theme(
       legend.position = "bottom", axis.text.x = element_text(angle = 45, size = 8),
-      axis.text.y = element_text(color = "black", size = 12),
+      axis.text.y = element_text(color = "black", face = "bold", size = 12),
       strip.text = element_text(face = "bold", size = 20),
       strip.background = element_blank()
     ) +
@@ -146,9 +146,9 @@ stackbar <- function(baseline_dec, Domain, output_folder) {
 
 
 execute_stackbar <- function() {
-  baseline_decB <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds")
-  baseline_decA <- readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.rds")
-  baseline_decE <- readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.rds")
+  baseline_decB <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
+  baseline_decA <- readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
+  baseline_decE <- readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
 
   stackbar(baseline_dec = baseline_decB, Domain = "Bacteria", output_folder)
   stackbar(baseline_dec = baseline_decA, Domain = "Archaea", output_folder)

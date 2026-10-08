@@ -12,7 +12,7 @@ cran_packages <- c(
 )
 
 # Bioconductor Packages
-bioc_packages <- c("phyloseq", "DESeq2", "microbiome", "limma")
+bioc_packages <- c("phyloseq", "DESeq2", "microbiome", "limma", "ComplexHeatmap")
 
 # GitHub Packages
 github_packages <- list(

@@ -57,7 +57,7 @@ paletteBact=c("Bifidobacterium adolescentis"="#8ea4d2", "Alistipes putredinis"= 
 "Blautia wexlerae"= "#edead0", "Bacteroides stercoris"= "#8ea4d2", "Bacteroides uniformis" = "#4d9078", 
 "Phocaeicola vulgatus"= "#414073", "Faecalibacterium prausnitzii"= "#fface4", "Other"="grey"
 )
-paletteArchaea=c("Methanomethylophilus alvi"= "#ef6f6c", "Methanobrevibacter arboriphilus"= "#1F78B4", 
+paletteArchaea=c("Methanobrevibacter arboriphilus"= "#1F78B4", 
 "Methanosphaera stadtmanae"= "#c0df85", "Methanobrevibacter smithii"= "#b1111f", "Methanomassiliicoccus Candidatus Methanomassiliicoccus intestinalis"= "#ab87ff", 
 "Methanobrevibacter sp. TLL-48-HuF1"="#f78154"
 )

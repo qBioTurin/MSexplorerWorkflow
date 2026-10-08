@@ -31,33 +31,35 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
       comparisons = list(c("HEALTHY", "MS")),
       map_signif_level = function(p) {
         sapply(p, function(x) {
-          if (x < 0.001) {
+          if (x <= 0.001) {
             paste0("*** (", signif(x, 2), ")")
-          } else if (x < 0.01) {
+          } else if (x <= 0.01) {
             paste0("** (", signif(x, 2), ")")
-          } else if (x < 0.05) {
+          } else if (x <= 0.05) {
             paste0("* (", signif(x, 2), ")")
-          } else if (x < 0.1) {
+          } else if (x <= 0.1) {
             paste0("NS. (", signif(x, 2), ")")
           } else {
             "NS."
           }
         })
       },
-      textsize = 5
+      textsize = 4
     ) +
     theme_classic() +
     scale_x_discrete(labels = custom_labels) +
     scale_fill_manual(values = c("#6EE2FF99", "#ff410D99"), labels = c("HD", "MS")) +
+    scale_y_continuous(expand = expansion(mult = c(0.05, 0.20))) +
     theme(
-      axis.title.x = element_text(size = 15),
-      axis.title.y = element_text(size = 15),
-      axis.text.x = element_text(size = 15),
-      axis.text.y = element_text(size = 15),
-      plot.title = element_text(size = 20),
-      legend.text = element_text(size = 15),
-      legend.title = element_text(size = 15),
-      strip.text = element_text(size = 20)
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16),
+      plot.title = element_text(size = 16),
+      legend.text = element_text(size = 16),
+      legend.title = element_text(size = 16),
+      strip.text = element_blank(),
+      strip.background = element_blank()
     )
   category
   saveRDS(category, gsub(" ", "", paste(output_folder, Domain, "_alpha_category.rds")))
@@ -91,27 +93,29 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
     geom_signif(
       comparisons = list(c("negative", "positive")),
       map_signif_level = function(p) {
-        if (p < 0.05) {
+        if (p < 0.049) {
           return(paste0("* (", signif(p, 2), ")"))
         } else if (p < 0.055) {
           return(paste0("NS. (", signif(p, 2), ")"))
         } else {
           return(paste0("NS."))
         }
-      }, textsize = 6
+      }, textsize = 4
     ) +
     theme_classic() +
     scale_x_discrete(labels = custom_labels) +
     scale_fill_manual(values = c("negative" = "#D7D7D7", "positive" = "#4D4D4D")) +
+    scale_y_continuous(expand = expansion(mult = c(0.05, 0.20))) +
     theme(
-      axis.title.x = element_text(size = 15),
-      axis.title.y = element_text(size = 15),
-      axis.text.x = element_text(size = 15),
-      axis.text.y = element_text(size = 15),
-      plot.title = element_text(size = 20),
-      legend.text = element_text(size = 15),
-      legend.title = element_text(size = 15),
-      strip.text = element_text(size = 20),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16),
+      plot.title = element_text(size = 16),
+      legend.text = element_text(size = 16),
+      legend.title = element_text(size = 16),
+      strip.text = element_blank(),
+      strip.background = element_blank(),
       legend.position = "none"
     )
     
@@ -120,9 +124,9 @@ Alpha <- function(baselines_dec, Domain, output_folder) {
 
 
 execute_alpha <- function() {
-  baselines_decB <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.rds")
-  baselines_decA <- readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.rds")
-  baselines_decE <- readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.rds")
+  baselines_decB <- readRDS(file = "Output/SUPERVISED_DEC/Bacteria_Supervised_decontam0.001.rds")
+  baselines_decA <- readRDS(file = "Output/SUPERVISED_DEC/Archaea_Supervised_decontam0.001.rds")
+  baselines_decE <- readRDS(file = "Output/SUPERVISED_DEC/Eukaryote_Supervised_decontam0.001.rds")
 
   Alpha(baselines_dec = baselines_decB, Domain = "Bacteria", output_folder)
   Alpha(baselines_dec = baselines_decA, Domain = "Archaea", output_folder)
